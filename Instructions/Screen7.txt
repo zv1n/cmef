@@ -1,0 +1,12 @@
+
+In the first study phase you will be given the opportunity to view 3 different 2 x 3
+grids and select the Chinese words for which you would like to see the English
+equivalents.  Each 2 x 3 grid will contain the Chinese words from Chinese-English
+vocabulary pairs.  A sample study grid appears below.  If this grid were active, then
+you could click on one of the Chinese characters to view its English equivalent.
+
+<IMAGE SampleGrid>
+
+Please click "Continue" once you have had a chance to review the sample grid.
+
+

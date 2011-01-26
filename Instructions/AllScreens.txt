@@ -1,0 +1,246 @@
+<EXPERIMENT>
+<SCREEN INDEX=1>
+
+In this task you will be asked to study Chinese-English vocabulary pairs.  Before you
+begin studying the vocabulary pairs, we would like to know how easy you think each 
+Chinese word will be for you to learn.  You will make your ratings using the
+following scale:
+
+
+_________________________________________________________________________________
+1         2         3         4         5         6         7         8         9
+Easy                                 Medium                                    Hard
+
+If you think the word will be easy for you to learn, then you will select a number on
+the left side of the scale.  If you think the word will be hard for you to learn, you
+will select a number on the right side of the scale.  If you think the word will be
+somewhere between easy and hard, then you will select a number in the middle of the
+scale.  You will provide your rating by typing the number that corresponds with your 
+selection.  Please click "Continue" to view a sample screen so that you may become
+familiar with the format.
+
+</SCREEN INDEX=1>
+<CLICK CONTINUE>
+<SCREEN INDEX=2>
+
+THIS IS A SAMPLE SCREEN.  YOU DO NOT HAVE TO ENTER A RESPONSE.
+
+  
+
+_________________________________________________________________________________
+1         2         3         4         5         6         7         8         9
+Easy                                 Medium                                    Hard
+
+
+Please type a number in the space below to indicate how easy or hard you think the
+Chinese word will be for you to learn then click "Continue"
+
+</SCREEN INDEX=2>
+<CLICK CONTINUE>
+<SCREEN INDEX=3>
+
+Each Chinese word will appear, one at a time, for 3 seconds.  Then a screen will
+appear that asks you to provide an ease of learning judgment for that item using
+the 1-9 scale that appeared on the previous screen.  This process will continue
+until you have  provided an ease of learning judgment for each item.  If you have
+questions about this procedure, please notify the experimenter now.  Otherwise,
+please click "Continue" to begin providing your judgments.
+
+</SCREEN INDEX=3>
+<CLICK CONTINUE>
+<RATE EAST OF LEARNING>
+<SCREEN INDEX=4>
+
+Now that you have had a chance to preview all the Chinese words, we are going to give
+you an opportunity to select Chinese words for which you would like to view the
+English equivalent in preparation for a recall test in which you will be presented
+with the Chinese words and asked to recall their English counterparts.  Please click 
+"Continue".
+
+</SCREEN INDEX=4>
+<CLICK CONTINUE>
+<SCREEN INDEX=5>
+
+Before you begin studying we would like to know how many of the 18 words you expect
+to be able to learn and correctly recall. That is, during the recall test when you
+are presented with the Chinese portion of each vocabulary pair, how many of the 18
+English equivalents do you expect to be able to correctly recall?  Please type a
+number between 0 and 18 below.
+
+</SCREEN INDEX=5>
+<CLICK CONTINUE>
+<CHECK INPUT>
+<SCREEN INDEX=6>
+
+Thank you for providing your prediction.  The following screens will provide
+instructions for the study phase.  Please click "Continue".
+
+</SCREEN INDEX=6>
+<CLICK CONTINUE>
+<SCREEN INDEX=7>
+
+In the first study phase you will be given the opportunity to view 3 different 2 x 3
+grids and select the Chinese words for which you would like to see the English
+equivalents.  Each 2 x 3 grid will contain the Chinese words from Chinese-English
+vocabulary pairs.  A sample study grid appears below.  If this grid were active, then
+you could click on one of the Chinese characters to view its English equivalent.
+
+
+<IMAGE "Sample Grid">
+
+
+
+Please click "Continue" once you have had a chance to review the sample grid.
+
+</SCREEN INDEX=7>
+<CLICK CONTINUE>
+<SCREEN INDEX=8>
+
+You will have 60 seconds total to study the items within a grid.  Only by clicking on
+a Chinese word will you be able to view the English equivalent for that word.  Once
+you select an item to study, a new screen will appear that contains the complete
+Chinese-English vocabulary pair as well as a countdown clock indicating how much time
+you have left to study items within the grid.  This clock will continue to count down
+until you either indicate you are finished studying the item by clicking the 
+"Finished studying" button or time runs out.  
+
+Please click "Continue" to view a sample study screen.
+
+</SCREEN INDEX=8>
+<CLICK CONTINUE>
+<======== display sample study screen ===============>
+<SCREEN INDEX=9>
+
+As noted, clicking on a Chinese word will allow you to see the English equivalent to
+the Chinese word.  For example, if you were to click on the Chinese word 
+
+"<insert Chinese character labeled "CHINESESAMPLE">", 
+
+then a new screen would appear
+that would contain both the Chinese and English words (e.g., 
+
+"<insert Chinese character labeled "CHINESESAMPLE">- forest").
+  
+A sample screen appears below.  
+Please click "Continue" once you are finished looking at the sample screen.
+
+</SCREEN INDEX=9>
+<CLICK CONTINUE>
+<SCREEN INDEX=10>
+
+After you indicate you are finished studying the selected vocabulary pair (e.g., by
+clicking on the "Finished Studying" button) the countdown clock will stop and the
+grid will automatically reappear and you will have the opportunity to select other
+items to study.  To allow you to easily keep track of which items you have studied
+within a grid, once an item has been selected for study it will turn red while
+unselected items will remain green.  You may select unstudied (green) items or
+restudy previously selected (red) items as long as time remains on the clock.  If
+you have studied all the items within a grid that you wish to study and time still
+remains on the clock, you can indicate that you wish to move on to the next grid by
+clicking the "Finished studying this grid" button at the bottom of the grid screen.
+Clicking this button will  automatically bring up the next grid and restart the
+countdown clock.  Once time has elapsed or you indicate you have finished studying
+all three grids you will be asked to try and recall the English equivalents for each
+of the 18 Chinese words.  
+
+Please click "Continue" to begin the Trial 1 study phase
+
+</SCREEN INDEX=10>
+<CLICK CONTINUE>
+<SCREEN INDEX=11>
+
+Now that you have finished the Trial 1 study phase we would like you to know how many
+of the 18 words you expect to be able correctly recall.  That is, during the recall
+test when you are presented with the Chinese portion of each vocabulary pair, how
+many of the 18 English equivalents do you expect to be able to correctly recall?
+Please type a number between 0 and 18 below then click "Continue".
+
+
+</SCREEN INDEX=11>
+<CLICK CONTINUE>
+<SCREEN INDEX=12>
+
+Now you will be asked to try to recall the vocabulary pairs.  In each screen we will
+present the Chinese word from each vocabulary pair and you will be asked to type the
+English equivalent.  After you have typed your response please press "Enter" to move
+on to the next word.  If you cannot recall the English equivalent you can simply hit
+any letter on the keyboard before clicking "Continue".  Please click "Continue" to
+begin the recall test.
+
+</SCREEN INDEX=12>
+<CLICK CONTINUE>
+<=========== Run recall test ===============>
+<SCREEN INDEX=13>
+
+Now that you have finished the Trial 1 recall test, we would like to know how many
+items you believe you correctly recalled?  Please enter a number between 0 and 18
+below.
+
+
+	
+Please type a number then click "Continue".
+
+</SCREEN INDEX=13>
+<CLICK CONTINUE>
+<================ Read Number ===================>
+<SCREEN INDEX=14>
+
+Now that you have completed the recall test for Trial 1, you will now be given the
+opportunity to study a second set of words.  Before you begin the Trial 2 study phase
+we would like to know how many of the items you expect to be able to learn.  Please
+enter a number between 0 and 18 below:
+	  
+
+Please type a number then click "Continue".
+
+</SCREEN INDEX=14>
+<CLICK CONTINUE>
+<================ Read Number ===================>
+<SCREEN INDEX=15>
+
+As in Trial 1 you will be given 60 seconds per grid to study the items. Please click
+"Continue" to begin selecting items to study.
+
+</SCREEN INDEX=15>
+<CLICK CONTINUE>
+<SCREEN INDEX=16>
+
+Now that you have finished studying items in Trial 2 we would like to know how many
+items you expect to be able to correctly recall on the upcoming recall test.  Please
+enter a number between 0 and 18 below then click "Continue".
+
+</SCREEN INDEX=16>
+<CLICK CONTINUE>
+<SCREEN INDEX=17>
+
+You are now ready to begin the Trial 2 recall test.  As in Trial 1, each Chinese
+character will appear, one at a time, and you should try and recall its English
+equivalent.  If you are unable to recall the English equivalent then press any letter
+on the keyboard and click "Continue" to move on to the next word.  Please click
+"Continue" to begin the Trial 2 recall test.
+
+</SCREEN INDEX=17>
+<CLICK CONTINUE>
+<================ Run recall test 2 =================>
+<SCREEN INDEX=18>
+
+Now that you have completed the recall test we would like to know how many of the 18
+items you believe you correctly recalled.  Please enter a number between 0 and 18
+below.
+
+
+Please type a number then click "Continue".
+
+</SCREEN INDEX=18>
+<CLICK CONTINUE>
+<================ Read Number ===================>
+<SCREEN INDEX=19>
+
+You have completed this portion of the experiment.  Please quietly notify the
+experimenter.
+
+Thank you!
+
+</SCREEN INDEX=19>
+</EXPERIMENT>
+

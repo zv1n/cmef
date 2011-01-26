@@ -1,0 +1,6 @@
+             THIS IS A SAMPLE SCREEN.  YOU DO NOT HAVE TO ENTER A RESPONSE.
+<IMAGE SampleScreen>
+
+                               Please click "Continue"
+
+
