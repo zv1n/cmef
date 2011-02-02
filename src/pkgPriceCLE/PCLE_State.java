@@ -1,5 +1,7 @@
 package pkgPriceCLE;
 
+import javax.swing.JOptionPane;
+
 //====================================================================
 /** PCLE_State
  *  <P>Purpose: This class defines the different states in which
@@ -14,9 +16,12 @@ public class PCLE_State
 {
 	/** State for this state */
 	private int m_iState;
-	
+
 	//----- Vars for show instructions mode -----
 	private String m_sInsFileName;
+	
+	//----- Vars for show condtion validation -----
+	private String m_sValidConditions;
 	
 	//----- Vars for all modes -----
 	private int m_iChangeStateBy;
@@ -36,6 +41,8 @@ public class PCLE_State
 	public static final int LEARNING = 6;
 	/** Testing mode */
 	public static final int TESTING = 7;
+	/** Display instructions/point notification mode */
+	public static final int SHOW_POINT_NOTIFICATION = 8;
 
 	//---------- Change mode indicator -------
 	/** Click Continue button to change mode */
@@ -96,4 +103,19 @@ public class PCLE_State
 	{
 		return m_sInsFileName;
 	}
+
+	//---------------------------------------------------------
+	/** Set the mode */
+	//---------------------------------------------------------
+	public void setValidConditions(String conditions) {
+		m_sValidConditions = conditions;
+	}
+
+	//---------------------------------------------------------
+	/** validate the condition we are currently in */
+	//---------------------------------------------------------
+	public boolean validCondition(String condition) {
+		return m_sValidConditions.contains(condition);
+	}
+
 }

@@ -807,8 +807,6 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 							}
 							case PCLE_State.ESTIMATE_NUMBER_CORRECT:
 							{
-								int numCorrect = -1;
-								int actualNumCorrect = 0;
 								if(m_ENC1 == -1) // Haven't gotten this one yet
 								{
 									m_ENC1 = value;
@@ -816,7 +814,6 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 										+ String.valueOf(m_ENRPost1), true);
 									// Save it for later printing also
 									m_Parent.saveUserEstimate(1, 2, m_ENC1);
-									actualNumCorrect = m_Parent.getUserPoints(1);
 								}
 								else
 								{
@@ -825,24 +822,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 											+ String.valueOf(m_ENRPost2), true);
 									// Save it for later printing also
 									m_Parent.saveUserEstimate(2, 2, m_ENC2);
-									actualNumCorrect = m_Parent.getUserPoints(2);
 								}	
-								
-								if (m_Parent.getCondition() > 4) {
-									do {
-										JOptionPane.showMessageDialog(m_Parent, "You have earned " + actualNumCorrect + " point(s)!",
-												"Points Earned", JOptionPane.INFORMATION_MESSAGE);
-										String userInput = JOptionPane.showInputDialog("Please enter the number of points earned:");
-										
-										if (userInput == null || userInput == "")
-											continue;
-										
-										try {
-											numCorrect = Integer.parseInt(userInput);
-										} catch(Exception ex) { continue; }
-									}
-									while(numCorrect != actualNumCorrect);
-								}
 							break;
 							}
 						}

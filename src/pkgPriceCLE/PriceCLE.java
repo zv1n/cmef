@@ -185,8 +185,9 @@ public class PriceCLE extends JFrame
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					if(m_CurState.getChangeStateAction() == PCLE_State.CLICK_CONTINUE)
-					setNextState();
+					if(m_CurState.getChangeStateAction() == PCLE_State.CLICK_CONTINUE) {
+						setNextState();
+					}
 				}
 			}
 		);
@@ -317,10 +318,21 @@ public class PriceCLE extends JFrame
 				{
 					thisState.setState(PCLE_State.SHOW_INSTRUCTIONS);
 				}
+				// Check for options in "Show Instructions"
+				else if(line.contains("Show Point Notification"))
+				{
+					thisState.setState(PCLE_State.SHOW_POINT_NOTIFICATION);
+				}
 				else if(line.contains("FILE"))
 				{
 					String insFile = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
 					thisState.setInstructionFile(insFile);
+				}
+				else if(line.contains("CONDITIONS"))
+				{
+					String valConditions = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
+					thisState.setValidConditions(valConditions);
+
 				}
 				else if(line.contains("END"))
 				{
@@ -765,7 +777,7 @@ public class PriceCLE extends JFrame
 						estStr;
 				postStatusMessage(line, false);
 				// Post headings for second section
-				line = "\nWord number,English,EOL Order," +
+				line = "\nSID,Word number,English,EOL Order," +
 					"EOL Rate,Test Order,User Answer,Correct(T/F),Answer Value,Trial,Set,Grid Row," +
 					"Grid Column,Times Studied,Total Study Time";
 				String stStr = "";
@@ -800,7 +812,8 @@ public class PriceCLE extends JFrame
 							studyStr = studyStr.concat(",0,0");
 						}
 					}
-					postStatusMessage(String.valueOf(i) + "," +
+					postStatusMessage(m_sSubjectID + "," +
+							String.valueOf(i) + "," +
 							img.getReferenceName() + "," +
 							String.valueOf(img.getEOLPresentationOrder()) + "," +
 							String.valueOf(img.getEOLRate()) + "," +
@@ -828,11 +841,37 @@ public class PriceCLE extends JFrame
 		}
 		m_LastState = m_CurState;
 		m_CurState = (PCLE_State)m_vExpStates.elementAt(m_iCurStateIdx);
+		if (!m_CurState.validCondition(sCondition)) {
+			this.setNextState();
+			return;
+		}
+		
+		if (m_LastState.getState() == PCLE_State.SHOW_POINT_NOTIFICATION) {
+			int numCorrect = -1;
+			int actualNumCorrect = getUserPoints(m_iTrialNumber);
+			
+			do {
+				JOptionPane.showMessageDialog(this, "You have earned " + actualNumCorrect + " point(s)!",
+						"Points Earned", JOptionPane.INFORMATION_MESSAGE);
+				String userInput = JOptionPane.showInputDialog("Please enter the number of points earned:");
+				
+				if (userInput == null || userInput == "")
+					continue;
+				
+				try {
+					numCorrect = Integer.parseInt(userInput);
+				} catch(Exception ex) { continue; }
+			}
+			while(numCorrect != actualNumCorrect);
+		}
+		
 		switch(m_CurState.getState())
 		{
 			case PCLE_State.SHOW_INSTRUCTIONS :
+			case PCLE_State.SHOW_POINT_NOTIFICATION :
 				if((m_LastState != null) && 
-					(m_LastState.getState() != PCLE_State.SHOW_INSTRUCTIONS))
+					(m_LastState.getState() != PCLE_State.SHOW_INSTRUCTIONS &&
+					 m_LastState.getState() != PCLE_State.SHOW_POINT_NOTIFICATION))
 				{
 					m_InstructionsPan.setVisible(true);
 					m_ContinueButton.setVisible(true);
