@@ -22,6 +22,7 @@ public class PCLE_State
 	
 	//----- Vars for show condtion validation -----
 	private String m_sValidConditions;
+	private boolean m_bRequireCondition;
 	
 	//----- Vars for all modes -----
 	private int m_iChangeStateBy;
@@ -53,7 +54,7 @@ public class PCLE_State
 	//---------------------------------------------------------
 	public PCLE_State()
 	{
-		
+		m_bRequireCondition = false;
 	}
 	
 	//---------------------------------------------------------
@@ -108,6 +109,9 @@ public class PCLE_State
 	/** Set the mode */
 	//---------------------------------------------------------
 	public void setValidConditions(String conditions) {
+		if (conditions.length() > 0) {
+			m_bRequireCondition = true;
+		}
 		m_sValidConditions = conditions;
 	}
 
@@ -115,6 +119,8 @@ public class PCLE_State
 	/** validate the condition we are currently in */
 	//---------------------------------------------------------
 	public boolean validCondition(String condition) {
+		if (!m_bRequireCondition)
+			return true;
 		return m_sValidConditions.contains(condition);
 	}
 

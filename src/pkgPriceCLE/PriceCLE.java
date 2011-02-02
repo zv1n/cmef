@@ -332,7 +332,6 @@ public class PriceCLE extends JFrame
 				{
 					String valConditions = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
 					thisState.setValidConditions(valConditions);
-
 				}
 				else if(line.contains("END"))
 				{
@@ -846,7 +845,7 @@ public class PriceCLE extends JFrame
 			return;
 		}
 		
-		if (m_LastState.getState() == PCLE_State.SHOW_POINT_NOTIFICATION) {
+		if (m_LastState != null && m_LastState.getState() == PCLE_State.SHOW_POINT_NOTIFICATION) {
 			int numCorrect = -1;
 			int actualNumCorrect = getUserPoints(m_iTrialNumber);
 			
