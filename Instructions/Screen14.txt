@@ -1,7 +1,8 @@
 
 Now that you have completed the recall test for Trial 1, you will now be given the
 opportunity to study a second set of words.  Before you begin the Trial 2 study phase
-we would like to know how many of the items you expect to be able to learn.  Please
-select a number from the combobox below between 0 and 18, then click "Continue".
+we would like to know how many of the items you expect to be able to learn.  Please 
+type a number between 0 and 18 in the box below, then click "Continue".
+
 
 

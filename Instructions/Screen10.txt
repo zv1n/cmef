@@ -4,14 +4,17 @@ clicking on the "Finished Studying" button) the countdown clock will stop and th
 grid will automatically reappear and you will have the opportunity to select other
 items to study.  To allow you to easily keep track of which items you have studied
 within a grid, once an item has been selected for study it will turn red while
-unselected items will remain green.  You may select unstudied (green) items or
-restudy previously selected (red) items as long as time remains on the clock.  If
-you have studied all the items within a grid that you wish to study and time still
-remains on the clock, you can indicate that you wish to move on to the next grid by
-clicking the "Finished studying this grid" button at the bottom of the grid screen.
-Clicking this button will  automatically bring up the next grid and restart the
+unselected items will remain green.  
+
+You may select unstudied (green) items or restudy previously selected (red) items 
+as long as time remains on the clock.  If you have studied all the items within a 
+grid that you wish to study and time still remains on the clock, you can indicate 
+that you wish to move on to the next grid by clicking the "Finished studying this 
+grid" button at the bottom of the grid screen.
+
+Clicking this button will automatically bring up the next grid and restart the
 countdown clock.  Once time has elapsed or you indicate you have finished studying
-all three grids you will be asked to try and recall the English equivalents for each
+both the grids you will be asked to try and recall the English equivalents for each
 of the 18 Chinese words.  
 
 Please click "Continue" to begin the Trial 1 study phase
