@@ -1,0 +1,3 @@
+Thank you for estimating how many characters you got correct. Each character you 
+correctly recalled was worth a certain number of points. Please hit "Continue" to see how 
+many points you earned on the last trial. 
