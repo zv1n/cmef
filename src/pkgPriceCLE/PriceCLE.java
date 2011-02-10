@@ -127,6 +127,9 @@ public class PriceCLE extends JFrame
 	/** Number of study times for each character to be written to file */
 	private int m_iMaxStudyTimes;
 	
+	/** Set to TRUE Is the Record State has been displayed alread */
+	private boolean m_bDataRecorded;
+	
 	/** Title font used for large labels */
 	public static final Font SysTitleFontB = new Font("SansSerif", Font.BOLD, 28);
 	
@@ -150,6 +153,8 @@ public class PriceCLE extends JFrame
 	//-----------------------------------------------
 	public PriceCLE()
 	{
+		m_bDataRecorded = false;
+		
 		this.setSize(1024, 768);
 		this.setLocation(50, 50);
 		this.setTitle("Price Chinese Learning Experiment");
@@ -289,6 +294,7 @@ public class PriceCLE extends JFrame
 		BufferedReader	bufReader = null;
 		String 			line;
 		PCLE_State 		thisState = null;
+		boolean			recordState = false;
 		
 		// Open the file
 		try
@@ -339,7 +345,18 @@ public class PriceCLE extends JFrame
 					{
 						thisState.setChangeStateAction(PCLE_State.CLICK_CONTINUE);
 					}
-				
+					if(line.contains("Record"))
+					{
+						if (!recordState) {
+							thisState.setRecordState();
+							recordState = true;
+						} else {
+							JOptionPane.showMessageDialog(this, 
+									"Error: Only one State in the Experiments file is allowed to specify a \"Record\" option!",
+									"Error In Experiments File!", JOptionPane.ERROR_MESSAGE);
+							return false;	
+						}
+					}
 				}
 				// Check for options in "Rate Ease of Learning"
 				else if(line.contains("Rate Ease of Learning"))
@@ -391,6 +408,10 @@ public class PriceCLE extends JFrame
 					"Error: Unable to read " + m_sExpFileName, 
 					"Error Reading Experiment File", JOptionPane.ERROR_MESSAGE);
 			return false;
+		}
+		
+		if (!recordState) {
+			((PCLE_State)m_vExpStates.lastElement()).setRecordState();
 		}
 		// Build vectors of images
 		//    Images  1-12 --- Easy
@@ -686,6 +707,9 @@ public class PriceCLE extends JFrame
 	//--------------------------------------------------------------------
 	public void postStatusMessage(String msg, boolean giveTime)
 	{
+		// If the data has already been recorded, the file will be closed...
+		if (m_bDataRecorded)
+			return;
 		String line;
 		try
 		{
@@ -746,10 +770,12 @@ public class PriceCLE extends JFrame
 			break;
 		}
 		m_iCurStateIdx++;
-		
+
+
 		// See if we are done and if so write out all the data in 
 		// comma separated format.
-		if(m_iCurStateIdx >= m_vExpStates.size())
+		//if(m_iCurStateIdx >= m_vExpStates.size())
+		if ((m_CurState != null) && m_CurState.isRecordState())
 		{
 			try
 			{
@@ -835,17 +861,25 @@ public class PriceCLE extends JFrame
 			}
 			catch(Exception e)
 			{}
+			m_bDataRecorded = true;
+		}
+
+		if (m_iCurStateIdx >= m_vExpStates.size()) {
 			// Terminate the experiment
 			System.exit(0);
 		}
+		
 		m_LastState = m_CurState;
-		m_CurState = (PCLE_State)m_vExpStates.elementAt(m_iCurStateIdx);
+		m_CurState = (PCLE_State)m_vExpStates.elementAt(m_iCurStateIdx);		
+		
 		if (!m_CurState.validCondition(sCondition)) {
 			this.setNextState();
 			return;
 		}
 		
-		if (m_LastState != null && m_LastState.getState() == PCLE_State.SHOW_POINT_NOTIFICATION) {
+		if (m_LastState != null && 
+			m_LastState.getState() == PCLE_State.SHOW_POINT_NOTIFICATION &&
+			m_LastState.validCondition(sCondition)) {
 			int numCorrect = -1;
 			int actualNumCorrect = getUserPoints(m_iTrialNumber);
 			
@@ -870,7 +904,8 @@ public class PriceCLE extends JFrame
 			case PCLE_State.SHOW_POINT_NOTIFICATION :
 				if((m_LastState != null) && 
 					(m_LastState.getState() != PCLE_State.SHOW_INSTRUCTIONS &&
-					 m_LastState.getState() != PCLE_State.SHOW_POINT_NOTIFICATION))
+					 (m_LastState.getState() != PCLE_State.SHOW_POINT_NOTIFICATION ||
+							 !m_LastState.validCondition(sCondition))))
 				{
 					m_InstructionsPan.setVisible(true);
 					m_ContinueButton.setVisible(true);

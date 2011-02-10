@@ -23,6 +23,7 @@ public class PCLE_State
 	//----- Vars for show condtion validation -----
 	private String m_sValidConditions;
 	private boolean m_bRequireCondition;
+	private boolean m_bRecordState;
 	
 	//----- Vars for all modes -----
 	private int m_iChangeStateBy;
@@ -103,6 +104,22 @@ public class PCLE_State
 	public String getInstructionFile()
 	{
 		return m_sInsFileName;
+	}
+
+	//---------------------------------------------------------
+	/** Is this state a Record state? */
+	//---------------------------------------------------------
+	public boolean isRecordState()
+	{
+		return m_bRecordState;
+	}
+
+	//---------------------------------------------------------
+	/** Set a Record State */
+	//---------------------------------------------------------
+	public void setRecordState()
+	{
+		m_bRecordState = true;
 	}
 
 	//---------------------------------------------------------
