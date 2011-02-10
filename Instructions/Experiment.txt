@@ -111,7 +111,7 @@
 	<STATE>
 		MODE="Estimate Number Correct"
 		FILE="../../Instructions/Screen18.txt"
-		END="On Click Continue"
+		END="On Click Continue And Record"
 	</STATE>
 	<STATE>
 		MODE="Show Point Notification"
