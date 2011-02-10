@@ -1,0 +1,8 @@
+
+Now that you have finished studying items in Trial 2 we would like to know how many
+items you expect to be able to correctly recall on the upcoming recall test.  Please
+select a number from the combobox below between 0 and 18, then click "Continue".
+
+
+
+

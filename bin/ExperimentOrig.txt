@@ -1,0 +1,106 @@
+<EXPERIMENT>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen1.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen2.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen3.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Rate Ease of Learning"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen4.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Estimate Number to Remember Pretrial"
+		FILE="../../Instructions/Screen5.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen6.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen7.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen8.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen9.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen10.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Learning Phase"
+	</STATE>
+	<STATE>
+		MODE="Estimate Number to Remember Posttrial"
+		FILE="../../Instructions/Screen11.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen12.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Estimate Number Correct"
+		FILE="../../Instructions/Screen13.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Estimate Number to Remember Pretrial"
+		FILE="../../Instructions/Screen14.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen15.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Learning Phase"
+	</STATE>
+	<STATE>
+		MODE="Estimate Number to Remember Posttrial"
+		FILE="../../Instructions/Screen16.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen17.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Estimate Number Correct"
+		FILE="../../Instructions/Screen18.txt"
+		END="On Click Continue"
+	</STATE>
+	<STATE>
+		MODE="Show Instructions"
+		FILE="../../Instructions/Screen19.txt"
+		END="On Click Continue"
+	</STATE>
+</EXPERIMENT>

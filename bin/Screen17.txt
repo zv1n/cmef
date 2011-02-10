@@ -1,0 +1,7 @@
+
+You are now ready to begin the Trial 2 recall test.  As in Trial 1, each Chinese
+character will appear, one at a time, and you should try and recall its English
+equivalent.  If you are unable to recall the English equivalent then press any letter
+on the keyboard and click "Continue" to move on to the next word.  Please click
+"Continue" to begin the Trial 2 recall test.
+

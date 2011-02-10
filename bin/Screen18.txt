@@ -1,0 +1,5 @@
+
+Now that you have completed the recall test we would like to know how many of the 18
+items you believe you correctly recalled.  Please select a number from the combobox
+below between 0 and 18, then click "Continue".
+
