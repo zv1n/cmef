@@ -1,4 +1,4 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,7 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 //====================================================================
-/** PCLE_StudyPanel
+/** CmeStudy
  *  <P>Purpose: This panel displays one image and the English 
  *  translation for the Price Chinese Learning Experiment.
  *  @author Dr. Rick Coleman
@@ -20,10 +20,10 @@ import javax.swing.JPanel;
  */
 //===================================================================
 
-public class PCLE_StudyPanel extends JDialog
+public class CmeStudy extends JDialog
 {
 	/** Parent panel */
-	private PCLE_ImagePanel m_Parent;
+	private CmeExperiment m_Parent;
 	
 	/** Done studying button */
 	private JButton m_DoneBtn;
@@ -32,7 +32,7 @@ public class PCLE_StudyPanel extends JDialog
 	private JPanel m_MainPanel;
 	
 	/** Image to draw */
-	private PCLE_Image m_PImage;
+	private CmeImage m_PImage;
 	
 	/** Width of image area */
 	private int m_iImgAreaWt;
@@ -49,11 +49,11 @@ public class PCLE_StudyPanel extends JDialog
 	//---------------------------------------------------
 	/** Default constructor */
 	//---------------------------------------------------
-	public PCLE_StudyPanel(PCLE_ImagePanel parent)
+	public CmeStudy(CmeExperiment parent)
 	{
 		m_Parent = parent;
 		// Center this frame on the parent frame
-		PriceCLE parentFrame = m_Parent.getParentFrame();
+		CmeApp parentFrame = m_Parent.getParentFrame();
 		int parentXPos = parentFrame.getLocation().x;
 		int parentYPos = parentFrame.getLocation().y;
 		int parentWidth = parentFrame.getSize().width;
@@ -102,7 +102,7 @@ public class PCLE_StudyPanel extends JDialog
 	//----------------------------------------------------
 	/** Set the PCLE_Image to display */
 	//----------------------------------------------------
-	public void setImage(PCLE_Image img)
+	public void setImage(CmeImage img)
 	{
 		m_PImage = img;
 	}
@@ -110,7 +110,7 @@ public class PCLE_StudyPanel extends JDialog
 	//----------------------------------------------------
 	/** Get the PCLE_Image displayed */
 	//----------------------------------------------------
-	public PCLE_Image getImage()
+	public CmeImage getImage()
 	{
 		return m_PImage;
 	}
@@ -130,7 +130,7 @@ public class PCLE_StudyPanel extends JDialog
 				m_iImgAreaY + ((m_iImgAreaHt - img.getHeight(null)) / 2), null);
 //		g.drawImage(img, 40, m_iImgAreaY + 10, null);
 		String str = m_PImage.getReferenceName();
-		g.setFont(PriceCLE.SysTitleFontB);
+		g.setFont(CmeApp.SysTitleFontB);
 		g.setColor(Color.BLACK);
 		g.drawString(str, m_iImgAreaX+(m_iImgAreaWt / 2)+100, 
 				210);

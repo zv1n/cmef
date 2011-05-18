@@ -1,9 +1,9 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import javax.swing.JOptionPane;
 
 //====================================================================
-/** PCLE_State
+/** CmeState
  *  <P>Purpose: This class defines the different states in which
  *  an experiment can exist in.
  *  @author Dr. Rick Coleman
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  */
 //===================================================================
 
-public class PCLE_State
+public class CmeState
 {
 	/** State for this state */
 	private int m_iState;
@@ -53,7 +53,7 @@ public class PCLE_State
 	//---------------------------------------------------------
 	/** Default constructor */
 	//---------------------------------------------------------
-	public PCLE_State()
+	public CmeState()
 	{
 		m_bRequireCondition = false;
 	}

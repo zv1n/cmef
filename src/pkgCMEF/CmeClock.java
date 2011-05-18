@@ -1,4 +1,4 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,7 +11,7 @@ import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
-/** PCLE_ClockPanel
+/** CmeClock
  *  <P>Purpose: This panel displays and counts down a clock for the
  *  Price Chinese Learning Experiment.
  *  @author Dr. Rick Coleman
@@ -20,7 +20,7 @@ import javax.swing.border.BevelBorder;
  */
 //===================================================================
 
-public class PCLE_ClockPanel extends JPanel
+public class CmeClock extends JPanel
 {
 	/** Initial time in seconds */
 	private int m_iInitTime;
@@ -43,7 +43,7 @@ public class PCLE_ClockPanel extends JPanel
 	//---------------------------------------------------
 	/** Default constructor */
 	//---------------------------------------------------
-	public PCLE_ClockPanel()
+	public CmeClock()
 	{
 		this.setSize(45, 35);
 		// Creater sets the location
@@ -114,7 +114,7 @@ public class PCLE_ClockPanel extends JPanel
 		g.setColor(Color.WHITE);
 		g.fillRect(m_iClockLeft, m_iClockTop, m_iClockWidth, m_iClockHeight);
 		// Print the seconds
-		g.setFont(PriceCLE.SysTitleFontB);
+		g.setFont(CmeApp.SysTitleFontB);
 		g.setColor(Color.BLACK);
 		// Draw the 10s if needed
 		if((m_iCurTime / 10) > 0)	

@@ -1,4 +1,4 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import java.awt.Color;
 
@@ -30,7 +30,7 @@ import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
-/** PCLE_ImagePanel
+/** CmeExperiment
  *  <P>Purpose: This panel displays 2 rows of 3 images for the
  *  Price Chinese Learning Experiment.
  *  @author Dr. Rick Coleman
@@ -39,10 +39,10 @@ import javax.swing.border.BevelBorder;
  */
 //===================================================================
 
-public class PCLE_ImagePanel extends JPanel implements MouseListener
+public class CmeExperiment extends JPanel implements MouseListener
 {
 	/** The parent application JFrame */
-	private PriceCLE m_Parent;
+	private CmeApp m_Parent;
 
 	/** Text area width */
 	private int m_iTextFrameWidth;
@@ -57,7 +57,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	private int m_iTextFrameTopY;
 		
 	/** The image factory */
-	private PCLE_ImageFactory m_ImageFactory;
+	private CmeImageFactory m_ImageFactory;
 	
 	/** Current display state */
 	private int m_State;
@@ -143,7 +143,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	private boolean m_bClockIsRunning;
 	
 	/** Clock panel for showing the time */
-	private PCLE_ClockPanel m_Clock;
+	private CmeClock m_Clock;
 	
 	/** Vector of string currently being displayed for estimate number to remember*/
 	private Vector m_vTextStrings;
@@ -230,7 +230,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	private int[] m_iStudied;
 	
 	/** Study panel for display of Chinese image and English translation */
-	private PCLE_StudyPanel m_StudyPan;
+	private CmeStudy m_StudyPan;
 	
 	/** Clock reading when a studying was begun */
 	private int m_iStartStudyTime;
@@ -266,7 +266,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	//--------------------------------------------
 	// Default constructor
 	//--------------------------------------------
-	public PCLE_ImagePanel(PriceCLE parent, int width, int height)
+	public CmeExperiment(CmeApp parent, int width, int height)
 	{
 		this.m_Parent = parent;
 		
@@ -278,7 +278,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		this.addMouseListener(this);
 		
 		// Create the clock panel
-		m_Clock = new PCLE_ClockPanel();
+		m_Clock = new CmeClock();
 		m_Clock.setLocation((this.getWidth() - m_Clock.getWidth()) / 2, 
 				this.getHeight() - 105);
 		this.add(m_Clock);
@@ -311,34 +311,34 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		
 		// Add the instructions
 		tempLbl = new JLabel("Rate how easy or difficult this Chinese word will be to learn then click Continue.");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(width - 35, 20);
 		tempLbl.setLocation(182, 5);
 		m_EOLPanel.add(tempLbl);
 
 		// Draw a line across the panel
 		tempLbl = new JLabel("_____________________________________________________________________________");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(width - 35, 20);
 		tempLbl.setLocation(100, rbY-20);
 		m_EOLPanel.add(tempLbl);
 
 		// Create another label to hide behind the m_EOLPanel
 		m_HowEasyLbl = new JLabel("Rate how easy or difficult this Chinese word will be to learn then click Continue.");
-		m_HowEasyLbl.setFont(PriceCLE.SysSmallFont);
+		m_HowEasyLbl.setFont(CmeApp.SysSmallFont);
 		m_HowEasyLbl.setSize(width - 35, 20);
 		m_HowEasyLbl.setLocation(182, 350);
 		this.add(m_HowEasyLbl);
 
 		m_LineUnderLbl = new JLabel("_____________________________________________________________________________");
-		m_LineUnderLbl.setFont(PriceCLE.SysSmallFont);
+		m_LineUnderLbl.setFont(CmeApp.SysSmallFont);
 		m_LineUnderLbl.setSize(width - 35, 20);
 		m_LineUnderLbl.setLocation(100, 350);
 		this.add(m_LineUnderLbl);
 
 		// Create the rating 1 radio button and label
 		tempLbl = new JLabel("1");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -359,7 +359,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Add the "Easy" label
 		tempLbl = new JLabel("Easy");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(50, lblSize);
 		tempLbl.setLocation(lblX-13, lblY+15);
 		m_EOLPanel.add(tempLbl);
@@ -369,7 +369,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		
 		// Create the rating 2 radio button and label
 		tempLbl = new JLabel("2");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -393,7 +393,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		
 		// Create the rating 3 radio button and label
 		tempLbl = new JLabel("3");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -417,7 +417,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Create the rating 4 radio button and label
 		tempLbl = new JLabel("4");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -441,7 +441,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Create the rating 5 radio button and label
 		tempLbl = new JLabel("5");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -462,7 +462,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		
 		// Add the "Medium" label
 		tempLbl = new JLabel("Medium");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(75, lblSize);
 		tempLbl.setLocation(lblX-23, lblY+15);
 		m_EOLPanel.add(tempLbl);
@@ -472,7 +472,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Create the rating 6 radio button and label
 		tempLbl = new JLabel("6");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -496,7 +496,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Create the rating 7 radio button and label
 		tempLbl = new JLabel("7");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -520,7 +520,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Create the rating 8 radio button and label
 		tempLbl = new JLabel("8");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -544,7 +544,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Create the rating 9 radio button and label
 		tempLbl = new JLabel("9");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(lblSize, lblSize);
 		tempLbl.setLocation(lblX, lblY);
 		m_EOLPanel.add(tempLbl);
@@ -585,7 +585,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		// m_NullRB
 		// Add the "Hard" label
 		tempLbl = new JLabel("Hard");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(50, lblSize);
 		tempLbl.setLocation(lblX-119, lblY+15);
 		m_EOLPanel.add(tempLbl);
@@ -628,7 +628,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 						m_EaseRatings[m_iERIdx] = m_iEaseRating;
 						m_iERIdx++;
 						// Get the image and store the rating
-						PCLE_Image img = (PCLE_Image)(m_vImgVec.elementAt(m_EOLOrder[m_iImgIdx]));
+						CmeImage img = (CmeImage)(m_vImgVec.elementAt(m_EOLOrder[m_iImgIdx]));
 						img.setEOLRate(m_iEaseRating);
 
 						m_EOLPanel.setVisible(false); // Hide the panel
@@ -636,7 +636,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 						m_Clock.setVisible(true); // Show the clock
 						m_iImgIdx++; // Next image
 						if(m_iImgIdx < m_EOLOrder.length)
-						     name = ((PCLE_Image)m_vImgVec.elementAt(m_EOLOrder[m_iImgIdx])).getReferenceName();
+						     name = ((CmeImage)m_vImgVec.elementAt(m_EOLOrder[m_iImgIdx])).getReferenceName();
 						else
 							name = "Sample";
 						if(name.contains("Sample")) // Time to quit
@@ -648,7 +648,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 						}
 						else
 						{
-							if(m_State == PCLE_State.RATE_EASE_OF_LEARNING)
+							if(m_State == CmeState.RATE_EASE_OF_LEARNING)
 							{
 								m_Clock.setInitialTime(3); // Set for 3 seconds
 								m_iSecondsRemaining = m_iInitialTime; // Reset for 3 seconds
@@ -678,27 +678,27 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		
 		// Add the labels for Number to Remember
 		m_ENRNumToRemLbl1 = new JLabel("Click in the edit box to select the number you think you");
-		m_ENRNumToRemLbl1.setFont(PriceCLE.SysSmallFont);
+		m_ENRNumToRemLbl1.setFont(CmeApp.SysSmallFont);
 		m_ENRNumToRemLbl1.setSize(width - 35, 20);
 		m_ENRNumToRemLbl1.setLocation(300, lblY);
 		m_ENRPanel.add(m_ENRNumToRemLbl1);
 		
 		m_ENRNumToRemLbl2 = new JLabel("will be able to remember (0-18) then click Continue.");
-		m_ENRNumToRemLbl2.setFont(PriceCLE.SysSmallFont);
+		m_ENRNumToRemLbl2.setFont(CmeApp.SysSmallFont);
 		m_ENRNumToRemLbl2.setSize(width - 35, 20);
 		m_ENRNumToRemLbl2.setLocation(310, lblY+15);
 		m_ENRPanel.add(m_ENRNumToRemLbl2);
 		
 		// Add the labels for Number Answered Correctly
 		m_ENRNumCorrectLbl1 = new JLabel("Click in the edit box to select the number you think you");
-		m_ENRNumCorrectLbl1.setFont(PriceCLE.SysSmallFont);
+		m_ENRNumCorrectLbl1.setFont(CmeApp.SysSmallFont);
 		m_ENRNumCorrectLbl1.setSize(width - 35, 20);
 		m_ENRNumCorrectLbl1.setLocation(300, lblY);
 		m_ENRPanel.add(m_ENRNumCorrectLbl1);
 		m_ENRNumCorrectLbl1.setVisible(false);
 		
 		m_ENRNumCorrectLbl2 = new JLabel("answered correctly (0-18) then click Continue.");
-		m_ENRNumCorrectLbl2.setFont(PriceCLE.SysSmallFont);
+		m_ENRNumCorrectLbl2.setFont(CmeApp.SysSmallFont);
 		m_ENRNumCorrectLbl2.setSize(width - 35, 20);
 		m_ENRNumCorrectLbl2.setLocation(325, lblY+15);
 		m_ENRPanel.add(m_ENRNumCorrectLbl2);
@@ -765,7 +765,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 						// Get the estimate from the combobox
 						switch(m_State)
 						{
-							case PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_PRE:
+							case CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE:
 							{
 								if(m_ENRPre1 == -1) // Haven't gotten this one yet
 								{
@@ -785,7 +785,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 								}
 							break;
 							}
-							case PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_POST:
+							case CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST:
 							{
 								if(m_ENRPost1 == -1) // Haven't gotten this one yet
 								{
@@ -805,7 +805,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 								}	
 							break;
 							}
-							case PCLE_State.ESTIMATE_NUMBER_CORRECT:
+							case CmeState.ESTIMATE_NUMBER_CORRECT:
 							{
 								if(m_ENC1 == -1) // Haven't gotten this one yet
 								{
@@ -860,7 +860,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 			m_iStudied[i] = 0; // Not studied
 		
 		// Create the study panel
-		m_StudyPan = new PCLE_StudyPanel(this);
+		m_StudyPan = new CmeStudy(this);
 		m_StudyPan.setVisible(false);
 		
 		// Create the done studying grid button
@@ -911,14 +911,14 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 
 		// Add the instructions above
 		tempLbl = new JLabel("Enter your answer here:");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(360, 20);
 		tempLbl.setLocation(340, 20);
 		m_TestPanel.add(tempLbl);
 
 		// Add the instructions below
 		tempLbl = new JLabel("If what you are typing does not appear click in the text box then try again.");
-		tempLbl.setFont(PriceCLE.SysSmallFont);
+		tempLbl.setFont(CmeApp.SysSmallFont);
 		tempLbl.setSize(600, 20);
 		tempLbl.setLocation(225, 50);
 		m_TestPanel.add(tempLbl);
@@ -976,7 +976,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 							m_vImgVec = m_ImageFactory.getImagesVector();
 
 						// Get the image and store the answer
-						PCLE_Image img = (PCLE_Image)(m_vImgVec.elementAt(group[grpIdx]));
+						CmeImage img = (CmeImage)(m_vImgVec.elementAt(group[grpIdx]));
 						if(img == null)
 							System.out.println("img is null.");
 
@@ -1099,7 +1099,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	//--------------------------------------------
 	/** Get a reference to the parent JFrame */
 	//--------------------------------------------
-	public PriceCLE getParentFrame()
+	public CmeApp getParentFrame()
 	{
 		return m_Parent;
 	}
@@ -1124,25 +1124,25 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		g.drawLine(m_iTextFrameLeftX, m_iTextFrameTopY,
 				m_iTextFrameLeftX, m_iTextFrameTopY + m_iTextFrameHeight);
 		
-		if(m_State == PCLE_State.RATE_EASE_OF_LEARNING)
+		if(m_State == CmeState.RATE_EASE_OF_LEARNING)
 		{
 			// Make sure we don't try to draw before our next state is set
 			if(m_iImgIdx < m_EOLOrder.length)
 			{
 				// Get the current image
-				Image img = ((PCLE_Image)m_vImgVec.elementAt(m_EOLOrder[m_iImgIdx])).getImage();
+				Image img = ((CmeImage)m_vImgVec.elementAt(m_EOLOrder[m_iImgIdx])).getImage();
 				g.drawImage(img,(m_iTextFrameWidth - img.getWidth(null))/2, 
 						(m_iTextFrameHeight - img.getHeight(null))/2, null);
 			}
 		}
-		else if((m_State == PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_PRE) ||
-				(m_State == PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_POST) ||
-				(m_State == PCLE_State.ESTIMATE_NUMBER_CORRECT))
+		else if((m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE) ||
+				(m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST) ||
+				(m_State == CmeState.ESTIMATE_NUMBER_CORRECT))
 		{
 			int curY = this.m_iTopY;
 			// Draw all the strings
 			g.setColor(Color.black);
-			g.setFont(PriceCLE.SysInstructionFont);
+			g.setFont(CmeApp.SysInstructionFont);
 			for(int i=0; i<m_vTextStrings.size(); i++)
 			{
 				String str = (String)m_vTextStrings.elementAt(i);
@@ -1151,7 +1151,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 				curY+=15;
 			}			
 		}
-		else if(m_State == PCLE_State.LEARNING)
+		else if(m_State == CmeState.LEARNING)
 		{
 			// Draw the grid of images
 			int[] theArray = null;
@@ -1162,7 +1162,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 			}
 			if(theArray == null) return; // Don't draw anything
 			
-			g.setFont(PriceCLE.SysTitleFontB);
+			g.setFont(CmeApp.SysTitleFontB);
 			for(int i=0; i<9; i++)
 			{
 				// Get the image to draw
@@ -1240,7 +1240,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 				}
 			}
 		}
-		else if(m_State == PCLE_State.TESTING)
+		else if(m_State == CmeState.TESTING)
 		{
 			if (m_iRemainingCount < 0)
 				return;
@@ -1286,7 +1286,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	    	  m_Parent.setNextState();
 	    	  return;
 		}*/
-		m_State = PCLE_State.RATE_EASE_OF_LEARNING;
+		m_State = CmeState.RATE_EASE_OF_LEARNING;
 		m_iImgIdx = 0;
 		m_vImgVec = m_ImageFactory.getImagesVector();
 		paint(getGraphics());
@@ -1341,7 +1341,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 					"Error Reading File", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		if(m_State == PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_PRE)
+		if(m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE)
 		{
 			m_HowEasyLbl.setVisible(false);
 			m_LineUnderLbl.setVisible(false);
@@ -1353,7 +1353,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 			m_bEstNumDone = false;
 			this.paint(this.getGraphics());
 		}
-		else if(m_State == PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_POST)
+		else if(m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST)
 		{
 			m_HowEasyLbl.setVisible(false);
 			m_LineUnderLbl.setVisible(false);
@@ -1391,7 +1391,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		m_iGroupDisplayed = 1;
 		m_iTrialNumber++;
 		
-		m_State = PCLE_State.LEARNING;
+		m_State = CmeState.LEARNING;
 		this.m_Clock.setVisible(true);
 		this.m_DoneStudyingGridBtn.setEnabled(true);
 		this.m_DoneStudyingGridBtn.setVisible(true);
@@ -1435,7 +1435,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 			m_iRemainingIdx[i] = m_iRemainingIdx[i+1];
 		
 		m_iTestGroup = 0;
-		m_State = PCLE_State.TESTING;
+		m_State = CmeState.TESTING;
 		this.m_Clock.setVisible(false);
 		this.m_TestPanel.setVisible(true);
 		m_TestAnswer.requestFocus();
@@ -1444,7 +1444,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	//-------------------------------------------------------
 	/** Set a reference to the image factory */
 	//-------------------------------------------------------
-	public void setImageFactory(PCLE_ImageFactory iFact)
+	public void setImageFactory(CmeImageFactory iFact)
 	{
 		m_ImageFactory = iFact;
 	}
@@ -1566,7 +1566,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	//-------------------------------------------------------
 	/** Get a reference to the clock */
 	//-------------------------------------------------------
-	public PCLE_ClockPanel getClock()
+	public CmeClock getClock()
 	{
 		return m_Clock;
 	}
@@ -1604,7 +1604,7 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 	//-------------------------------------------------------
 	public void mouseReleased(MouseEvent e)
 	{
-		if(m_State != PCLE_State.LEARNING) return;
+		if(m_State != CmeState.LEARNING) return;
 		
 		if(this.m_StudyPan.isVisible())
 		{
@@ -1648,19 +1648,19 @@ public class PCLE_ImagePanel extends JPanel implements MouseListener
 		paint(getGraphics());
 		// Show the study panel
 		Vector vec = m_ImageFactory.getImagesVector();
-		PCLE_Image theImg;
+		CmeImage theImg;
 		
 		if(this.m_iGroupDisplayed == 1)
 		{
-			theImg = (PCLE_Image)(vec.elementAt(m_iGroup1[selIdx]));
+			theImg = (CmeImage)(vec.elementAt(m_iGroup1[selIdx]));
 			m_StudyPan.setImage(theImg);
 			this.m_Parent.postStatusMessage(" - Studying " + theImg.getReferenceName() +
 					". Clock = " + m_Clock.getTimeRemaining() + " seconds.", true);
 		}
 		else if(this.m_iGroupDisplayed == 2)
 		{
-			theImg = (PCLE_Image)(vec.elementAt(m_iGroup2[selIdx]));
-			m_StudyPan.setImage((PCLE_Image)(vec.elementAt(m_iGroup2[selIdx])));
+			theImg = (CmeImage)(vec.elementAt(m_iGroup2[selIdx]));
+			m_StudyPan.setImage((CmeImage)(vec.elementAt(m_iGroup2[selIdx])));
 			this.m_Parent.postStatusMessage(" - Studying " + theImg.getReferenceName()+
 					". Clock = " + m_Clock.getTimeRemaining() + " seconds.", true);
 		}

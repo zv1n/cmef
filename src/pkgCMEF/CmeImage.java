@@ -1,4 +1,4 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 *   @author Dr. Rick Coleman
 */
 //=====================================================================
-public class PCLE_Image
+public class CmeImage
 {
 
     /** Reference to the image icon */
@@ -74,7 +74,7 @@ public class PCLE_Image
 	//-------------------------------------------------
 	/** Default constructor */
 	//-------------------------------------------------
-	public PCLE_Image(String refName, String imgName)
+	public CmeImage(String refName, String imgName)
 	{
 		m_sRefName = refName;
 		m_sImageName = imgName;

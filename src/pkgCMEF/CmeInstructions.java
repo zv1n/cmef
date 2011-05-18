@@ -1,4 +1,4 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,7 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
-/** PCLE_InstructionsPanel
+/** CmeInstructions
  *  <P>Purpose: This panel displays a JTextArea object for display
  *  instructions.
  *  @author Dr. Rick Coleman
@@ -31,10 +31,10 @@ import javax.swing.border.BevelBorder;
  */
 //===================================================================
 
-public class PCLE_InstructionsPanel extends JPanel
+public class CmeInstructions extends JPanel
 {
 	/** Parent frame */
-	PriceCLE m_Parent;
+	CmeApp m_Parent;
 	
 	/** Text area width */
 	private int m_iTextFrameWidth;
@@ -61,7 +61,7 @@ public class PCLE_InstructionsPanel extends JPanel
 	private Vector m_vTextStrings;
 	
 	/** The image factory */
-	private PCLE_ImageFactory m_ImageFactory;
+	private CmeImageFactory m_ImageFactory;
 	
 	/** The text area where instructions are displayed */
 //	private JTextArea m_Instructions;
@@ -72,7 +72,7 @@ public class PCLE_InstructionsPanel extends JPanel
 	//----------------------------------------------------------------
 	/** Default constructor */
 	//----------------------------------------------------------------
-	public PCLE_InstructionsPanel(int width, int height, PriceCLE parent)
+	public CmeInstructions(int width, int height, CmeApp parent)
 	{
 		m_Parent = parent;
 		
@@ -93,7 +93,7 @@ public class PCLE_InstructionsPanel extends JPanel
 		m_iLeftX = 21;
 		
 		JLabel tempLbl = new JLabel("Instructions:");
-		tempLbl.setFont(PriceCLE.SysTitleFontB);
+		tempLbl.setFont(CmeApp.SysTitleFontB);
 		tempLbl.setSize(200, 25);
 		tempLbl.setLocation(25, 5);
 		this.add(tempLbl);
@@ -169,7 +169,7 @@ public class PCLE_InstructionsPanel extends JPanel
 				m_iTextFrameLeftX, m_iTextFrameTopY + m_iTextFrameHeight);
 		// Draw all the strings
 		g.setColor(Color.black);
-		g.setFont(PriceCLE.SysInstructionFont);
+		g.setFont(CmeApp.SysInstructionFont);
 		for(int i=0; i<m_vTextStrings.size(); i++)
 		{
 			String str = (String)m_vTextStrings.elementAt(i);
@@ -205,7 +205,7 @@ public class PCLE_InstructionsPanel extends JPanel
 	//-------------------------------------------------------
 	/** Set a reference to the image factory */
 	//-------------------------------------------------------
-	public void setImageFactory(PCLE_ImageFactory iFact)
+	public void setImageFactory(CmeImageFactory iFact)
 	{
 		m_ImageFactory = iFact;
 	}

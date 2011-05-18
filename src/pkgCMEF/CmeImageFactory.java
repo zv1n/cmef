@@ -1,4 +1,4 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import java.awt.Image;
 import java.io.BufferedReader;
@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  */
 //=============================================================================
 
-public class PCLE_ImageFactory
+public class CmeImageFactory
 {
 	/** Vector of PCLE_Image objects */
 	private Vector m_vImages;
@@ -26,7 +26,7 @@ public class PCLE_ImageFactory
 	//-------------------------------------------------
 	/** Default constructor */
 	//-------------------------------------------------
-	public PCLE_ImageFactory()
+	public CmeImageFactory()
 	{
 		// Create the vector to hold all images
 		m_vImages = new Vector();
@@ -51,7 +51,7 @@ public class PCLE_ImageFactory
 		try
 		{
 			bufReader = new BufferedReader(instFile);
-			PCLE_Image img;
+			CmeImage img;
 			
 			// For each line in the file
 			while((line = bufReader.readLine()) != null)
@@ -59,7 +59,7 @@ public class PCLE_ImageFactory
 				// Parse the name key and image name
 				String[] strs = line.split(" ");
 				// Create the image and add to the vector of images
-				img = new PCLE_Image(strs[0], strs[1]);
+				img = new CmeImage(strs[0], strs[1]);
 				m_vImages.add(img);
 			}
 		}
@@ -79,7 +79,7 @@ public class PCLE_ImageFactory
 	{
 		for(int i=0; i<m_vImages.size(); i++)
 		{
-			PCLE_Image img = (PCLE_Image)m_vImages.elementAt(i);
+			CmeImage img = (CmeImage)m_vImages.elementAt(i);
 			if(refName.compareTo(img.getReferenceName()) == 0)
 			{
 				return img.getImage();
@@ -94,7 +94,7 @@ public class PCLE_ImageFactory
 	public Image getImage(int idx)
 	{
 		if((idx < 0) || (idx >= m_vImages.size())) return null;
-		return ((PCLE_Image)m_vImages.elementAt(idx)).getImage();
+		return ((CmeImage)m_vImages.elementAt(idx)).getImage();
 	}
 	
 	//-------------------------------------------------------------
@@ -103,7 +103,7 @@ public class PCLE_ImageFactory
 	public String getReferenceName(int idx)
 	{
 		if((idx < 0) || (idx >= m_vImages.size())) return null;
-		return ((PCLE_Image)m_vImages.elementAt(idx)).getReferenceName();
+		return ((CmeImage)m_vImages.elementAt(idx)).getReferenceName();
 	}
 	
 	//-------------------------------------------------------------
@@ -112,7 +112,7 @@ public class PCLE_ImageFactory
 	public String getImageValue(int idx)
 	{
 		if((idx < 0) || (idx >= m_vImages.size())) return null;
-		return String.valueOf(((PCLE_Image)m_vImages.elementAt(idx)).getImageValue());
+		return String.valueOf(((CmeImage)m_vImages.elementAt(idx)).getImageValue());
 	}
 	
 	//-------------------------------------------------------------

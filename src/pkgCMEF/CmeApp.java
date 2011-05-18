@@ -1,4 +1,4 @@
-package pkgPriceCLE;
+package pkgCMEF;
 
 import java.awt.Color;
 import java.awt.Dialog;
@@ -26,28 +26,28 @@ import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
-/** Price Chinese Learning Experiment
+/** Custom Memory Experiemnt Framework
  *  <P>Purpose: This application was designed and written for use
  *  as the primary experimental software for an experiment in 
  *  learning conducted by Jodi Price.
- *  @author Dr. Rick Coleman, Modified By Terry Meacham
- *  @version 1.0
- *  Date: January, 2009
+ *  @author Terry Meacham, Dr. Rick Coleman
+ *  @version 2.0
+ *  Date: May 2011
  */
 //===================================================================
-public class PriceCLE extends JFrame
+public class CmeApp extends JFrame
 {
 	/** Main panel */
 	private JPanel m_MainPanel;
 	
 	/** Instructions text area */
-	private PCLE_InstructionsPanel m_InstructionsPan;
+	private CmeInstructions m_InstructionsPan;
 	
 	/** Continue button */
 	private JButton m_ContinueButton;
 	
 	/** Image panel */
-	private PCLE_ImagePanel m_ImagePanel;
+	private CmeExperiment m_ImagePanel;
 	
 	/** Name of the experiment definition file */
 	private String m_sExpFileName = "Instructions/Experiment.txt";
@@ -59,13 +59,13 @@ public class PriceCLE extends JFrame
 	private int m_iCurStateIdx;
 	
 	/** Reference to the current state */
-	private PCLE_State m_CurState;
+	private CmeState m_CurState;
 	
 	/** Reference to the last state */
-	private PCLE_State m_LastState;
+	private CmeState m_LastState;
 	
 	/** Reference to the image factory */
-	private PCLE_ImageFactory m_ImageFactory;
+	private CmeImageFactory m_ImageFactory;
 	
 	/** ID of this subject */
 	private String m_sSubjectID;
@@ -96,12 +96,6 @@ public class PriceCLE extends JFrame
 
 	/** Array of all indices in both tests for checking EOL */
 	private int[] m_iEOLOrder;
-	
-	/** Array of indices (based on 18) for order of testing trial 1 */
-//	private int[] m_iTestOrder1;
-	
-	/** Array of indices (based on 18) for order of testing trial 1 */
-//	private int[] m_iTestOrder2;
 
 	/** User estimates: 0,3 = pretrial, 1,4 = posttrial, 2,5 = postdict */
 	private int[] m_iUserEstimates;
@@ -151,7 +145,7 @@ public class PriceCLE extends JFrame
 	//-----------------------------------------------
 	// Default constructor
 	//-----------------------------------------------
-	public PriceCLE()
+	public CmeApp()
 	{
 		m_bDataRecorded = false;
 		
@@ -170,12 +164,12 @@ public class PriceCLE extends JFrame
 		this.getContentPane().add(m_MainPanel);
 		
 		// Create and show the instructions panel
-		m_InstructionsPan = new PCLE_InstructionsPanel(1010, 686, this);
+		m_InstructionsPan = new CmeInstructions(1010, 686, this);
 		m_InstructionsPan.setLocation(-1, -1);
 		m_MainPanel.add(m_InstructionsPan);
 		
 		// Create the image panel
-		m_ImagePanel = new PCLE_ImagePanel(this, 1010, 728);
+		m_ImagePanel = new CmeExperiment(this, 1010, 728);
 		m_ImagePanel.setLocation(-1, -1);
 		m_MainPanel.add(m_ImagePanel);
 		m_ImagePanel.setVisible(false);
@@ -190,7 +184,7 @@ public class PriceCLE extends JFrame
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					if(m_CurState.getChangeStateAction() == PCLE_State.CLICK_CONTINUE) {
+					if(m_CurState.getChangeStateAction() == CmeState.CLICK_CONTINUE) {
 						setNextState();
 					}
 				}
@@ -200,7 +194,7 @@ public class PriceCLE extends JFrame
 		m_MainPanel.add(m_ContinueButton);
 		
 		// Create the image factory
-		m_ImageFactory = new PCLE_ImageFactory();
+		m_ImageFactory = new CmeImageFactory();
 		m_InstructionsPan.setImageFactory(m_ImageFactory);
 		m_ImagePanel.setImageFactory(m_ImageFactory);
 
@@ -293,7 +287,7 @@ public class PriceCLE extends JFrame
 		FileReader		instFile;
 		BufferedReader	bufReader = null;
 		String 			line;
-		PCLE_State 		thisState = null;
+		CmeState 		thisState = null;
 		boolean			recordState = false;
 		
 		// Open the file
@@ -317,17 +311,17 @@ public class PriceCLE extends JFrame
 				// See if we need to create a new State
 				if((line.contains("STATE")) && (!(line.contains("/STATE"))))
 				{
-					thisState = new PCLE_State();
+					thisState = new CmeState();
 				}
 				// Check for options in "Show Instructions"
 				else if(line.contains("Show Instructions"))
 				{
-					thisState.setState(PCLE_State.SHOW_INSTRUCTIONS);
+					thisState.setState(CmeState.SHOW_INSTRUCTIONS);
 				}
 				// Check for options in "Show Instructions"
 				else if(line.contains("Show Point Notification"))
 				{
-					thisState.setState(PCLE_State.SHOW_POINT_NOTIFICATION);
+					thisState.setState(CmeState.SHOW_POINT_NOTIFICATION);
 				}
 				else if(line.contains("FILE"))
 				{
@@ -343,7 +337,7 @@ public class PriceCLE extends JFrame
 				{
 					if(line.contains("On Click Continue"))
 					{
-						thisState.setChangeStateAction(PCLE_State.CLICK_CONTINUE);
+						thisState.setChangeStateAction(CmeState.CLICK_CONTINUE);
 					}
 					if(line.contains("Record"))
 					{
@@ -361,32 +355,32 @@ public class PriceCLE extends JFrame
 				// Check for options in "Rate Ease of Learning"
 				else if(line.contains("Rate Ease of Learning"))
 				{
-					thisState.setState(PCLE_State.RATE_EASE_OF_LEARNING);
+					thisState.setState(CmeState.RATE_EASE_OF_LEARNING);
 				}
 				// Check for options in "Estimate Number to Remember Pretrial"
 				else if(line.contains("Estimate Number to Remember Pretrial"))
 				{
-					thisState.setState(PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_PRE);
+					thisState.setState(CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE);
 				}
 				// Check for options in "Estimate Number to Remember Posttrial"
 				else if(line.contains("Estimate Number to Remember Posttrial"))
 				{
-					thisState.setState(PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_POST);
+					thisState.setState(CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST);
 				}
 				// Check for options in "Estimate Number Correct"
 				else if(line.contains("Estimate Number Correct"))
 				{
-					thisState.setState(PCLE_State.ESTIMATE_NUMBER_CORRECT);
+					thisState.setState(CmeState.ESTIMATE_NUMBER_CORRECT);
 				}
 				// Check for options in "Learning Phase"
 				else if(line.contains("Learning Phase"))
 				{
-					thisState.setState(PCLE_State.LEARNING);
+					thisState.setState(CmeState.LEARNING);
 				}
 				// Check for options in "Testing Phase"
 				else if(line.contains("Testing Phase"))
 				{
-					thisState.setState(PCLE_State.TESTING);
+					thisState.setState(CmeState.TESTING);
 				}
 				else if(line.contains("/STATE"))
 				{
@@ -411,7 +405,7 @@ public class PriceCLE extends JFrame
 		}
 		
 		if (!recordState) {
-			((PCLE_State)m_vExpStates.lastElement()).setRecordState();
+			((CmeState)m_vExpStates.lastElement()).setRecordState();
 		}
 		// Build vectors of images
 		//    Images  1-12 --- Easy
@@ -668,7 +662,7 @@ public class PriceCLE extends JFrame
 			for(int j=0; j<9; j++)
 			{
 				
-				PCLE_Image theImg = (PCLE_Image)iVec.elementAt(theArray[j]);
+				CmeImage theImg = (CmeImage)iVec.elementAt(theArray[j]);
 				if(j < 8)
 					line = line.concat(theImg.getReferenceName() + ", ");
 				else
@@ -818,7 +812,7 @@ public class PriceCLE extends JFrame
 				Vector vec = this.m_ImageFactory.getImagesVector();
 				for(int i=0; i<36; i++) // Only do the exp images
 				{
-					PCLE_Image img = (PCLE_Image)vec.elementAt(i);
+					CmeImage img = (CmeImage)vec.elementAt(i);
 					// Build the study string (up to 5 times allowed)
 					Vector stVec = img.getStudyTimeVector();
 					Vector soVec = img.getStudyOrderVector();
@@ -870,7 +864,7 @@ public class PriceCLE extends JFrame
 		}
 		
 		m_LastState = m_CurState;
-		m_CurState = (PCLE_State)m_vExpStates.elementAt(m_iCurStateIdx);		
+		m_CurState = (CmeState)m_vExpStates.elementAt(m_iCurStateIdx);		
 		
 		if (!m_CurState.validCondition(sCondition)) {
 			this.setNextState();
@@ -878,7 +872,7 @@ public class PriceCLE extends JFrame
 		}
 		
 		if (m_LastState != null && 
-			m_LastState.getState() == PCLE_State.SHOW_POINT_NOTIFICATION &&
+			m_LastState.getState() == CmeState.SHOW_POINT_NOTIFICATION &&
 			m_LastState.validCondition(sCondition)) {
 			int numCorrect = -1;
 			int actualNumCorrect = getUserPoints(m_iTrialNumber);
@@ -900,11 +894,11 @@ public class PriceCLE extends JFrame
 		
 		switch(m_CurState.getState())
 		{
-			case PCLE_State.SHOW_INSTRUCTIONS :
-			case PCLE_State.SHOW_POINT_NOTIFICATION :
+			case CmeState.SHOW_INSTRUCTIONS :
+			case CmeState.SHOW_POINT_NOTIFICATION :
 				if((m_LastState != null) && 
-					(m_LastState.getState() != PCLE_State.SHOW_INSTRUCTIONS &&
-					 (m_LastState.getState() != PCLE_State.SHOW_POINT_NOTIFICATION ||
+					(m_LastState.getState() != CmeState.SHOW_INSTRUCTIONS &&
+					 (m_LastState.getState() != CmeState.SHOW_POINT_NOTIFICATION ||
 							 !m_LastState.validCondition(sCondition))))
 				{
 					m_InstructionsPan.setVisible(true);
@@ -918,7 +912,7 @@ public class PriceCLE extends JFrame
 				m_InstructionsPan.showInstructions(m_CurState.getInstructionFile());
 				m_InstructionsPan.setVisible(true);
 				break;
-			case PCLE_State.RATE_EASE_OF_LEARNING :
+			case CmeState.RATE_EASE_OF_LEARNING :
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
 				m_ImagePanel.setVisible(true);
@@ -929,34 +923,34 @@ public class PriceCLE extends JFrame
 //				m_ContinueButton.setVisible(true);
 //				m_ImagePanel.setVisible(false);
 				break;
-			case PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_PRE :
+			case CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE :
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
 				m_ImagePanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Estimating number to remember pretrial.", true);
 				m_ImagePanel.estimateNumber(m_CurState.getInstructionFile(),
-						PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_PRE);
+						CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE);
 				break;
-			case PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_POST :
+			case CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST :
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
 				m_ImagePanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Estimating number to remember posttrial.", true);
 				m_ImagePanel.estimateNumber(m_CurState.getInstructionFile(),
-						PCLE_State.ESTIMATE_NUMBER_TO_REMEMBER_POST);
+						CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST);
 				break;
-			case PCLE_State.ESTIMATE_NUMBER_CORRECT :
+			case CmeState.ESTIMATE_NUMBER_CORRECT :
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
 				m_ImagePanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Estimating number correct.", true);
 				m_ImagePanel.estimateNumber(m_CurState.getInstructionFile(),
-						PCLE_State.ESTIMATE_NUMBER_CORRECT);
+						CmeState.ESTIMATE_NUMBER_CORRECT);
 				break;
-			case PCLE_State.LEARNING :
+			case CmeState.LEARNING :
 				m_iTrialNumber++;
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
@@ -968,7 +962,7 @@ public class PriceCLE extends JFrame
 				else
 					m_ImagePanel.doLearning(m_iTrial2Group1, m_iTrial2Group2);
 				break;
-			case PCLE_State.TESTING :
+			case CmeState.TESTING :
 				//set up panels
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
@@ -1078,7 +1072,7 @@ public class PriceCLE extends JFrame
 	//-----------------------------------------------
 	public static void main(String[] args)
 	{
-		PriceCLE theApp = new PriceCLE();
+		CmeApp theApp = new CmeApp();
 	}
 
 }
