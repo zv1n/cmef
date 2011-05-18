@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="PriceCLE/PriceCLE.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/PriceCLE/PriceCLEJarDesc.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="CMEF.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="CMEFJarDesc.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
@@ -11,11 +11,11 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="false" exportJavaFiles="true" exportOutputFolder="true">
-        <file path="/PriceCLE/.classpath"/>
-        <file path="/PriceCLE/.project"/>
-        <javaElement handleIdentifier="=PriceCLE/Images"/>
-        <javaElement handleIdentifier="=PriceCLE/src"/>
-        <javaElement handleIdentifier="=PriceCLE/Instructions"/>
+        <file path=".classpath"/>
+        <file path=".project"/>
+        <javaElement handleIdentifier="=Images"/>
+        <javaElement handleIdentifier="=src"/>
+        <javaElement handleIdentifier="=Instructions"/>
     </selectedElements>
     <fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
 </jardesc>
