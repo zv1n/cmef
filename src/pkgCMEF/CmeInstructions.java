@@ -34,7 +34,7 @@ import javax.swing.border.BevelBorder;
 public class CmeInstructions extends JPanel
 {
 	/** Parent frame */
-	CmeApp m_Parent;
+	CmeApp m_App;
 	
 	/** Text area width */
 	private int m_iTextFrameWidth;
@@ -63,22 +63,15 @@ public class CmeInstructions extends JPanel
 	/** The image factory */
 	private CmeImageFactory m_ImageFactory;
 	
-	/** The text area where instructions are displayed */
-//	private JTextArea m_Instructions;
-
-	/** Scroll pane to hold the instructions */
-//	private JScrollPane m_InsScrollPane;
-	
 	//----------------------------------------------------------------
 	/** Default constructor */
 	//----------------------------------------------------------------
 	public CmeInstructions(int width, int height, CmeApp parent)
 	{
-		m_Parent = parent;
+		m_App = parent;
 		
 		this.setSize(width, height);
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-//		this.setBackground(Color.blue);
 		this.setLayout(null);
 		
 		m_vTextStrings = new Vector<String>();

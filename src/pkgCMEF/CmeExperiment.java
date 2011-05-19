@@ -42,7 +42,7 @@ import javax.swing.border.BevelBorder;
 public class CmeExperiment extends JPanel implements MouseListener
 {
 	/** The parent application JFrame */
-	private CmeApp m_Parent;
+	private CmeApp m_App;
 
 	/** Text area width */
 	private int m_iTextFrameWidth;
@@ -268,7 +268,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 	//--------------------------------------------
 	public CmeExperiment(CmeApp parent, int width, int height)
 	{
-		this.m_Parent = parent;
+		this.m_App = parent;
 		
 		this.setSize(width, height);
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -615,13 +615,13 @@ public class CmeExperiment extends JPanel implements MouseListener
 						String name = "Sample";
 						if(m_NullRB.isSelected())
 						{
-							m_Parent.postStatusMessage(" - Continue button pressed but no rating selected. Repeating.", true);
-							JOptionPane.showMessageDialog(m_Parent, 
+							m_App.postStatusMessage(" - Continue button pressed but no rating selected. Repeating.", true);
+							JOptionPane.showMessageDialog(m_App, 
 									"Please select an ease of learning rating (1-9)", 
 									"Rate Ease of Learning", JOptionPane.WARNING_MESSAGE);
 							return;
 						}
-						m_Parent.postStatusMessage(" - Continue button pressed with rating of " 
+						m_App.postStatusMessage(" - Continue button pressed with rating of " 
 								+ String.valueOf(m_iEaseRating) + " for symbol " +
 								String.valueOf(m_EOLOrder[m_iImgIdx]), true);
 						// Save this rating -- WE MAY NOT NEED THIS
@@ -644,16 +644,16 @@ public class CmeExperiment extends JPanel implements MouseListener
 							m_HowEasyLbl.setVisible(false);
 							m_LineUnderLbl.setVisible(false);
 							m_Clock.setVisible(false);
-							m_Parent.setNextState();
+							m_App.setNextState();
 						}
 						else
 						{
-							if(m_State == CmeState.RATE_EASE_OF_LEARNING)
+/*							if(m_State == CmeState.RATE_EASE_OF_LEARNING)
 							{
 								m_Clock.setInitialTime(3); // Set for 3 seconds
 								m_iSecondsRemaining = m_iInitialTime; // Reset for 3 seconds
-							}
-							setEOLTimer();
+							}*/
+							//setEOLTimer();
 							paint(getGraphics()); // Repaint
 						}
 					}
@@ -744,7 +744,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 						}
 						catch (Exception ex)
 						{
-							JOptionPane.showMessageDialog(m_Parent, 
+							JOptionPane.showMessageDialog(m_App, 
 								"Please enter a number from 0 to 18 in the given text field.", 
 								"Estimate a Number", JOptionPane.ERROR_MESSAGE);
 							m_ENRTextField.setText("");
@@ -752,7 +752,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 						}
 						// Ignore button click if an estimate has not been made
 						if(!m_bEstNumDone || value < 0 || value > 18) {
-							JOptionPane.showMessageDialog(m_Parent, 
+							JOptionPane.showMessageDialog(m_App, 
 								"Please enter a number from 0 to 18 in the given text field.", 
 								"Estimate a Number", JOptionPane.ERROR_MESSAGE);
 							m_ENRTextField.setText("");
@@ -764,24 +764,24 @@ public class CmeExperiment extends JPanel implements MouseListener
 						m_ENRPanel.setVisible(false);
 						// Get the estimate from the combobox
 						switch(m_State)
-						{
+						{/*
 							case CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE:
 							{
 								if(m_ENRPre1 == -1) // Haven't gotten this one yet
 								{
 									m_ENRPre1 = value;
-									m_Parent.postStatusMessage(" - Test 1 estimated number to remember pretrial =  "
+									m_App.postStatusMessage(" - Test 1 estimated number to remember pretrial =  "
 											+ String.valueOf(m_ENRPre1), true);
 									// Save it for later printing also
-									m_Parent.saveUserEstimate(1, 0, m_ENRPre1);
+									m_App.saveUserEstimate(1, 0, m_ENRPre1);
 								}
 								else
 								{
 									m_ENRPre2 = value;
-									m_Parent.postStatusMessage(" - Test 2 estimated number to remember pretrial =  "
+									m_App.postStatusMessage(" - Test 2 estimated number to remember pretrial =  "
 											+ String.valueOf(m_ENRPre2), true);
 									// Save it for later printing also
-									m_Parent.saveUserEstimate(2, 0, m_ENRPre2);
+									m_App.saveUserEstimate(2, 0, m_ENRPre2);
 								}
 							break;
 							}
@@ -790,18 +790,18 @@ public class CmeExperiment extends JPanel implements MouseListener
 								if(m_ENRPost1 == -1) // Haven't gotten this one yet
 								{
 									m_ENRPost1 = value;
-									m_Parent.postStatusMessage(" - Test 1 estimated number to remember posttrial =  "
+									m_App.postStatusMessage(" - Test 1 estimated number to remember posttrial =  "
 											+ String.valueOf(m_ENRPost1), true);
 									// Save it for later printing also
-									m_Parent.saveUserEstimate(1, 1, m_ENRPost1);
+									m_App.saveUserEstimate(1, 1, m_ENRPost1);
 								}
 								else
 								{
 									m_ENRPost2 = value;
-									m_Parent.postStatusMessage(" - Test 2 estimated number to remember posttrial =  "
+									m_App.postStatusMessage(" - Test 2 estimated number to remember posttrial =  "
 											+ String.valueOf(m_ENRPost2), true);
 									// Save it for later printing also
-									m_Parent.saveUserEstimate(2, 1, m_ENRPost2);
+									m_App.saveUserEstimate(2, 1, m_ENRPost2);
 								}	
 							break;
 							}
@@ -810,24 +810,24 @@ public class CmeExperiment extends JPanel implements MouseListener
 								if(m_ENC1 == -1) // Haven't gotten this one yet
 								{
 									m_ENC1 = value;
-									m_Parent.postStatusMessage(" - Test 1 estimated number correct posttrial =  "
+									m_App.postStatusMessage(" - Test 1 estimated number correct posttrial =  "
 										+ String.valueOf(m_ENRPost1), true);
 									// Save it for later printing also
-									m_Parent.saveUserEstimate(1, 2, m_ENC1);
+									m_App.saveUserEstimate(1, 2, m_ENC1);
 								}
 								else
 								{
 									m_ENC2 = value;
-									m_Parent.postStatusMessage(" - Test 2 estimated number correct posttrial =  "
+									m_App.postStatusMessage(" - Test 2 estimated number correct posttrial =  "
 											+ String.valueOf(m_ENRPost2), true);
 									// Save it for later printing also
-									m_Parent.saveUserEstimate(2, 2, m_ENC2);
+									m_App.saveUserEstimate(2, 2, m_ENC2);
 								}	
 							break;
-							}
+							}*/
 						}
 						paint(getGraphics());
-						m_Parent.setNextState();
+						m_App.setNextState();
 					}
 				});
 		m_ENRPanel.add(m_ENRContinueButton); 
@@ -986,7 +986,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 						correctAns = m_ImageFactory.getReferenceName(group[grpIdx]);
 						imageValue = m_ImageFactory.getImageValue(group[grpIdx]);
 						
-						m_Parent.postStatusMessage(" - Test " + String.valueOf(m_iTrialNumber) + ": Item " +
+						m_App.postStatusMessage(" - Test " + String.valueOf(m_iTrialNumber) + ": Item " +
 								String.valueOf(17 - m_iRemainingCount) + " Subject Answer = " + subjAns + 
 								", Correct Answer = " + correctAns + " @ " + imageValue, true);
 						
@@ -996,8 +996,8 @@ public class CmeExperiment extends JPanel implements MouseListener
 							imageVal = Integer.parseInt(imageValue);
 							} catch(Exception ex) { imageVal = 0; }
 							
-							int value = m_Parent.getUserPoints(m_iTrialNumber);
-							m_Parent.saveUserPoints(m_iTrialNumber, value+imageVal);
+							int value = m_App.getUserPoints(m_iTrialNumber);
+							m_App.saveUserPoints(m_iTrialNumber, value+imageVal);
 						}
 						
 						/* Determine next image! */
@@ -1013,7 +1013,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 						if (m_iRemainingCount < 0) // We're done
 						{
 							m_TestPanel.setVisible(false);
-							m_Parent.setNextState();
+							m_App.setNextState();
 						}
 						
 						/** Old method for displaying test images -- this method is sequential as specified below */
@@ -1101,7 +1101,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 	//--------------------------------------------
 	public CmeApp getParentFrame()
 	{
-		return m_Parent;
+		return m_App;
 	}
 	
 	//--------------------------------------------
@@ -1135,7 +1135,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 						(m_iTextFrameHeight - img.getHeight(null))/2, null);
 			}
 		}
-		else if((m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE) ||
+		/*else if((m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE) ||
 				(m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST) ||
 				(m_State == CmeState.ESTIMATE_NUMBER_CORRECT))
 		{
@@ -1150,7 +1150,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 				g.drawString((String)m_vTextStrings.elementAt(i), m_iLeftX, curY);
 				curY+=15;
 			}			
-		}
+		}*/
 		else if(m_State == CmeState.LEARNING)
 		{
 			// Draw the grid of images
@@ -1464,7 +1464,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 		    	  {
 					  m_Clock.setVisible(false); // Hide the clock
 			    	  m_EOLPanel.setVisible(true); // Show the panel
-			  		  m_Parent.postStatusMessage(" - Stopping timer to estimate ease of learning for character "
+			  		  m_App.postStatusMessage(" - Stopping timer to estimate ease of learning for character "
 							+ String.valueOf(m_EOLOrder[m_iImgIdx]) + ".", true);
 			    	  // Clear all the radio buttons
 			    	  m_NullRB.doClick();
@@ -1475,7 +1475,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 		  };
 		m_Timer = new Timer(m_iTimerInterval, taskPerformer);
 		m_Timer.setRepeats(true); // Run till done
-		m_Parent.postStatusMessage(" - Starting timer to estimate ease of learning for character "
+		m_App.postStatusMessage(" - Starting timer to estimate ease of learning for character "
 				+ String.valueOf(m_EOLOrder[m_iImgIdx]) + ".", true);
 		m_Timer.start();
 	}
@@ -1513,16 +1513,16 @@ public class CmeExperiment extends JPanel implements MouseListener
 					  
 					  if(m_iGroupDisplayed >= 3) // finished with all 2 groups
 					  {
-						  m_Parent.postStatusMessage(" - End study phase", true);
+						  m_App.postStatusMessage(" - End study phase", true);
 						  for(int i=0; i<9; i++) // Reset all for next time
 							  m_iStudied[i] = 0; // Not studied
 						  m_DoneStudyingGridBtn.setEnabled(false);
 						  m_DoneStudyingGridBtn.setVisible(false);
-						  m_Parent.setNextState();
+						  m_App.setNextState();
 					  }
 					  else
 					  {
-						  m_Parent.postStatusMessage(" - 60 second study period elapsed.", true);
+						  m_App.postStatusMessage(" - 60 second study period elapsed.", true);
 						  // Do next group
 						  // TESTING
 						  m_Clock.setVisible(true); // Show the clock
@@ -1654,14 +1654,14 @@ public class CmeExperiment extends JPanel implements MouseListener
 		{
 			theImg = (CmeImage)(vec.elementAt(m_iGroup1[selIdx]));
 			m_StudyPan.setImage(theImg);
-			this.m_Parent.postStatusMessage(" - Studying " + theImg.getReferenceName() +
+			this.m_App.postStatusMessage(" - Studying " + theImg.getReferenceName() +
 					". Clock = " + m_Clock.getTimeRemaining() + " seconds.", true);
 		}
 		else if(this.m_iGroupDisplayed == 2)
 		{
 			theImg = (CmeImage)(vec.elementAt(m_iGroup2[selIdx]));
 			m_StudyPan.setImage((CmeImage)(vec.elementAt(m_iGroup2[selIdx])));
-			this.m_Parent.postStatusMessage(" - Studying " + theImg.getReferenceName()+
+			this.m_App.postStatusMessage(" - Studying " + theImg.getReferenceName()+
 					". Clock = " + m_Clock.getTimeRemaining() + " seconds.", true);
 		}
 		m_iStartStudyTime = m_Clock.getTimeRemaining();
@@ -1674,3 +1674,33 @@ public class CmeExperiment extends JPanel implements MouseListener
 		// Restart the timer
 	}
 }
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}

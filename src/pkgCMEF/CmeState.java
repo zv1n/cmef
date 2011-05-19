@@ -3,141 +3,133 @@ package pkgCMEF;
 import javax.swing.JOptionPane;
 
 //====================================================================
-/** CmeState
- *  <P>Purpose: This class defines the different states in which
- *  an experiment can exist in.
- *  @author Dr. Rick Coleman
- *  @version 1.0
- *  Date: February, 2009
+/**
+ * CmeState
+ * <P>
+ * Purpose: This class defines the different states in which an experiment can
+ * exist in.
+ * 
+ * @author Dr. Rick Coleman, Terry Meacham
+ * @version 1.1 Date: February, 2009
  */
-//===================================================================
+// ===================================================================
 
-public class CmeState
-{
+public class CmeState {
 	/** State for this state */
 	private int m_iState;
 
-	//----- Vars for show instructions mode -----
+	// ----- Vars for show instructions mode -----
 	private String m_sInsFileName;
-	
-	//----- Vars for show condtion validation -----
+
+	// ----- Vars for show condtion validation -----
 	private String m_sValidConditions;
-	private boolean m_bRequireCondition;
+
 	private boolean m_bRecordState;
 	
-	//----- Vars for all modes -----
-	private int m_iChangeStateBy;
+	private int[] m_iEvent;
 	
-	//-------- Defined Modes ----------
-	/** Display instructions mode */
-	public static final int SHOW_INSTRUCTIONS = 1;
-	/** Rate ease of learning mode */
-	public static final int RATE_EASE_OF_LEARNING = 2;
-	/** Estimate number to remember mode */
-	public static final int ESTIMATE_NUMBER_TO_REMEMBER_PRE = 3;
-	/** Estimate number to remember mode */
-	public static final int ESTIMATE_NUMBER_TO_REMEMBER_POST = 4;
-	/** Estimate number correct */
-	public static final int ESTIMATE_NUMBER_CORRECT = 5;
-	/** Learning mode */
-	public static final int LEARNING = 6;
-	/** Testing mode */
-	public static final int TESTING = 7;
-	/** Display instructions/point notification mode */
-	public static final int SHOW_POINT_NOTIFICATION = 8;
+	/** Specifies 
 
-	//---------- Change mode indicator -------
-	/** Click Continue button to change mode */
-	public static final int CLICK_CONTINUE = 1;
+	// ----- Vars for all modes -----
+	private int m_iChangeStateBy;
+
+	// -------- Defined Modes ----------
+	/** Display instructions mode */
+	public static final int STATE_INSTRUCTION = 1;
+	/** Learning mode */
+	public static final int STATE_LEARNING = 2;
+	/** Testing mode */
+	public static final int STATE_TEST = 3;
+
+	// ---------- Events -------
+	/** Event for Clicking a Continue Button */
+	public static final int EVENT_CLICK_CONTINUE = 0x01;
 	
-	//---------------------------------------------------------
+	// ---------- Event Groups ---------
+	/** Groups for Events */ 
+	public static final int GROUP_NEXT_STATE = 0;
+	public static final int GROUP_MAX = 1;		
+
+	// ---------------------------------------------------------
 	/** Default constructor */
-	//---------------------------------------------------------
-	public CmeState()
-	{
-		m_bRequireCondition = false;
+	// ---------------------------------------------------------
+	public CmeState() {
+		m_iEvent = new int[GROUP_MAX];
 	}
-	
-	//---------------------------------------------------------
+
+	// ---------------------------------------------------------
 	/** Set the mode */
-	//---------------------------------------------------------
-	public void setState(int m)
-	{
+	// ---------------------------------------------------------
+	public void setState(int m) {
 		m_iState = m;
 	}
 
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	/** Set the mode */
-	//---------------------------------------------------------
-	public int getState()
-	{
+	// ---------------------------------------------------------
+	public int getState() {
 		return m_iState;
 	}
 
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	/** Set the change by action */
-	//---------------------------------------------------------
-	public void setChangeStateAction(int c)
-	{
-		m_iChangeStateBy = c;
-	}
-
-	//---------------------------------------------------------
-	/** Set the mode */
-	//---------------------------------------------------------
-	public int getChangeStateAction()
-	{
-		return m_iChangeStateBy;
+	// ---------------------------------------------------------
+	public void TriggerEvent(int event) {
+		if (!m_iEvent)
+			return;
+		
+		if(m_iEvent[CmeState.GROUP_NEXT_STATE] & event) {
+			
+		}
 	}
 	
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
+	/** Set event response */
+	// ---------------------------------------------------------
+	public void setEventResponse(int group, int event) {
+		if (group >= 0 && group < CmeState.GROUP_MAX)
+			m_iEvent[group] |= event;
+	}
+
+	// ---------------------------------------------------------
 	/** Set the instruction file name */
-	//---------------------------------------------------------
-	public void setInstructionFile(String s)
-	{
+	// ---------------------------------------------------------
+	public void setInstructionFile(String s) {
 		m_sInsFileName = s;
 	}
 
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	/** Set the mode */
-	//---------------------------------------------------------
-	public String getInstructionFile()
-	{
+	// ---------------------------------------------------------
+	public String getInstructionFile() {
 		return m_sInsFileName;
 	}
 
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	/** Is this state a Record state? */
-	//---------------------------------------------------------
-	public boolean isRecordState()
-	{
+	// ---------------------------------------------------------
+	public boolean isRecordState() {
 		return m_bRecordState;
 	}
 
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	/** Set a Record State */
-	//---------------------------------------------------------
-	public void setRecordState()
-	{
+	// ---------------------------------------------------------
+	public void setRecordState() {
 		m_bRecordState = true;
 	}
 
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	/** Set the mode */
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	public void setValidConditions(String conditions) {
-		if (conditions.length() > 0) {
-			m_bRequireCondition = true;
-		}
 		m_sValidConditions = conditions;
 	}
 
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	/** validate the condition we are currently in */
-	//---------------------------------------------------------
+	// ---------------------------------------------------------
 	public boolean validCondition(String condition) {
-		if (!m_bRequireCondition)
-			return true;
 		return m_sValidConditions.contains(condition);
 	}
 

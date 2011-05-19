@@ -179,14 +179,17 @@ public class CmeApp extends JFrame
 		m_ContinueButton.setSize(100, 20);
 		m_ContinueButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		m_ContinueButton.setLocation(462, 692);
+		
+		/*
+		 * This should be changed to accept an event.  OnEvent, check for the cause... 
+		 * If the cause if acceptable... then transition (return true)
+		 */
 		m_ContinueButton.addActionListener(
 			new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					if(m_CurState.getChangeStateAction() == CmeState.CLICK_CONTINUE) {
-						setNextState();
-					}
+					m_CurState.TriggerEvent(CmeState.EVENT_CLICK_CONTINUE);
 				}
 			}
 		);
@@ -316,12 +319,7 @@ public class CmeApp extends JFrame
 				// Check for options in "Show Instructions"
 				else if(line.contains("Show Instructions"))
 				{
-					thisState.setState(CmeState.SHOW_INSTRUCTIONS);
-				}
-				// Check for options in "Show Instructions"
-				else if(line.contains("Show Point Notification"))
-				{
-					thisState.setState(CmeState.SHOW_POINT_NOTIFICATION);
+					thisState.setState(CmeState.STATE_INSTRUCTION);
 				}
 				else if(line.contains("FILE"))
 				{
@@ -337,7 +335,7 @@ public class CmeApp extends JFrame
 				{
 					if(line.contains("On Click Continue"))
 					{
-						thisState.setChangeStateAction(CmeState.CLICK_CONTINUE);
+						thisState.setEventResponse(CmeState.GROUP_NEXT_STATE, CmeState.EVENT_CLICK_CONTINUE);
 					}
 					if(line.contains("Record"))
 					{
@@ -352,35 +350,15 @@ public class CmeApp extends JFrame
 						}
 					}
 				}
-				// Check for options in "Rate Ease of Learning"
-				else if(line.contains("Rate Ease of Learning"))
-				{
-					thisState.setState(CmeState.RATE_EASE_OF_LEARNING);
-				}
-				// Check for options in "Estimate Number to Remember Pretrial"
-				else if(line.contains("Estimate Number to Remember Pretrial"))
-				{
-					thisState.setState(CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE);
-				}
-				// Check for options in "Estimate Number to Remember Posttrial"
-				else if(line.contains("Estimate Number to Remember Posttrial"))
-				{
-					thisState.setState(CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST);
-				}
-				// Check for options in "Estimate Number Correct"
-				else if(line.contains("Estimate Number Correct"))
-				{
-					thisState.setState(CmeState.ESTIMATE_NUMBER_CORRECT);
-				}
-				// Check for options in "Learning Phase"
+								// Check for options in "Learning Phase"
 				else if(line.contains("Learning Phase"))
 				{
-					thisState.setState(CmeState.LEARNING);
+					thisState.setState(CmeState.STATE_LEARNING);
 				}
 				// Check for options in "Testing Phase"
 				else if(line.contains("Testing Phase"))
 				{
-					thisState.setState(CmeState.TESTING);
+					thisState.setState(CmeState.STATE_TEST);
 				}
 				else if(line.contains("/STATE"))
 				{
@@ -871,32 +849,10 @@ public class CmeApp extends JFrame
 			return;
 		}
 		
-		if (m_LastState != null && 
-			m_LastState.getState() == CmeState.SHOW_POINT_NOTIFICATION &&
-			m_LastState.validCondition(sCondition)) {
-			int numCorrect = -1;
-			int actualNumCorrect = getUserPoints(m_iTrialNumber);
-			
-			do {
-				JOptionPane.showMessageDialog(this, "You have earned " + actualNumCorrect + " point(s)!",
-						"Points Earned", JOptionPane.INFORMATION_MESSAGE);
-				String userInput = JOptionPane.showInputDialog("Please enter the number of points earned:");
-				
-				if (userInput == null || userInput == "")
-					continue;
-				
-				try {
-					numCorrect = Integer.parseInt(userInput);
-				} catch(Exception ex) { continue; }
-			}
-			while(numCorrect != actualNumCorrect);
-		}
-		
 		switch(m_CurState.getState())
 		{
-			case CmeState.SHOW_INSTRUCTIONS :
-			case CmeState.SHOW_POINT_NOTIFICATION :
-				if((m_LastState != null) && 
+			case CmeState.STATE_INSTRUCTION :
+				/*if((m_LastState != null) && 
 					(m_LastState.getState() != CmeState.SHOW_INSTRUCTIONS &&
 					 (m_LastState.getState() != CmeState.SHOW_POINT_NOTIFICATION ||
 							 !m_LastState.validCondition(sCondition))))
@@ -904,7 +860,7 @@ public class CmeApp extends JFrame
 					m_InstructionsPan.setVisible(true);
 					m_ContinueButton.setVisible(true);
 					m_ImagePanel.setVisible(false);
-				}
+				}*/
 				postStatusMessage(" - Displaying instructions: " + m_CurState.getInstructionFile(), true);
 				//This must be done to get around glitch which causes the first page
 				//to duplicate itself... several times...
@@ -912,7 +868,7 @@ public class CmeApp extends JFrame
 				m_InstructionsPan.showInstructions(m_CurState.getInstructionFile());
 				m_InstructionsPan.setVisible(true);
 				break;
-			case CmeState.RATE_EASE_OF_LEARNING :
+/*			case CmeState.RATE_EASE_OF_LEARNING :
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
 				m_ImagePanel.setVisible(true);
@@ -949,8 +905,8 @@ public class CmeApp extends JFrame
 				postStatusMessage(" - Estimating number correct.", true);
 				m_ImagePanel.estimateNumber(m_CurState.getInstructionFile(),
 						CmeState.ESTIMATE_NUMBER_CORRECT);
-				break;
-			case CmeState.LEARNING :
+				break;*/
+			case CmeState.STATE_LEARNING :
 				m_iTrialNumber++;
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);
@@ -962,7 +918,7 @@ public class CmeApp extends JFrame
 				else
 					m_ImagePanel.doLearning(m_iTrial2Group1, m_iTrial2Group2);
 				break;
-			case CmeState.TESTING :
+			case CmeState.STATE_TEST :
 				//set up panels
 				m_InstructionsPan.setVisible(false);
 				m_ContinueButton.setVisible(false);

@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 public class CmeStudy extends JDialog
 {
 	/** Parent panel */
-	private CmeExperiment m_Parent;
+	private CmeExperiment m_App;
 	
 	/** Done studying button */
 	private JButton m_DoneBtn;
@@ -51,9 +51,9 @@ public class CmeStudy extends JDialog
 	//---------------------------------------------------
 	public CmeStudy(CmeExperiment parent)
 	{
-		m_Parent = parent;
+		m_App = parent;
 		// Center this frame on the parent frame
-		CmeApp parentFrame = m_Parent.getParentFrame();
+		CmeApp parentFrame = m_App.getParentFrame();
 		int parentXPos = parentFrame.getLocation().x;
 		int parentYPos = parentFrame.getLocation().y;
 		int parentWidth = parentFrame.getSize().width;
@@ -82,10 +82,10 @@ public class CmeStudy extends JDialog
 				{
 					public void actionPerformed(ActionEvent e)
 					{
-						m_Parent.stopClock();
+						m_App.stopClock();
 						
-						m_Parent.getParentFrame().postStatusMessage(" - Done studying selected character." +
-								" Clock = " + m_Parent.getClock().getTimeRemaining() + " seconds.", true);
+						m_App.getParentFrame().postStatusMessage(" - Done studying selected character." +
+								" Clock = " + m_App.getClock().getTimeRemaining() + " seconds.", true);
 						setVisible(false);
 					}
 				});
