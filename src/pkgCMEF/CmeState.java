@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Purpose: This class defines the different states in which an experiment can
  * exist in.
  * 
- * @author Dr. Rick Coleman, Terry Meacham
+ * @author Terry Meacham, Dr. Rick Coleman
  * @version 1.1 Date: February, 2009
  */
 // ===================================================================
