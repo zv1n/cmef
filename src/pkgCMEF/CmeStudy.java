@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.xml.bind.Marshaller.Listener;
 
 //====================================================================
 /** CmeStudy
@@ -77,18 +78,18 @@ public class CmeStudy extends JDialog
 		m_DoneBtn = new JButton("Finished Studying");
 		m_DoneBtn.setSize(300, 40);
 		m_DoneBtn.setLocation(300, 425);
-		m_DoneBtn.addActionListener(
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						m_App.stopClock();
-						
-						m_App.getParentFrame().postStatusMessage(" - Done studying selected character." +
-								" Clock = " + m_App.getClock().getTimeRemaining() + " seconds.", true);
-						setVisible(false);
-					}
-				});
+		
+		ActionListener doneListener = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				m_App.stopClock();
+				
+				m_App.getParentFrame().postStatusMessage(" - Done studying selected character." +
+						" Clock = " + m_App.getClock().getTimeRemaining() + " seconds.", true);
+				setVisible(false);
+			}
+		};
+		
+		m_DoneBtn.addActionListener(doneListener);
 				
 		m_MainPanel.add(m_DoneBtn);
 		

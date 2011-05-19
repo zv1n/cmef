@@ -1123,7 +1123,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 				m_iTextFrameLeftX, m_iTextFrameTopY);
 		g.drawLine(m_iTextFrameLeftX, m_iTextFrameTopY,
 				m_iTextFrameLeftX, m_iTextFrameTopY + m_iTextFrameHeight);
-		
+		/*
 		if(m_State == CmeState.RATE_EASE_OF_LEARNING)
 		{
 			// Make sure we don't try to draw before our next state is set
@@ -1150,8 +1150,8 @@ public class CmeExperiment extends JPanel implements MouseListener
 				g.drawString((String)m_vTextStrings.elementAt(i), m_iLeftX, curY);
 				curY+=15;
 			}			
-		}*/
-		else if(m_State == CmeState.LEARNING)
+		}
+		else */if(m_State == CmeState.STATE_LEARNING)
 		{
 			// Draw the grid of images
 			int[] theArray = null;
@@ -1240,7 +1240,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 				}
 			}
 		}
-		else if(m_State == CmeState.TESTING)
+		else if(m_State == CmeState.STATE_TEST)
 		{
 			if (m_iRemainingCount < 0)
 				return;
@@ -1286,7 +1286,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 	    	  m_Parent.setNextState();
 	    	  return;
 		}*/
-		m_State = CmeState.RATE_EASE_OF_LEARNING;
+		//m_State = CmeState.RATE_EASE_OF_LEARNING;
 		m_iImgIdx = 0;
 		m_vImgVec = m_ImageFactory.getImagesVector();
 		paint(getGraphics());
@@ -1341,42 +1341,8 @@ public class CmeExperiment extends JPanel implements MouseListener
 					"Error Reading File", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		if(m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE)
-		{
-			m_HowEasyLbl.setVisible(false);
-			m_LineUnderLbl.setVisible(false);
-			m_ENRNumToRemLbl1.setVisible(true);
-			m_ENRNumToRemLbl2.setVisible(true);
-			m_ENRNumCorrectLbl1.setVisible(false);
-			m_ENRNumCorrectLbl2.setVisible(false);
-			this.m_ENRPanel.setVisible(true);
-			m_bEstNumDone = false;
-			this.paint(this.getGraphics());
-		}
-		else if(m_State == CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST)
-		{
-			m_HowEasyLbl.setVisible(false);
-			m_LineUnderLbl.setVisible(false);
-			m_ENRNumToRemLbl1.setVisible(true);
-			m_ENRNumToRemLbl2.setVisible(true);
-			m_ENRNumCorrectLbl1.setVisible(false);
-			m_ENRNumCorrectLbl2.setVisible(false);
-			this.m_ENRPanel.setVisible(true);
-			m_bEstNumDone = false;
-			this.paint(this.getGraphics());
-		}
-		else // m_State == PCLE_State.ESTIMATE_NUMBER_CORRECT
-		{
-			m_HowEasyLbl.setVisible(false);
-			m_LineUnderLbl.setVisible(false);
-			m_ENRNumToRemLbl1.setVisible(false);
-			m_ENRNumToRemLbl2.setVisible(false);
-			m_ENRNumCorrectLbl1.setVisible(true);
-			m_ENRNumCorrectLbl2.setVisible(true);
-			this.m_ENRPanel.setVisible(true);
-			m_bEstNumDone = false;
-			this.paint(this.getGraphics());
-		}
+	
+	
 	}
 	
 	//-------------------------------------------------------
@@ -1391,7 +1357,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 		m_iGroupDisplayed = 1;
 		m_iTrialNumber++;
 		
-		m_State = CmeState.LEARNING;
+		m_State = CmeState.STATE_LEARNING;
 		this.m_Clock.setVisible(true);
 		this.m_DoneStudyingGridBtn.setEnabled(true);
 		this.m_DoneStudyingGridBtn.setVisible(true);
@@ -1435,7 +1401,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 			m_iRemainingIdx[i] = m_iRemainingIdx[i+1];
 		
 		m_iTestGroup = 0;
-		m_State = CmeState.TESTING;
+		m_State = CmeState.STATE_TEST;
 		this.m_Clock.setVisible(false);
 		this.m_TestPanel.setVisible(true);
 		m_TestAnswer.requestFocus();
@@ -1604,7 +1570,7 @@ public class CmeExperiment extends JPanel implements MouseListener
 	//-------------------------------------------------------
 	public void mouseReleased(MouseEvent e)
 	{
-		if(m_State != CmeState.LEARNING) return;
+		if(m_State != CmeState.STATE_LEARNING) return;
 		
 		if(this.m_StudyPan.isVisible())
 		{
@@ -1674,33 +1640,3 @@ public class CmeExperiment extends JPanel implements MouseListener
 		// Restart the timer
 	}
 }
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}

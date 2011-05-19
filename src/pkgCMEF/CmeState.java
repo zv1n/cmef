@@ -2,6 +2,9 @@ package pkgCMEF;
 
 import javax.swing.JOptionPane;
 
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+
 //====================================================================
 /**
  * CmeState
@@ -17,21 +20,13 @@ import javax.swing.JOptionPane;
 public class CmeState {
 	/** State for this state */
 	private int m_iState;
-
-	// ----- Vars for show instructions mode -----
-	private String m_sInsFileName;
-
-	// ----- Vars for show condtion validation -----
-	private String m_sValidConditions;
-
-	private boolean m_bRecordState;
 	
-	private int[] m_iEvent;
+	private CmeState m_sPrevState;
 	
-	/** Specifies 
+	private CmeEventResponse[] m_erEvent = new CmeEventResponse[EVENT_MAX];
 
-	// ----- Vars for all modes -----
-	private int m_iChangeStateBy;
+	/** HashSet used to store the properties for each state */
+	private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
 
 	// -------- Defined Modes ----------
 	/** Display instructions mode */
@@ -43,18 +38,15 @@ public class CmeState {
 
 	// ---------- Events -------
 	/** Event for Clicking a Continue Button */
-	public static final int EVENT_CLICK_CONTINUE = 0x01;
-	
-	// ---------- Event Groups ---------
-	/** Groups for Events */ 
-	public static final int GROUP_NEXT_STATE = 0;
-	public static final int GROUP_MAX = 1;		
+	public static final int EVENT_CLICK_CONTINUE = 0;
+	/** Number of events */
+	public static final int EVENT_MAX = 1;
+		
 
 	// ---------------------------------------------------------
 	/** Default constructor */
 	// ---------------------------------------------------------
 	public CmeState() {
-		m_iEvent = new int[GROUP_MAX];
 	}
 
 	// ---------------------------------------------------------
@@ -75,62 +67,43 @@ public class CmeState {
 	/** Set the change by action */
 	// ---------------------------------------------------------
 	public void TriggerEvent(int event) {
-		if (!m_iEvent)
+		if(event < 0 || event >= EVENT_MAX || m_erEvent[event] == null)
 			return;
-		
-		if(m_iEvent[CmeState.GROUP_NEXT_STATE] & event) {
-			
-		}
+		m_erEvent[event].Respond();
 	}
 	
 	// ---------------------------------------------------------
 	/** Set event response */
 	// ---------------------------------------------------------
-	public void setEventResponse(int group, int event) {
-		if (group >= 0 && group < CmeState.GROUP_MAX)
-			m_iEvent[group] |= event;
+	public void setEventResponse(int eventId, CmeEventResponse event) {
+			m_erEvent[eventId] = event;
 	}
-
+	
 	// ---------------------------------------------------------
-	/** Set the instruction file name */
+	/** Set a PropertyValue*/
 	// ---------------------------------------------------------
-	public void setInstructionFile(String s) {
-		m_sInsFileName = s;
+	public void setProperty(String name, Object prop) {
+		m_sProperties.put(name, prop);
 	}
-
+	
 	// ---------------------------------------------------------
-	/** Set the mode */
+	/** Set event response */
 	// ---------------------------------------------------------
-	public String getInstructionFile() {
-		return m_sInsFileName;
+	public Object getProperty(String name) {
+		return m_sProperties.get(name);
 	}
-
+	
 	// ---------------------------------------------------------
-	/** Is this state a Record state? */
+	/** Set a PropertyValue*/
 	// ---------------------------------------------------------
-	public boolean isRecordState() {
-		return m_bRecordState;
+	public void setPreviousState(CmeState state) {
+		m_sPrevState = state;
 	}
-
+	
 	// ---------------------------------------------------------
-	/** Set a Record State */
+	/** Set event response */
 	// ---------------------------------------------------------
-	public void setRecordState() {
-		m_bRecordState = true;
+	public Object getPreviousState() {
+		return m_sPrevState;
 	}
-
-	// ---------------------------------------------------------
-	/** Set the mode */
-	// ---------------------------------------------------------
-	public void setValidConditions(String conditions) {
-		m_sValidConditions = conditions;
-	}
-
-	// ---------------------------------------------------------
-	/** validate the condition we are currently in */
-	// ---------------------------------------------------------
-	public boolean validCondition(String condition) {
-		return m_sValidConditions.contains(condition);
-	}
-
 }

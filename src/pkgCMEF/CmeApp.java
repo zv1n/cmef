@@ -26,7 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
-/** Custom Memory Experiemnt Framework
+/** Custom Memory Experament Framework
  *  <P>Purpose: This application was designed and written for use
  *  as the primary experimental software for an experiment in 
  *  learning conducted by Jodi Price.
@@ -41,13 +41,13 @@ public class CmeApp extends JFrame
 	private JPanel m_MainPanel;
 	
 	/** Instructions text area */
-	private CmeInstructions m_InstructionsPan;
+	private CmeInstructions m_InstructionsPanel;
+	
+	/** Image panel */
+	private CmeExperiment m_ExperimentPanel;
 	
 	/** Continue button */
 	private JButton m_ContinueButton;
-	
-	/** Image panel */
-	private CmeExperiment m_ImagePanel;
 	
 	/** Name of the experiment definition file */
 	private String m_sExpFileName = "Instructions/Experiment.txt";
@@ -60,9 +60,6 @@ public class CmeApp extends JFrame
 	
 	/** Reference to the current state */
 	private CmeState m_CurState;
-	
-	/** Reference to the last state */
-	private CmeState m_LastState;
 	
 	/** Reference to the image factory */
 	private CmeImageFactory m_ImageFactory;
@@ -164,15 +161,15 @@ public class CmeApp extends JFrame
 		this.getContentPane().add(m_MainPanel);
 		
 		// Create and show the instructions panel
-		m_InstructionsPan = new CmeInstructions(1010, 686, this);
-		m_InstructionsPan.setLocation(-1, -1);
-		m_MainPanel.add(m_InstructionsPan);
+		m_InstructionsPanel = new CmeInstructions(1010, 686, this);
+		m_InstructionsPanel.setLocation(-1, -1);
+		m_MainPanel.add(m_InstructionsPanel);
 		
 		// Create the image panel
-		m_ImagePanel = new CmeExperiment(this, 1010, 728);
-		m_ImagePanel.setLocation(-1, -1);
-		m_MainPanel.add(m_ImagePanel);
-		m_ImagePanel.setVisible(false);
+		m_ExperimentPanel = new CmeExperiment(this, 1010, 728);
+		m_ExperimentPanel.setLocation(-1, -1);
+		m_MainPanel.add(m_ExperimentPanel);
+		m_ExperimentPanel.setVisible(false);
 		
 		// Create and add the Continue button
 		m_ContinueButton = new JButton("Continue");
@@ -198,8 +195,8 @@ public class CmeApp extends JFrame
 		
 		// Create the image factory
 		m_ImageFactory = new CmeImageFactory();
-		m_InstructionsPan.setImageFactory(m_ImageFactory);
-		m_ImagePanel.setImageFactory(m_ImageFactory);
+		m_InstructionsPanel.setImageFactory(m_ImageFactory);
+		m_ExperimentPanel.setImageFactory(m_ImageFactory);
 
 		// Set up the experiment arrays
 		m_iTrial1Group1 = new int[9];
@@ -235,7 +232,6 @@ public class CmeApp extends JFrame
 			System.exit(0);
 		
 		m_iCurStateIdx = -1;
-		m_LastState = null;
 		m_CurState = null;
 		
 		// Show the window
@@ -286,13 +282,14 @@ public class CmeApp extends JFrame
 	//-----------------------------------------------
 	public boolean initExperiment()
 	{
+		final CmeApp thisApp = this;
+		
 		// Open the experiment file
 		FileReader		instFile;
 		BufferedReader	bufReader = null;
 		String 			line;
 		CmeState 		thisState = null;
 		boolean			recordState = false;
-		
 		// Open the file
 		try
 		{
@@ -324,30 +321,23 @@ public class CmeApp extends JFrame
 				else if(line.contains("FILE"))
 				{
 					String insFile = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
-					thisState.setInstructionFile(insFile);
+					thisState.setProperty("InstructionFile", insFile);
 				}
 				else if(line.contains("CONDITIONS"))
 				{
 					String valConditions = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
-					thisState.setValidConditions(valConditions);
+					thisState.setProperty("ValidConditions", valConditions);
 				}
 				else if(line.contains("END"))
 				{
 					if(line.contains("On Click Continue"))
 					{
-						thisState.setEventResponse(CmeState.GROUP_NEXT_STATE, CmeState.EVENT_CLICK_CONTINUE);
-					}
-					if(line.contains("Record"))
-					{
-						if (!recordState) {
-							thisState.setRecordState();
-							recordState = true;
-						} else {
-							JOptionPane.showMessageDialog(this, 
-									"Error: Only one State in the Experiments file is allowed to specify a \"Record\" option!",
-									"Error In Experiments File!", JOptionPane.ERROR_MESSAGE);
-							return false;	
-						}
+						thisState.setEventResponse(CmeState.EVENT_CLICK_CONTINUE,
+							new CmeEventResponse() {
+									public void Respond() {
+										thisApp.setNextState();
+									}
+							});
 					}
 				}
 								// Check for options in "Learning Phase"
@@ -382,9 +372,6 @@ public class CmeApp extends JFrame
 			return false;
 		}
 		
-		if (!recordState) {
-			((CmeState)m_vExpStates.lastElement()).setRecordState();
-		}
 		// Build vectors of images
 		//    Images  1-12 --- Easy
 		//    Images 13-24 --- Medium
@@ -663,7 +650,7 @@ public class CmeApp extends JFrame
 		postStatusMessage("\n", false);
 		
 		// Give this presentation order for EOL to the Image panel
-		m_ImagePanel.setEOLPresentationOrder(m_iEOLOrder);
+		m_ExperimentPanel.setEOLPresentationOrder(m_iEOLOrder);
 		
 		// Set to record experiment events
 		postStatusMessage("Exp.Time - Experiment Event", false);
@@ -743,11 +730,10 @@ public class CmeApp extends JFrame
 		}
 		m_iCurStateIdx++;
 
-
-		// See if we are done and if so write out all the data in 
-		// comma separated format.
-		//if(m_iCurStateIdx >= m_vExpStates.size())
-		if ((m_CurState != null) && m_CurState.isRecordState())
+		//TODO Move header prints to the initialization
+		
+		// write out all the data in comma separated format.
+		if (m_CurState != null)
 		{
 			try
 			{
@@ -840,14 +826,8 @@ public class CmeApp extends JFrame
 			// Terminate the experiment
 			System.exit(0);
 		}
-		
-		m_LastState = m_CurState;
+
 		m_CurState = (CmeState)m_vExpStates.elementAt(m_iCurStateIdx);		
-		
-		if (!m_CurState.validCondition(sCondition)) {
-			this.setNextState();
-			return;
-		}
 		
 		switch(m_CurState.getState())
 		{
@@ -857,78 +837,78 @@ public class CmeApp extends JFrame
 					 (m_LastState.getState() != CmeState.SHOW_POINT_NOTIFICATION ||
 							 !m_LastState.validCondition(sCondition))))
 				{
-					m_InstructionsPan.setVisible(true);
+					m_InstructionsPanel.setVisible(true);
 					m_ContinueButton.setVisible(true);
-					m_ImagePanel.setVisible(false);
+					m_ExperimentPanel.setVisible(false);
 				}*/
-				postStatusMessage(" - Displaying instructions: " + m_CurState.getInstructionFile(), true);
+				postStatusMessage(" - Displaying instructions: " + m_CurState.getProperty("InstructionFile").toString(), true);
 				//This must be done to get around glitch which causes the first page
 				//to duplicate itself... several times...
-				m_InstructionsPan.setVisible(false);
-				m_InstructionsPan.showInstructions(m_CurState.getInstructionFile());
-				m_InstructionsPan.setVisible(true);
+				m_InstructionsPanel.setVisible(false);
+				m_InstructionsPanel.showInstructions(m_CurState.getProperty("InstructionFile").toString());
+				m_InstructionsPanel.setVisible(true);
 				break;
 /*			case CmeState.RATE_EASE_OF_LEARNING :
-				m_InstructionsPan.setVisible(false);
+				m_InstructionsPanel.setVisible(false);
 				m_ContinueButton.setVisible(false);
-				m_ImagePanel.setVisible(true);
+				m_ExperimentPanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Rating ease of learning.", true);
-				m_ImagePanel.rateEaseOfLearning();
-//				m_InstructionsPan.setVisible(true);
+				m_ExperimentPanel.rateEaseOfLearning();
+//				m_InstructionsPanel.setVisible(true);
 //				m_ContinueButton.setVisible(true);
-//				m_ImagePanel.setVisible(false);
+//				m_ExperimentPanel.setVisible(false);
 				break;
 			case CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE :
-				m_InstructionsPan.setVisible(false);
+				m_InstructionsPanel.setVisible(false);
 				m_ContinueButton.setVisible(false);
-				m_ImagePanel.setVisible(true);
+				m_ExperimentPanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Estimating number to remember pretrial.", true);
-				m_ImagePanel.estimateNumber(m_CurState.getInstructionFile(),
+				m_ExperimentPanel.estimateNumber(m_CurState.getInstructionFile(),
 						CmeState.ESTIMATE_NUMBER_TO_REMEMBER_PRE);
 				break;
 			case CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST :
-				m_InstructionsPan.setVisible(false);
+				m_InstructionsPanel.setVisible(false);
 				m_ContinueButton.setVisible(false);
-				m_ImagePanel.setVisible(true);
+				m_ExperimentPanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Estimating number to remember posttrial.", true);
-				m_ImagePanel.estimateNumber(m_CurState.getInstructionFile(),
+				m_ExperimentPanel.estimateNumber(m_CurState.getInstructionFile(),
 						CmeState.ESTIMATE_NUMBER_TO_REMEMBER_POST);
 				break;
 			case CmeState.ESTIMATE_NUMBER_CORRECT :
-				m_InstructionsPan.setVisible(false);
+				m_InstructionsPanel.setVisible(false);
 				m_ContinueButton.setVisible(false);
-				m_ImagePanel.setVisible(true);
+				m_ExperimentPanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Estimating number correct.", true);
-				m_ImagePanel.estimateNumber(m_CurState.getInstructionFile(),
+				m_ExperimentPanel.estimateNumber(m_CurState.getInstructionFile(),
 						CmeState.ESTIMATE_NUMBER_CORRECT);
 				break;*/
 			case CmeState.STATE_LEARNING :
 				m_iTrialNumber++;
-				m_InstructionsPan.setVisible(false);
+				m_InstructionsPanel.setVisible(false);
 				m_ContinueButton.setVisible(false);
-				m_ImagePanel.setVisible(true);
+				m_ExperimentPanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Begin study phase.", true);
 				if(m_iTrialNumber == 1)
-					m_ImagePanel.doLearning(m_iTrial1Group1, m_iTrial1Group2);
+					m_ExperimentPanel.doLearning(m_iTrial1Group1, m_iTrial1Group2);
 				else
-					m_ImagePanel.doLearning(m_iTrial2Group1, m_iTrial2Group2);
+					m_ExperimentPanel.doLearning(m_iTrial2Group1, m_iTrial2Group2);
 				break;
 			case CmeState.STATE_TEST :
 				//set up panels
-				m_InstructionsPan.setVisible(false);
+				m_InstructionsPanel.setVisible(false);
 				m_ContinueButton.setVisible(false);
-				m_ImagePanel.setVisible(true);
+				m_ExperimentPanel.setVisible(true);
 				paint(getGraphics());
 				postStatusMessage(" - Begin testing phase.", true);
 				if(m_iTrialNumber == 1)
-					m_ImagePanel.doTesting(1, m_iTrial1Group1, m_iTrial1Group2);
+					m_ExperimentPanel.doTesting(1, m_iTrial1Group1, m_iTrial1Group2);
 				else
-					m_ImagePanel.doTesting(2, m_iTrial2Group1, m_iTrial2Group2);
+					m_ExperimentPanel.doTesting(2, m_iTrial2Group1, m_iTrial2Group2);
 				break;
 		}
 	}
