@@ -996,8 +996,8 @@ public class CmeExperiment extends JPanel implements MouseListener
 							imageVal = Integer.parseInt(imageValue);
 							} catch(Exception ex) { imageVal = 0; }
 							
-							int value = m_App.getUserPoints(m_iTrialNumber);
-							m_App.saveUserPoints(m_iTrialNumber, value+imageVal);
+							//int value = m_App.getUserPoints(m_iTrialNumber);
+							//m_App.saveUserPoints(m_iTrialNumber, value+imageVal);
 						}
 						
 						/* Determine next image! */
