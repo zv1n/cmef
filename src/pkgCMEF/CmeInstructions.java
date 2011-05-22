@@ -3,22 +3,16 @@ package pkgCMEF;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
@@ -31,6 +25,7 @@ import javax.swing.border.BevelBorder;
  */
 //===================================================================
 
+@SuppressWarnings("serial")
 public class CmeInstructions extends JPanel
 {
 	/** Parent frame */
@@ -66,19 +61,19 @@ public class CmeInstructions extends JPanel
 	//----------------------------------------------------------------
 	/** Default constructor */
 	//----------------------------------------------------------------
-	public CmeInstructions(int width, int height, CmeApp parent)
+	public CmeInstructions(CmeApp parent)
 	{
 		m_App = parent;
 		
-		this.setSize(width, height);
+		this.setSize(parent.getSize());
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.setLayout(null);
 		
 		m_vTextStrings = new Vector<String>();
 		
 		// Define the area in which to draw the text
-		m_iTextFrameWidth = width - 35;
-		m_iTextFrameHeight = height - 60;
+		m_iTextFrameWidth = this.getSize().width - 35;
+		m_iTextFrameHeight = this.getSize().height - 60;
 		m_iTextFrameLeftX = 15;
 		m_iTextFrameTopY = 40;
 		

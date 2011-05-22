@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 public class CmeImageFactory
 {
 	/** Vector of PCLE_Image objects */
-	private Vector m_vImages;
+	private Vector<CmeImage> m_vImages;
 	
 	//-------------------------------------------------
 	/** Default constructor */
@@ -29,7 +29,7 @@ public class CmeImageFactory
 	public CmeImageFactory()
 	{
 		// Create the vector to hold all images
-		m_vImages = new Vector();
+		m_vImages = new Vector<CmeImage>();
 		
 		// Open the ImageList.txt file
 		FileReader		instFile;
@@ -118,7 +118,7 @@ public class CmeImageFactory
 	//-------------------------------------------------------------
 	/** Get the image vector. */
 	//-------------------------------------------------------------
-	public Vector getImagesVector()
+	public Vector<CmeImage> getImagesVector()
 	{
 		return this.m_vImages;
 	}

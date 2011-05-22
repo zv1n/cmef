@@ -2,24 +2,21 @@ package pkgCMEF;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
 /** CmeClock
  *  <P>Purpose: This panel displays and counts down a clock for the
- *  Price Chinese Learning Experiment.
- *  @author Dr. Rick Coleman
- *  @version 1.0
- *  Date: February, 2009
+ *  CME Framework.
+ *  @author Terry Meacham; Dr. Rick Coleman
+ *  @version 1.1
  */
 //===================================================================
 
+@SuppressWarnings("serial")
 public class CmeClock extends JPanel
 {
 	/** Initial time in seconds */
@@ -65,7 +62,7 @@ public class CmeClock extends JPanel
 	public void setInitialTime(int timeInSec)
 	{
 		m_iInitTime = timeInSec;
-		m_iCurTime = timeInSec;
+		m_iCurTime = m_iInitTime;
 		paint(getGraphics());
 	}
 	

@@ -1,10 +1,7 @@
 package pkgCMEF;
 
 import java.awt.Color;
-import java.awt.Dialog;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,14 +12,13 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
@@ -35,6 +31,7 @@ import javax.swing.border.BevelBorder;
  *  Date: May 2011
  */
 //===================================================================
+@SuppressWarnings("serial")
 public class CmeApp extends JFrame
 {
 	/** Main panel */
@@ -42,9 +39,12 @@ public class CmeApp extends JFrame
 	
 	/** Instructions Handler */
 	private CmeInstructions m_InstructionsHandler;
-	
+
 	/** Experiment Handler */
 	private CmeExperiment m_ExperimentHandler;
+	
+	/** Experiment Handler */
+	private CmeStudy m_StudyHandler;
 
 	/** Start time in milliseconds */
 	private long m_lStartTimeMillis;
@@ -56,7 +56,10 @@ public class CmeApp extends JFrame
 	private String m_sExpFileName = "Instructions/Experiment.txt";
 	
 	/** Vector of states defining the experiment */
-	private Vector m_vExpStates;
+	private Vector<CmeState> m_vExpStates;
+	
+	/** HashMap of all experiment properties */
+	private HashMap<String, Object> m_eProperties;
 	
 	/** Index of the current state */
 	private int m_iCurStateIdx;
@@ -66,12 +69,6 @@ public class CmeApp extends JFrame
 	
 	/** Reference to the image factory */
 	private CmeImageFactory m_ImageFactory;
-	
-	/** ID of this subject */
-	private String m_sSubjectID;
-
-	/** Experiment Condition */
-	private String m_sCondition;
 
 	//------------------------------------------------------------------
 	// Data storage components
@@ -105,31 +102,25 @@ public class CmeApp extends JFrame
 	public static final Font SysSmallFont = new Font("SansSerif", Font.PLAIN, 18);
 	
 	//-----------------------------------------------
-	// Init function for prepping all State handlers
-	// (CmeExperiment,CmeInstructions,CmeStudy)
-	//-----------------------------------------------
-	private void initStateHandlers() {
-
-		// Create the image factory
-		m_ImageFactory = new CmeImageFactory();
-		m_InstructionsHandler.setImageFactory(m_ImageFactory);
-		m_ExperimentHandler.setImageFactory(m_ImageFactory);
-		
-	}
-	
-	//-----------------------------------------------
 	// Default constructor
 	//-----------------------------------------------
 	public CmeApp(int debugLevel)
 	{
-		
 		this.setSize(1024, 768);
 		this.setLocation(50, 50);
 		this.setTitle("CME Main Panel");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		initStateHandlers();
+		try {
+			initStateHandlers();
+			initExperiment();
+		}
+		catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "A FATAL Error Occured!\n"
+					+ ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+		}
 		
+		this.setTitle(m_eProperties.get("Title").toString());
 		
 		// Create the main panel
 		m_MainPanel = new JPanel();
@@ -141,40 +132,22 @@ public class CmeApp extends JFrame
 		this.getContentPane().add(m_MainPanel);
 		
 		// Create and show the instructions panel
-		m_InstructionsHandler = new CmeInstructions(1010, 686, this);
+		m_InstructionsHandler = new CmeInstructions(this);
 		m_InstructionsHandler.setLocation(-1, -1);
 		m_MainPanel.add(m_InstructionsHandler);
 		
 		// Create the image panel
-		m_ExperimentHandler = new CmeExperiment(this, 1010, 728);
+		m_ExperimentHandler = new CmeExperiment(this);
 		m_ExperimentHandler.setLocation(-1, -1);
 		m_MainPanel.add(m_ExperimentHandler);
 		m_ExperimentHandler.setVisible(false);
-/*		
-		// Create and add the Continue button
-		m_ContinueButton = new JButton("Continue");
-		m_ContinueButton.setSize(100, 20);
-		m_ContinueButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		m_ContinueButton.setLocation(462, 692);
-		
-		m_ContinueButton.addActionListener(
-			new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					m_CurState.TriggerEvent(CmeState.EVENT_CLICK_CONTINUE);
-				}
-			}
-		);
+				
+		String sSubjectId;
+		do {
+			sSubjectId = JOptionPane.showInputDialog("Please enter your subject ID:");
+		} while (sSubjectId != null);
 
-		m_MainPanel.add(m_ContinueButton); */
 		
-		
-		// Get the subject ID first
-		m_sSubjectID = JOptionPane.showInputDialog("Please enter the subject's ID.");
-		if (m_sSubjectID == null)
-			System.exit(0);
-
 		String sCondition;
 		do {
 			sCondition = JOptionPane.showInputDialog("Please enter the experimental Condition\n(This should be given by the experimenter).");
@@ -183,51 +156,57 @@ public class CmeApp extends JFrame
 			}
 		} while (!setCondition(sCondition));
 		
+		
 		// Set up the experiment states
-		m_vExpStates = new Vector();
-		if(!initExperiment())	// Oops! Couldn't read the file
-			System.exit(0);
-		
-		m_iCurStateIdx = -1;
-		m_CurState = null;
-		
+		m_vExpStates = new Vector<CmeState>();
+		try {
+			initExperiment();	// Oops! Couldn't read the file
+		}
+		catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "A FATAL Error Occured!\n"
+					+ ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);	
+		}
+				
 		// Show the window
 		this.setVisible(true);
 		
 		// Set the initial state
-		this.setNextState();
+		this.startExperiment();
 	}
 
-	public boolean validateCondition(String condition)
-	{
-		return true;
+	/**
+	 * Initialization function for preparing all State handlers
+	 * (CmeExperiment,CmeInstructions,CmeStudy)
+	 */
+	private void initStateHandlers() {
+		// Create the image factory
+		m_ImageFactory = new CmeImageFactory();
+		m_InstructionsHandler.setImageFactory(m_ImageFactory);
+		m_ExperimentHandler.setImageFactory(m_ImageFactory);
+		m_StudyHandler.setImageFactory(m_ImageFactory);
 	}
 	
-	//-----------------------------------------------
-	/** Set the condition; return false 
-	 * if the string is invalid 
-	 */	
-	//-----------------------------------------------
-	public boolean setCondition(String condition)
-	{
-		m_sCondition = condition;
-		return validateCondition(condition);
-	}
 	
 	//-----------------------------------------------
-	/** Set up to run the experiment */
+	/** 
+	 * Initialization function for preparing all States
+	 *  Reads in experiment config file and generates all
+	 *  configured state information.
+	 * @throws Exception 
+	 * */
 	//-----------------------------------------------
-	public boolean initExperiment()
+	public void initExperiment() throws Exception
 	{
 		final CmeApp thisApp = this;
-		
+	
 		// Open the experiment file
 		FileReader		instFile;
 		BufferedReader	bufReader = null;
 		String 			line;
 		CmeState 		thisState = null;
-		boolean			recordState = false;
 		Calendar		expCalendar;
+				
 		// Open the file
 		try
 		{
@@ -235,10 +214,7 @@ public class CmeApp extends JFrame
 		}
 		catch(FileNotFoundException e1) // If we failed to opened it
 		{
-			JOptionPane.showMessageDialog(this, 
-					"Error: Unable to open " + m_sExpFileName, 
-					"Error Opening Experiment File", JOptionPane.ERROR_MESSAGE);
-			return false;
+			throw new Exception("Unable to open " + m_sExpFileName);
 		}
 		// Read the text strings and add them to the text area
 		try
@@ -303,10 +279,7 @@ public class CmeApp extends JFrame
 		}
 		catch(IOException e)
 		{
-			JOptionPane.showMessageDialog(this, 
-					"Error: Unable to read " + m_sExpFileName, 
-					"Error Reading Experiment File", JOptionPane.ERROR_MESSAGE);
-			return false;
+			 throw new Exception("Error: Unable to read " + m_sExpFileName);
 		}
 				
 		// Create a unique report file name using the time
@@ -321,7 +294,8 @@ public class CmeApp extends JFrame
 		
 		// Create an image file name
 		String fileName = new String(m_sStudyName + "_"
-				+ m_sCondition + "_SID" + m_sSubjectID
+				+ m_eProperties.get("ExpCondition").toString() + "_SID" 
+				+ m_eProperties.get("SCondition").toString()
                 + "_" + ((day<10)?("0"+String.valueOf(day)):String.valueOf(day))
                 + ((month<10)?("0"+String.valueOf(month)):String.valueOf(month))
                 + year + ".txt");
@@ -350,22 +324,52 @@ public class CmeApp extends JFrame
 		}
 		catch(IOException ex)
 		{
-			JOptionPane.showMessageDialog(this, 
-					"Error: Unable to write to report file.", 
-					"Error Writing Report File", JOptionPane.ERROR_MESSAGE);
-			return false;
+			throw new Exception("Unable to write to report file.");
 		}
 		
 		// Record the setup for this experiment
 		postStatusMessage("Setup for this run: ", false);
 		postStatusMessage("\tDisplay arrangement for each trial will be top row (l to r), bottom row (l to r) ", false);
-		Vector iVec = this.m_ImageFactory.getImagesVector();
+		Vector<CmeImage> iVec = this.m_ImageFactory.getImagesVector();
 		
 		postStatusMessage(line, false);
 		
 		// Set to record experiment events
 		postStatusMessage("--------------------------------------------------------------", false);
-		return true;
+	}
+	
+	private void startExperiment() {
+		return;
+	}
+
+	/** 
+	 * Validates that a given condition is valid.
+	 * 
+	 * @param condition - the condition to be validated
+	 * @return true if condition is valid, else false;
+	 * 
+	 * @see property ValidConditions is populated with a string of the form: 
+	 * 		":cond1:cond2:cond3:"
+	 */
+	public boolean validateCondition(String condition)
+	{
+		return m_eProperties.get("ValidConditions").toString().contains(":" + condition + ":");
+	}
+	
+	/** 
+	 * Set the condition property for the current experiment run.
+	 *  
+	 * @param condition - value to be
+	 * @return true if condition is valid, else false  
+	 */	
+	public boolean setCondition(String condition)
+	{
+		if (validateCondition(condition)) {
+			m_eProperties.put("ExpCondition", condition);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	//--------------------------------------------------------------------
