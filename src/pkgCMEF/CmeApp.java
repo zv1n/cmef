@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 //====================================================================
-/** Custom Memory Experament Framework
+/** Custom Memory Experiment Framework
  *  <P>Purpose: This application was designed and written for use
  *  as the primary experimental software for an experiment in 
  *  learning conducted by Jodi Price.
@@ -46,11 +46,11 @@ public class CmeApp extends JFrame
 	/** Experiment Handler */
 	private CmeStudy m_StudyHandler;
 
+	/** Debug Level */
+	private int m_iDebugLevel;
+
 	/** Start time in milliseconds */
 	private long m_lStartTimeMillis;
-	
-	/** Study Name from Config Files */
-	private String m_sStudyName;
 	
 	/** Name of the experiment definition file */
 	private String m_sExpFileName = "Instructions/Experiment.txt";
@@ -101,26 +101,27 @@ public class CmeApp extends JFrame
 	/** Small font used for instructions and labels on text widgets */
 	public static final Font SysSmallFont = new Font("SansSerif", Font.PLAIN, 18);
 	
+	public void dmsg(int level, String msg) {
+		if (level >= m_iDebugLevel) {
+			JOptionPane.showMessageDialog(this, msg, 
+					"Debug Msg", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
 	//-----------------------------------------------
 	// Default constructor
 	//-----------------------------------------------
 	public CmeApp(int debugLevel)
 	{
+		String sCondition;
+		String sSubjectId;
+		
+		m_iDebugLevel = debugLevel;
+	
 		this.setSize(1024, 768);
 		this.setLocation(50, 50);
 		this.setTitle("CME Main Panel");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-		try {
-			initStateHandlers();
-			initExperiment();
-		}
-		catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "A FATAL Error Occured!\n"
-					+ ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
-		}
-		
-		this.setTitle(m_eProperties.get("Title").toString());
 		
 		// Create the main panel
 		m_MainPanel = new JPanel();
@@ -129,176 +130,114 @@ public class CmeApp extends JFrame
 		m_MainPanel.setLayout(null);
 		m_MainPanel.setBackground(Color.LIGHT_GRAY);
 		m_MainPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		this.getContentPane().add(m_MainPanel);
-		
-		// Create and show the instructions panel
-		m_InstructionsHandler = new CmeInstructions(this);
-		m_InstructionsHandler.setLocation(-1, -1);
-		m_MainPanel.add(m_InstructionsHandler);
-		
-		// Create the image panel
-		m_ExperimentHandler = new CmeExperiment(this);
-		m_ExperimentHandler.setLocation(-1, -1);
-		m_MainPanel.add(m_ExperimentHandler);
-		m_ExperimentHandler.setVisible(false);
-				
-		String sSubjectId;
-		do {
-			sSubjectId = JOptionPane.showInputDialog("Please enter your subject ID:");
-		} while (sSubjectId != null);
+		this.getContentPane().add(m_MainPanel);		
 
-		
-		String sCondition;
-		do {
-			sCondition = JOptionPane.showInputDialog("Please enter the experimental Condition\n(This should be given by the experimenter).");
-			if (sCondition == null) {
-				System.exit(0);
-			}
-		} while (!setCondition(sCondition));
-		
+		// Set up the property HashMap
+		m_eProperties = new HashMap<String, Object>();
 		
 		// Set up the experiment states
 		m_vExpStates = new Vector<CmeState>();
+		
 		try {
-			initExperiment();	// Oops! Couldn't read the file
+			initStateHandlers();
+			initExperiment();
+			
+			if ((m_iDebugLevel & 0x100) == 0x0) {
+				
+				do {
+					sSubjectId = JOptionPane.showInputDialog("Please enter your subject ID:");
+					if (sSubjectId == null) {
+						System.exit(0);
+					}
+				} while (sSubjectId == "");
+				
+				m_eProperties.put("SubjectID", sSubjectId);
+				dmsg(5, "Subject Complete!");
+			
+				do {
+					sCondition = JOptionPane.showInputDialog("Please enter the experimental Condition\n"
+							+ "(This should be given by the experimenter).");
+					if (sCondition == null) {
+						System.exit(0);
+					}
+				} while (!setCondition(sCondition.toUpperCase()));
+				dmsg(5, "Conditions Complete!");
+			
+			} else {
+				m_eProperties.put("SubjectID","TESTID");
+				m_eProperties.put("ExpCondition","B");
+			}
+
+			initOutputFile();
+			
+			this.setTitle(m_eProperties.get("Title").toString());
+			dmsg(5, "Title Set");
+			
 		}
 		catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "A FATAL Error Occured!\n"
-					+ ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);	
+			JOptionPane.showMessageDialog(this, "FATAL Error:\n" + ex.toString() + 
+					"\n" + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
-				
+						
+
 		// Show the window
 		this.setVisible(true);
 		
 		// Set the initial state
-		this.startExperiment();
+		this.setNextState();
 	}
 
 	/**
 	 * Initialization function for preparing all State handlers
 	 * (CmeExperiment,CmeInstructions,CmeStudy)
 	 */
-	private void initStateHandlers() {
+	private void initStateHandlers() throws Exception {
 		// Create the image factory
 		m_ImageFactory = new CmeImageFactory();
-		m_InstructionsHandler.setImageFactory(m_ImageFactory);
+		
+		m_InstructionsHandler = new CmeInstructions(this);
+		m_InstructionsHandler.setLocation(-1, -1);
+		m_InstructionsHandler.setVisible(false);
+		m_MainPanel.add(m_InstructionsHandler);		
+		
+		m_ExperimentHandler = new CmeExperiment(this);
 		m_ExperimentHandler.setImageFactory(m_ImageFactory);
+		m_ExperimentHandler.setLocation(-1, -1);
+		m_ExperimentHandler.setVisible(false);
+		m_MainPanel.add(m_ExperimentHandler);
+		
+		m_StudyHandler = new CmeStudy(this);
 		m_StudyHandler.setImageFactory(m_ImageFactory);
+		m_StudyHandler.setLocation(-1, -1);
+		m_StudyHandler.setVisible(false);
+		m_MainPanel.add(m_StudyHandler);
+
+		dmsg(5, "State Handler Init Successful!");
 	}
 	
-	
-	//-----------------------------------------------
-	/** 
-	 * Initialization function for preparing all States
-	 *  Reads in experiment config file and generates all
-	 *  configured state information.
-	 * @throws Exception 
-	 * */
-	//-----------------------------------------------
-	public void initExperiment() throws Exception
+	public void initOutputFile() throws Exception 
 	{
-		final CmeApp thisApp = this;
-	
-		// Open the experiment file
-		FileReader		instFile;
-		BufferedReader	bufReader = null;
-		String 			line;
-		CmeState 		thisState = null;
 		Calendar		expCalendar;
-				
-		// Open the file
-		try
-		{
-			instFile = new FileReader(m_sExpFileName);
-		}
-		catch(FileNotFoundException e1) // If we failed to opened it
-		{
-			throw new Exception("Unable to open " + m_sExpFileName);
-		}
-		// Read the text strings and add them to the text area
-		try
-		{
-			bufReader = new BufferedReader(instFile);
-			while((line = bufReader.readLine()) != null)
-			{
-				// See if we need to create a new State
-				if((line.contains("STATE")) && (!(line.contains("/STATE"))))
-				{
-					thisState = new CmeState();
-				}
-				// Check for options in "Show Instructions"
-				else if(line.contains("Show Instructions"))
-				{
-					thisState.setState(CmeState.STATE_INSTRUCTION);
-				}
-				else if(line.contains("FILE"))
-				{
-					String insFile = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
-					thisState.setProperty("InstructionFile", insFile);
-				}
-				else if(line.contains("CONDITIONS"))
-				{
-					String valConditions = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
-					thisState.setProperty("ValidConditions", valConditions);
-				}
-				else if(line.contains("END"))
-				{
-					if(line.contains("On Click Continue"))
-					{
-						thisState.setEventResponse(CmeState.EVENT_CLICK_CONTINUE,
-							new CmeEventResponse() {
-									public void Respond() {
-										thisApp.setNextState();
-									}
-							});
-					}
-				}
-								// Check for options in "Learning Phase"
-				else if(line.contains("Learning Phase"))
-				{
-					thisState.setState(CmeState.STATE_LEARNING);
-				}
-				// Check for options in "Testing Phase"
-				else if(line.contains("Testing Phase"))
-				{
-					thisState.setState(CmeState.STATE_TEST);
-				}
-				else if(line.contains("/STATE"))
-				{
-					// Add this one to the vector
-					m_vExpStates.add(thisState);
-				}
-				else if((line.contains("STUDY_TIMES")) && (!line.contains("/")))
-				{
-					// Get the number of study times to write out to report
-					line = bufReader.readLine().trim();
-				}
-
-			}
-		}
-		catch(IOException e)
-		{
-			 throw new Exception("Error: Unable to read " + m_sExpFileName);
-		}
-				
 		// Create a unique report file name using the time
 		// Note: Calendar months are numbered from 0 so add 1 to Calendar.MONTH
 		expCalendar = Calendar.getInstance();
-		int hr = expCalendar.get(Calendar.HOUR_OF_DAY);
-		int min = expCalendar.get(Calendar.MINUTE);
-		int sec = expCalendar.get(Calendar.SECOND);
+		//int hr = expCalendar.get(Calendar.HOUR_OF_DAY);
+		//int min = expCalendar.get(Calendar.MINUTE);
+		//int sec = expCalendar.get(Calendar.SECOND);
 		int day = expCalendar.get(Calendar.DAY_OF_MONTH);
 		int month = expCalendar.get(Calendar.MONTH)+1; // Calendar months are numbered from 0 
 		int year = expCalendar.get(Calendar.YEAR);
 		
 		// Create an image file name
-		String fileName = new String(m_sStudyName + "_"
-				+ m_eProperties.get("ExpCondition").toString() + "_SID" 
-				+ m_eProperties.get("SCondition").toString()
-                + "_" + ((day<10)?("0"+String.valueOf(day)):String.valueOf(day))
-                + ((month<10)?("0"+String.valueOf(month)):String.valueOf(month))
-                + year + ".txt");
+		String fileName = new String(
+				m_eProperties.get("StudyName").toString() + "_" +
+				m_eProperties.get("ExpCondition").toString() + "_SID" +
+				m_eProperties.get("SubjectID").toString() + "_" + 
+				((day<10)?("0"+String.valueOf(day)):String.valueOf(day)) +
+                ((month<10)?("0"+String.valueOf(month)):String.valueOf(month)) +
+                year + ".txt");
+
 		try
 		{
 			// Open the report file
@@ -309,37 +248,105 @@ public class CmeApp extends JFrame
 			m_bufWriter = new BufferedWriter(m_fileWriter);
 			// Get the experiment start time in milliseconds
 			m_lStartTimeMillis = System.currentTimeMillis();
-			
-			// Save and write some initial time data
-			// Create time string as HH:MM:SS
-			/*m_sExpTimeStr = 
-				((hr<10)?("0"+String.valueOf(hr)):String.valueOf(hr)) + ":" +
-				((min<10)?("0"+String.valueOf(min)):String.valueOf(min)) + ":" +
-				((sec<10)?("0"+String.valueOf(sec)):String.valueOf(sec));*/
-			// Create date string as DOW Month Date Year "EEEE MMMM dd yyyy"
-			SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.FULL);
-			sdf.applyPattern("EEEE MMMM dd yyyy");
+
 			postStatusMessage("Subject Test Time: " + 
-					expCalendar.getTime().toString() + "\n", false);
+				expCalendar.getTime().toString() + "\n", false);
 		}
+		
 		catch(IOException ex)
 		{
-			throw new Exception("Unable to write to report file.");
+			throw new Exception("Unable to write to report file: " + ex.getMessage());
 		}
-		
-		// Record the setup for this experiment
-		postStatusMessage("Setup for this run: ", false);
-		postStatusMessage("\tDisplay arrangement for each trial will be top row (l to r), bottom row (l to r) ", false);
-		Vector<CmeImage> iVec = this.m_ImageFactory.getImagesVector();
-		
-		postStatusMessage(line, false);
-		
-		// Set to record experiment events
-		postStatusMessage("--------------------------------------------------------------", false);
+
+		dmsg(5, "Output File Generated!");
 	}
 	
-	private void startExperiment() {
-		return;
+	//-----------------------------------------------
+	/** 
+	 * Initialization function for preparing all States
+	 *  Reads in experiment configuration file and generates 
+	 *  all configured state information.
+	 * @throws Exception 
+	 * */
+	//-----------------------------------------------
+	public void initExperiment() throws Exception
+	{
+		final CmeApp thisApp = this;
+	
+		// Open the experiment file
+		String			line;
+		FileReader		instFile;
+		BufferedReader	bufReader = null;
+		CmeState 		thisState = null;
+				
+		// Open the file
+		try {
+			instFile = new FileReader(m_sExpFileName);
+		}
+		catch(FileNotFoundException e1) {
+			throw new Exception("Unable to open: " + m_sExpFileName);
+		}
+
+		// Read the text strings and add them to the text area
+		try
+		{
+			bufReader = new BufferedReader(instFile);
+			while((line = bufReader.readLine()) != null)
+			{
+				// See if we need to create a new State
+				if((line.contains("STATE")) && (!(line.contains("/STATE")))) {
+					thisState = new CmeState();
+				} else if(line.contains("TITLE")) {	
+					String title = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
+					m_eProperties.put("Title",title);					
+				} else if(line.contains("STUDYNAME")) {	
+					String study = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
+					m_eProperties.put("StudyName",study);					
+				} else if(line.contains("CONDITIONS")) {	
+					String valConditions = line.substring(line.indexOf("\"")+1, 
+							line.lastIndexOf("\"")).toUpperCase().replace(',',':');
+					if (thisState == null)
+						m_eProperties.put("ValidConditions",":" + valConditions + ":");
+					else
+						thisState.setProperty("ValidConditions", ":" + valConditions + ":");				
+				} else if(line.contains("Show Instructions")) {
+					// Check for options in "Show Instructions"
+					thisState.setState(CmeState.STATE_INSTRUCTION);
+				} else if(line.contains("FILE")) {
+					String insFile = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
+					thisState.setProperty("InstructionFile", insFile);
+				} else if(line.contains("END")) {
+					if(line.contains("On Click Continue")) {
+						thisState.setEventResponse(CmeState.EVENT_CLICK_CONTINUE,
+							new CmeEventResponse() {
+									public void Respond() {
+										thisApp.setNextState();
+									}
+							});
+					}
+				} else if(line.contains("Learning Phase")) {								
+					// Check for options in "Learning Phase"
+					thisState.setState(CmeState.STATE_STUDY);
+				} else if(line.contains("Testing Phase")) {
+					// Check for options in "Testing Phase"
+					thisState.setState(CmeState.STATE_TEST);
+				} else if(line.contains("/STATE")) {
+					// Add this one to the vector
+					m_vExpStates.add(thisState);
+				} else if((line.contains("STUDY_TIMES")) && (!line.contains("/"))) {
+					// Get the number of study times to write out to report
+					line = bufReader.readLine().trim();
+				}
+			}
+		}
+		catch(IOException e) {
+			throw new Exception(e.getMessage() + m_sExpFileName);
+		}
+		catch(Exception e) {
+			throw new Exception("Error parsing configuration file!");
+		}
+		
+		dmsg(5, "Experiment Init Successful!");
 	}
 
 	/** 
@@ -352,14 +359,17 @@ public class CmeApp extends JFrame
 	 * 		":cond1:cond2:cond3:"
 	 */
 	public boolean validateCondition(String condition)
-	{
-		return m_eProperties.get("ValidConditions").toString().contains(":" + condition + ":");
+	{	
+		String validConditions = m_eProperties.get("ValidConditions").toString();
+		if (validConditions == null)
+			return false;
+		return validConditions.contains(":" + condition + ":");
 	}
 	
 	/** 
 	 * Set the condition property for the current experiment run.
 	 *  
-	 * @param condition - value to be
+	 * @param condition - condition to be set
 	 * @return true if condition is valid, else false  
 	 */	
 	public boolean setCondition(String condition)
@@ -368,7 +378,6 @@ public class CmeApp extends JFrame
 			m_eProperties.put("ExpCondition", condition);
 			return true;
 		}
-		
 		return false;
 	}
 	
@@ -497,7 +506,7 @@ public class CmeApp extends JFrame
 				m_InstructionsHandler.showInstructions(m_CurState.getProperty("InstructionFile").toString());
 				m_InstructionsHandler.setVisible(true);
 				break;
-			case CmeState.STATE_LEARNING :
+			case CmeState.STATE_STUDY :
 				m_InstructionsHandler.setVisible(false);
 				m_ExperimentHandler.setVisible(true);
 				paint(getGraphics());
@@ -565,7 +574,8 @@ public class CmeApp extends JFrame
 			}
 		}
 		
-		CmeApp theApp = new CmeApp(debug);
+		@SuppressWarnings("unused")
+		CmeApp theApp = new CmeApp(0x104);
 	}
 
 }

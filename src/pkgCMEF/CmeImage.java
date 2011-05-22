@@ -2,20 +2,16 @@ package pkgCMEF;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.File;
-import java.util.Vector;
-
 import javax.swing.JOptionPane;
 
 //=====================================================================
 /** This class implements a PCLE_Image which references an Image object 
 *   for use in the experiment.
-*   @author Dr. Rick Coleman
+*   @author Terry Meacham; Dr. Rick Coleman
 */
 //=====================================================================
 public class CmeImage
 {
-
     /** Reference to the image icon */
 	private Image		m_Image;
 

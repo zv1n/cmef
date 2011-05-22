@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.xml.bind.Marshaller.Listener;
 
 //====================================================================
 /** CmeStudy
@@ -25,7 +24,7 @@ import javax.xml.bind.Marshaller.Listener;
 public class CmeStudyDialog extends JDialog
 {
 	/** Parent panel */
-	private CmeStudy m_Study;
+	private CmeStudy m_Parent;
 	
 	/** Done studying button */
 	private JButton m_DoneBtn;
@@ -34,35 +33,16 @@ public class CmeStudyDialog extends JDialog
 	private JPanel m_MainPanel;
 	
 	/** Image to draw */
-	private CmeImage m_PImage;
-	
-	/** Width of image area */
-	private int m_iImgAreaWt;
-	
-	/** Height of the image area */
-	private int m_iImgAreaHt;
-	
-	/** Image area X coord */
-	private int m_iImgAreaX;
-	
-	/** Image area Y coord */
-	private int m_iImgAreaY;
+	private CmeImage m_cImage;
 	
 	//---------------------------------------------------
 	/** Default constructor */
 	//---------------------------------------------------
 	public CmeStudyDialog(CmeStudy parent)
 	{
-		m_Study = parent;
-		// Center this frame on the parent frame
-		CmeApp parentFrame = m_Study.getParentFrame();
-		int parentXPos = parentFrame.getLocation().x;
-		int parentYPos = parentFrame.getLocation().y;
-		int parentWidth = parentFrame.getSize().width;
-		int parentHeight = parentFrame.getSize().height;
+		m_Parent = parent;
 		
-		this.setSize(900, 600);
-		this.setLocation((parentWidth-900)/2,0);
+		this.setSize(parent.getSize());
 		this.setLayout(null);
 		this.setBackground(Color.LIGHT_GRAY);
 		this.getContentPane().setLayout(null);
@@ -70,8 +50,7 @@ public class CmeStudyDialog extends JDialog
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		
 		m_MainPanel = new JPanel();
-		m_MainPanel.setSize(900, 600);
-		m_MainPanel.setLocation(0,0);
+		m_MainPanel.setSize(m_Parent.getSize());
 		m_MainPanel.setBackground(Color.LIGHT_GRAY);
 		m_MainPanel.setLayout(null);
 		this.getContentPane().add(m_MainPanel);
@@ -82,23 +61,13 @@ public class CmeStudyDialog extends JDialog
 		
 		ActionListener doneListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				m_Study.stopClock();
-				
-				m_Study.getParentFrame().postStatusMessage(" - Done studying selected character." +
-						" Clock = " + m_Study.getClock().getTimeRemaining() + " seconds.", true);
 				setVisible(false);
 			}
 		};
 		
 		m_DoneBtn.addActionListener(doneListener);
 				
-		m_MainPanel.add(m_DoneBtn);
-		
-		m_iImgAreaWt = 880;
-		m_iImgAreaHt = 380;
-		m_iImgAreaX = 10;
-		m_iImgAreaY = 10;
-		
+		m_MainPanel.add(m_DoneBtn);		
 	}
 	
 	//----------------------------------------------------
@@ -106,7 +75,7 @@ public class CmeStudyDialog extends JDialog
 	//----------------------------------------------------
 	public void setImage(CmeImage img)
 	{
-		m_PImage = img;
+		m_cImage = img;
 	}
 
 	//----------------------------------------------------
@@ -114,7 +83,7 @@ public class CmeStudyDialog extends JDialog
 	//----------------------------------------------------
 	public CmeImage getImage()
 	{
-		return m_PImage;
+		return m_cImage;
 	}
 
 	//----------------------------------------------------
@@ -123,21 +92,18 @@ public class CmeStudyDialog extends JDialog
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		Image img = m_PImage.getImage();
+		Image img = m_cImage.getImage();
 		// Paint the area
 		g.setColor(Color.white);
-		g.fillRect(m_iImgAreaX, m_iImgAreaY, m_iImgAreaWt, m_iImgAreaHt);
-		g.drawImage(img, 
-				m_iImgAreaX + (((m_iImgAreaWt / 2) - img.getWidth(null)) / 2), 
-				m_iImgAreaY + ((m_iImgAreaHt - img.getHeight(null)) / 2), null);
+		
 //		g.drawImage(img, 40, m_iImgAreaY + 10, null);
-		String str = m_PImage.getReferenceName();
+		String str = m_cImage.getReferenceName();
 		g.setFont(CmeApp.SysTitleFontB);
 		g.setColor(Color.BLACK);
-		g.drawString(str, m_iImgAreaX+(m_iImgAreaWt / 2)+100, 
-				210);
-		g.drawString(String.valueOf(m_PImage.getImageValue()),
-				m_iImgAreaX+(m_iImgAreaWt / 2)+125,	245);
+//		g.drawString(str, m_iImgAreaX+(m_iImgAreaWt / 2)+100, 
+//				210);
+//		g.drawString(String.valueOf(m_cImage.getImageValue()),
+//				m_iImgAreaX+(m_iImgAreaWt / 2)+125,	245);
 //		g.drawString(str, m_iImgAreaX+m_PImage.getImage().getWidth(null)+20, 
 //				100);
 	}

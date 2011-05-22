@@ -29,7 +29,7 @@ public class CmeState {
 	/** Display instructions mode */
 	public static final int STATE_INSTRUCTION = 1;
 	/** Learning mode */
-	public static final int STATE_LEARNING = 2;
+	public static final int STATE_STUDY = 2;
 	/** Testing mode */
 	public static final int STATE_TEST = 3;
 
