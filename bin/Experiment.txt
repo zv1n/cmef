@@ -1,127 +1,152 @@
 <EXPERIMENT>
-	<STUDY_TIMES>
-		10
-	</STUDY_TIMES>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen1.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen2.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen3.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Rate Ease of Learning"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen4.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Pretrial"
-		FILE="../../Instructions/Screen5.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen6.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen7.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen8.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen9.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen10.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Learning Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Posttrial"
-		FILE="../../Instructions/Screen11.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen12.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Testing Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number Correct"
-		FILE="../../Instructions/Screen13.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Point Notification"
-		CONDITIONS="AF,BF,CF,DF"
-		FILE="../../Instructions/Points.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Pretrial"
-		FILE="../../Instructions/Screen14.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen15.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Learning Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Posttrial"
-		FILE="../../Instructions/Screen16.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen17.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Testing Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number Correct"
-		FILE="../../Instructions/Screen18.txt"
-		END="On Click Continue And Record"
-	</STATE>
-	<STATE>
-		MODE="Show Point Notification"
-		CONDITIONS="AF,BF,CF,DF"
-		FILE="../../Instructions/Points.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen19.txt"
-		END="On Click Continue"
-	</STATE>
+	TITLE="PCLE Test Experiment"
+	STUDYNAME="PCLE"
+	CONDITIONS="A,B,C,D,AF,BF,CF,DF"
+	<TRIAL ID="1">
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen2.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen3.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Rate Ease of Learning"
+			END="Click:Next"
+			REPEAT="Images"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen4.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number to Remember Pretrial"
+			FILE="../../Instructions/Screen5.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen6.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen7.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen8.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen9.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen10.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			TITLE="Image Study - Trial 1"
+			TIME="10"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number to Remember Posttrial"
+			FILE="../../Instructions/Screen11.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen12.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			TITLE="Testing"
+			MODE="Test"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number Correct"
+			FILE="../../Instructions/Screen13.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			CONDITIONS="AF,BF,CF,DF"
+			FILE="../../Instructions/Points.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Prompt"
+			CONDITIONS="AF,BF,CF,DF"
+			VALUE="$points_this_trial"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2">
+		<STATE>
+			MODe="Feedback"
+			TITLE="Estimate Number to Remember Pretrial"
+			FILE="../../Instructions/Screen14.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen15.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			TITLE="Image Study - Trial 2"
+			TIME="10"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number to Remember Posttrial"
+			FILE="../../Instructions/Screen16.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen17.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			TITLE="Testing"
+			MODE="Test"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number Correct"
+			FILE="../../Instructions/Screen18.txt"
+			END="Click:Continue And Record"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Show Point Notification"
+			CONDITIONS="AF,BF,CF,DF"
+			FILE="../../Instructions/Points.txt"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="../../Instructions/Screen19.txt"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
 </EXPERIMENT>

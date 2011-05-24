@@ -5,7 +5,7 @@
 	<TRIAL ID="1">
 		<STATE>
 			MODE="Instruction"
-			FILE="../../Instructions/Screen1.txt"
+			FILE="../../Instructions/Screen1.htm"
 			END="Click:Continue"
 		</STATE>
 		<STATE>

@@ -109,7 +109,7 @@ public class CmeApp extends JFrame
 	 * @param msg - the msg to be displayed
 	 */
 	public void dmsg(int level, String msg) {
-		if (level >= m_iDebugLevel) {
+		if (level >= (m_iDebugLevel&0xFF)) {
 			JOptionPane.showMessageDialog(this, msg, 
 					"Debug Msg", JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -123,7 +123,7 @@ public class CmeApp extends JFrame
 	{
 		String sCondition;
 		String sSubjectId;
-		
+
 		m_iDebugLevel = debugLevel;
 	
 		this.setSize(1024, 768);
@@ -145,11 +145,11 @@ public class CmeApp extends JFrame
 		
 		// Set up the experiment states
 		m_vStates = new Vector<CmeState>();
-		
+
 		try {
 			initStateHandlers();
 			initExperiment();
-			
+
 			if ((m_iDebugLevel & 0x100) == 0x0) {
 				
 				do {
@@ -187,7 +187,7 @@ public class CmeApp extends JFrame
 					"\n" + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
-						
+
 
 		// Show the window
 		this.setVisible(true);
@@ -372,8 +372,11 @@ public class CmeApp extends JFrame
 					if (trialId != null)
 						thisState.setProperty("TrialID", trialId);
 				} else if(line.contains("TITLE")) {	
-					String title = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
-					m_eProperties.put("Title",title);					
+					String title = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));					
+					if (thisState == null)
+						m_eProperties.put("Title", title);
+					else
+						thisState.setProperty("Title", title);
 				} else if(line.contains("STUDYNAME")) {	
 					String study = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					m_eProperties.put("StudyName",study);					
@@ -398,17 +401,20 @@ public class CmeApp extends JFrame
 					}
 				} else if(line.contains("MODE")) {			
 
-					if (line.toUpperCase().contains("Instruction"))
+					if (line.toUpperCase().contains("INSTRUCTION"))
 						thisState.setState(CmeState.STATE_INSTRUCTION);
-					else if (line.toUpperCase().contains("Feedback"))
+					else if (line.toUpperCase().contains("FEEDBACK"))
 						thisState.setState(CmeState.STATE_FEEDBACK);
-					else if (line.toUpperCase().contains("Prompt"))
+					else if (line.toUpperCase().contains("PROMPT"))
 						thisState.setState(CmeState.STATE_PROMPT);
-					else if (line.toUpperCase().contains("Study"))
+					else if (line.toUpperCase().contains("STUDY"))
 						thisState.setState(CmeState.STATE_STUDY);
-					else if (line.toUpperCase().contains("Test"))
+					else if (line.toUpperCase().contains("TEST"))
 						thisState.setState(CmeState.STATE_TEST);
-					dmsg(2, "Invalid State Mode!");
+					else {
+						dmsg(0xFF, "Invalid State Mode!");
+						System.exit(0);
+					}
 					
 				} else if(line.contains("/STATE")) {
 					// Add this one to the vector
@@ -505,7 +511,9 @@ public class CmeApp extends JFrame
 			m_CurState = (CmeState)m_cIterator.next();
 		else
 			System.exit(0);
-
+		
+		dmsg(5, "Next State!");
+		
 		try {
 			m_InstructionsHandler.setState(m_CurState);
 			m_StudyHandler.setState(m_CurState);
@@ -573,7 +581,7 @@ public class CmeApp extends JFrame
 		}
 		
 		@SuppressWarnings("unused")
-		CmeApp theApp = new CmeApp(0x104);
+		CmeApp theApp = new CmeApp(0x107);
 	}
 
 }

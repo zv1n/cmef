@@ -39,7 +39,7 @@ public class CmeStudy extends JPanel implements MouseListener
 
 	/** Current state */
 	CmeState m_CurState;
-	
+
 	//--------------------------------------------
 	// Default constructor
 	//--------------------------------------------

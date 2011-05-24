@@ -2,6 +2,8 @@ package pkgCMEF;
 
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 //====================================================================
 /**
  * CmeState
@@ -42,7 +44,6 @@ public class CmeState {
 	public static final int EVENT_CLICK_CONTINUE = 0;
 	/** Number of events */
 	public static final int EVENT_MAX = 1;
-
 
 	// ---------------------------------------------------------
 	/** Default constructor */
