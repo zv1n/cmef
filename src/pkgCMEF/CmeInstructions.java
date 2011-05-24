@@ -31,6 +31,9 @@ public class CmeInstructions extends JPanel
 	/** Parent frame */
 	CmeApp m_App;
 	
+	/** Current state */
+	CmeState m_CurState;
+	
 	//----------------------------------------------------------------
 	/** Default constructor */
 	//----------------------------------------------------------------
@@ -65,5 +68,35 @@ public class CmeInstructions extends JPanel
 	{
 		super.paint(g);
 		// Paint the area
+	}
+
+	public void setState(CmeState mCurState) throws Exception {
+		m_CurState = mCurState;
+		
+		//Begin!
+		try 
+		{ 
+			switch (m_CurState.getState()) 
+			{
+			case CmeState.STATE_INSTRUCTION:
+			case CmeState.STATE_FEEDBACK:
+				String instructionFile = m_CurState.getProperty("InstructionFile").toString();
+				this.showInstructions(instructionFile);
+				break;
+				
+			case CmeState.STATE_PROMPT:
+				break;
+				
+			case CmeState.STATE_TEST:
+			case CmeState.STATE_STUDY:
+				this.setVisible(false);
+				return;
+			}
+		}
+		catch (Exception ex) {
+			throw new Exception ("Failed to set Instruction State!");
+		}
+
+		this.setVisible(true);
 	}
 }

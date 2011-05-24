@@ -9,11 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -45,24 +44,27 @@ public class CmeApp extends JFrame
 	
 	/** Experiment Handler */
 	private CmeStudy m_StudyHandler;
-
-	/** Debug Level */
-	private int m_iDebugLevel;
-
-	/** Start time in milliseconds */
-	private long m_lStartTimeMillis;
-	
-	/** Name of the experiment definition file */
-	private String m_sExpFileName = "Instructions/Experiment.txt";
-	
-	/** Vector of states defining the experiment */
-	private Vector<CmeState> m_vExpStates;
 	
 	/** HashMap of all experiment properties */
 	private HashMap<String, Object> m_eProperties;
+
+	/** Debug Level */
+	private int m_iDebugLevel;
+	
+	/** Store time in milliseconds */
+	private long m_lStartTimeMillis;
+
+	/** Name of the experiment definition file */
+	private String m_sExpFileName = "Instructions/Experiment.txt";
+	
+	//------------------------------------------------------------------
+	// State variables for storing state information loaded from file.
+	//------------------------------------------------------------------
+	/** Vector of states defining the experiment */
+	private Vector<CmeState> m_vStates;
 	
 	/** Index of the current state */
-	private int m_iCurStateIdx;
+	private Iterator<CmeState> m_cIterator;
 	
 	/** Reference to the current state */
 	private CmeState m_CurState;
@@ -101,16 +103,22 @@ public class CmeApp extends JFrame
 	/** Small font used for instructions and labels on text widgets */
 	public static final Font SysSmallFont = new Font("SansSerif", Font.PLAIN, 18);
 	
+	/**
+	 * Pop-up a message box to be used for debug messages.
+	 * @param level - minimum debug level to show the MsgBox
+	 * @param msg - the msg to be displayed
+	 */
 	public void dmsg(int level, String msg) {
 		if (level >= m_iDebugLevel) {
 			JOptionPane.showMessageDialog(this, msg, 
 					"Debug Msg", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
-	
-	//-----------------------------------------------
-	// Default constructor
-	//-----------------------------------------------
+
+	/**
+	 * The CmeApp class constructor.
+	 * @param debugLevel - initial application debug level
+	 */
 	public CmeApp(int debugLevel)
 	{
 		String sCondition;
@@ -136,7 +144,7 @@ public class CmeApp extends JFrame
 		m_eProperties = new HashMap<String, Object>();
 		
 		// Set up the experiment states
-		m_vExpStates = new Vector<CmeState>();
+		m_vStates = new Vector<CmeState>();
 		
 		try {
 			initStateHandlers();
@@ -238,27 +246,86 @@ public class CmeApp extends JFrame
                 ((month<10)?("0"+String.valueOf(month)):String.valueOf(month)) +
                 year + ".txt");
 
-		try
-		{
+		try {
 			// Open the report file
 			m_fileReport = new File(fileName);
 			// Place it in the FileWriter
 			m_fileWriter = new FileWriter(m_fileReport);
 			// Place that in the BufferedWriter
 			m_bufWriter = new BufferedWriter(m_fileWriter);
-			// Get the experiment start time in milliseconds
-			m_lStartTimeMillis = System.currentTimeMillis();
 
 			postStatusMessage("Subject Test Time: " + 
 				expCalendar.getTime().toString() + "\n", false);
 		}
 		
-		catch(IOException ex)
-		{
+		catch(IOException ex) {
 			throw new Exception("Unable to write to report file: " + ex.getMessage());
 		}
 
 		dmsg(5, "Output File Generated!");
+		
+		
+		try {/*
+			String line;
+			// Post headings for first section
+			line =  "\n\nSubject ID,Condition,Run Date,Run Time,Total Exp Time," +
+				    "Test 1 Pretrial,Test 1 Posttrial,Test 1 Postdict," +
+			   		"Test 2 Pretrial,Test 2 Posttrial,Test 2 Postdict";
+			postStatusMessage(line, false);
+			String estStr = "";
+			// Build the estimates string
+			for(int i=0; i<6; i++)
+			{
+				estStr = estStr.concat("," + String.valueOf(m_iUserEstimates[i]));
+			}
+				
+			// Get the total experiment time
+			line = 	m_sSubjectID + "," + 
+					sCondition + "," +
+					timeToString() + 
+					estStr;
+			postStatusMessage(line, false);
+			// Post headings for second section
+			line = 	"\nSID,Word number,English,EOL Order," +
+				   	"EOL Rate,Test Order,User Answer,Correct(T/F),Answer Value,Trial,Set,Grid Row," +
+					"Grid Column,Times Studied,Total Study Time";
+			String stStr = "";
+			for(int i=0; i<m_iMaxStudyTimes; i++)
+			{
+				stStr = stStr.concat(",Study Time " + String.valueOf(i+1) +
+						",Study Order " + String.valueOf(i+1));
+			}
+			line = line.concat(stStr);
+			postStatusMessage(line, false);
+			// Write out all the information on this run
+			// postStatusMessage for the column headings
+			Vector vec = this.m_ImageFactory.getImagesVector();
+			for(int i=0; i<36; i++) // Only do the exp images
+			{
+				postStatusMessage(m_sSubjectID + "," +
+							String.valueOf(i) + "," +
+							img.getReferenceName() + "," +
+							String.valueOf(img.getEOLPresentationOrder()) + "," +
+							String.valueOf(img.getEOLRate()) + "," +
+							String.valueOf(img.getTestPresentationOrder()) + "," +
+							img.getUserAnswer() + "," +
+							String.valueOf(img.getUserAnswerCorrect()) + "," +
+							String.valueOf(img.getImageValue()) + "," +
+							String.valueOf(img.getTrial()) + "," +
+							String.valueOf(img.getGrid()) + "," +
+							String.valueOf(img.getRow()) + "," +
+							String.valueOf(img.getColumn()) + "," +
+							String.valueOf(img.getTimesStudied()) + "," +
+							String.valueOf(img.getTotalStudyTime()) +
+							studyStr
+							, false);
+			}
+			postStatusMessage("\n\n", false);
+			postStatusMessage(" - End of experiment.", true);
+			m_bufWriter.close(); // Close the file
+			*/	
+		}	
+		catch(Exception e){}
 	}
 	
 	//-----------------------------------------------
@@ -276,6 +343,8 @@ public class CmeApp extends JFrame
 		// Open the experiment file
 		String			line;
 		FileReader		instFile;
+		
+		String			trialId = null;
 		BufferedReader	bufReader = null;
 		CmeState 		thisState = null;
 				
@@ -294,8 +363,14 @@ public class CmeApp extends JFrame
 			while((line = bufReader.readLine()) != null)
 			{
 				// See if we need to create a new State
-				if((line.contains("STATE")) && (!(line.contains("/STATE")))) {
+				if((line.contains("TRIAL")) && (!(line.contains("/TRIAL")))) {
+					trialId = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
+				} else if(line.contains("/TRIAL")) {
+					trialId = null;
+				} else if((line.contains("STATE")) && (!(line.contains("/STATE")))) {
 					thisState = new CmeState();
+					if (trialId != null)
+						thisState.setProperty("TrialID", trialId);
 				} else if(line.contains("TITLE")) {	
 					String title = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					m_eProperties.put("Title",title);					
@@ -308,15 +383,12 @@ public class CmeApp extends JFrame
 					if (thisState == null)
 						m_eProperties.put("ValidConditions",":" + valConditions + ":");
 					else
-						thisState.setProperty("ValidConditions", ":" + valConditions + ":");				
-				} else if(line.contains("Show Instructions")) {
-					// Check for options in "Show Instructions"
-					thisState.setState(CmeState.STATE_INSTRUCTION);
+						thisState.setProperty("ValidConditions", ":" + valConditions + ":");
 				} else if(line.contains("FILE")) {
 					String insFile = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
 					thisState.setProperty("InstructionFile", insFile);
 				} else if(line.contains("END")) {
-					if(line.contains("On Click Continue")) {
+					if(line.contains("Click:Continue")) {
 						thisState.setEventResponse(CmeState.EVENT_CLICK_CONTINUE,
 							new CmeEventResponse() {
 									public void Respond() {
@@ -324,15 +396,23 @@ public class CmeApp extends JFrame
 									}
 							});
 					}
-				} else if(line.contains("Learning Phase")) {								
-					// Check for options in "Learning Phase"
-					thisState.setState(CmeState.STATE_STUDY);
-				} else if(line.contains("Testing Phase")) {
-					// Check for options in "Testing Phase"
-					thisState.setState(CmeState.STATE_TEST);
+				} else if(line.contains("MODE")) {			
+
+					if (line.toUpperCase().contains("Instruction"))
+						thisState.setState(CmeState.STATE_INSTRUCTION);
+					else if (line.toUpperCase().contains("Feedback"))
+						thisState.setState(CmeState.STATE_FEEDBACK);
+					else if (line.toUpperCase().contains("Prompt"))
+						thisState.setState(CmeState.STATE_PROMPT);
+					else if (line.toUpperCase().contains("Study"))
+						thisState.setState(CmeState.STATE_STUDY);
+					else if (line.toUpperCase().contains("Test"))
+						thisState.setState(CmeState.STATE_TEST);
+					dmsg(2, "Invalid State Mode!");
+					
 				} else if(line.contains("/STATE")) {
 					// Add this one to the vector
-					m_vExpStates.add(thisState);
+					m_vStates.add(thisState);
 				} else if((line.contains("STUDY_TIMES")) && (!line.contains("/"))) {
 					// Get the number of study times to write out to report
 					line = bufReader.readLine().trim();
@@ -418,105 +498,23 @@ public class CmeApp extends JFrame
 	//-----------------------------------------------
 	public void setNextState()
 	{
-		m_iCurStateIdx++;
-		//TODO Move header prints to the initialization
+		if (m_cIterator == null)
+			m_cIterator = m_vStates.iterator();	
 		
-		// write out all the data in comma separated format.
-		if (m_CurState != null)
-		{
-			try
-			{/*
-				String line;
-				// Post headings for first section
-				line = "\n\nSubject ID,Condition,Run Date,Run Time,Total Exp Time," +
-					   "Test 1 Pretrial,Test 1 Posttrial,Test 1 Postdict," +
-				   "Test 2 Pretrial,Test 2 Posttrial,Test 2 Postdict";
-				postStatusMessage(line, false);
-				String estStr = "";
-				// Build the estimates string
-
-				for(int i=0; i<6; i++)
-				{
-					estStr = estStr.concat("," + String.valueOf(m_iUserEstimates[i]));
-				}
-				
-				// Get the total experiment time
-				line = 	m_sSubjectID + "," + 
-						sCondition + "," +
-						timeToString() + 
-						estStr;
-				postStatusMessage(line, false);
-				// Post headings for second section
-				line = "\nSID,Word number,English,EOL Order," +
-					"EOL Rate,Test Order,User Answer,Correct(T/F),Answer Value,Trial,Set,Grid Row," +
-					"Grid Column,Times Studied,Total Study Time";
-				String stStr = "";
-				for(int i=0; i<m_iMaxStudyTimes; i++)
-				{
-					stStr = stStr.concat(",Study Time " + String.valueOf(i+1) +
-							",Study Order " + String.valueOf(i+1));
-				}
-				line = line.concat(stStr);
-				postStatusMessage(line, false);
-				// Write out all the information on this run
-				// postStatusMessage for the column headings
-				Vector vec = this.m_ImageFactory.getImagesVector();
-				for(int i=0; i<36; i++) // Only do the exp images
-				{
-					postStatusMessage(m_sSubjectID + "," +
-							String.valueOf(i) + "," +
-							img.getReferenceName() + "," +
-							String.valueOf(img.getEOLPresentationOrder()) + "," +
-							String.valueOf(img.getEOLRate()) + "," +
-							String.valueOf(img.getTestPresentationOrder()) + "," +
-							img.getUserAnswer() + "," +
-							String.valueOf(img.getUserAnswerCorrect()) + "," +
-							String.valueOf(img.getImageValue()) + "," +
-							String.valueOf(img.getTrial()) + "," +
-							String.valueOf(img.getGrid()) + "," +
-							String.valueOf(img.getRow()) + "," +
-							String.valueOf(img.getColumn()) + "," +
-							String.valueOf(img.getTimesStudied()) + "," +
-							String.valueOf(img.getTotalStudyTime()) +
-							studyStr
-							, false);
-				}
-				postStatusMessage("\n\n", false);
-				postStatusMessage(" - End of experiment.", true);
-				m_bufWriter.close(); // Close the file
-				*/
-			}
-			catch(Exception e)
-			{}
-			
-		}
-
-		if (m_iCurStateIdx >= m_vExpStates.size()) {
-			// Terminate the experiment
+		if (m_cIterator.hasNext())
+			m_CurState = (CmeState)m_cIterator.next();
+		else
 			System.exit(0);
-		}
 
-		m_CurState = (CmeState)m_vExpStates.elementAt(m_iCurStateIdx);		
-		
-		switch(m_CurState.getState())
-		{
-			case CmeState.STATE_INSTRUCTION :
-				postStatusMessage(" - Displaying instructions: " + m_CurState.getProperty("InstructionFile").toString(), true);
-				m_InstructionsHandler.setVisible(false);
-				m_InstructionsHandler.showInstructions(m_CurState.getProperty("InstructionFile").toString());
-				m_InstructionsHandler.setVisible(true);
-				break;
-			case CmeState.STATE_STUDY :
-				m_InstructionsHandler.setVisible(false);
-				m_ExperimentHandler.setVisible(true);
-				paint(getGraphics());
-				postStatusMessage(" - Begin study phase.", true);
-			case CmeState.STATE_TEST :
-				//set up panels
-				m_InstructionsHandler.setVisible(false);
-				m_ExperimentHandler.setVisible(true);
-				paint(getGraphics());
-				postStatusMessage(" - Begin testing phase.", true);
+		try {
+			m_InstructionsHandler.setState(m_CurState);
+			m_StudyHandler.setState(m_CurState);
+			m_ExperimentHandler.setState(m_CurState);
+		}
+		catch(Exception ex) {
+			JOptionPane.showMessageDialog(this, "FATAL Error:\n" + ex.toString() + 
+					"\n" + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
 		}
 	}
 

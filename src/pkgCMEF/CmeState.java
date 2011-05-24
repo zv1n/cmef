@@ -28,17 +28,21 @@ public class CmeState {
 	// -------- Defined Modes ----------
 	/** Display instructions mode */
 	public static final int STATE_INSTRUCTION = 1;
+	/** Display feedback mode */
+	public static final int STATE_FEEDBACK = 2;
+	/** Display prompt mode */
+	public static final int STATE_PROMPT = 3;
 	/** Learning mode */
-	public static final int STATE_STUDY = 2;
+	public static final int STATE_STUDY = 4;
 	/** Testing mode */
-	public static final int STATE_TEST = 3;
+	public static final int STATE_TEST = 5;
 
 	// ---------- Events -------
 	/** Event for Clicking a Continue Button */
 	public static final int EVENT_CLICK_CONTINUE = 0;
 	/** Number of events */
 	public static final int EVENT_MAX = 1;
-		
+
 
 	// ---------------------------------------------------------
 	/** Default constructor */

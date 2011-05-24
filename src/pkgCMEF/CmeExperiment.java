@@ -29,7 +29,10 @@ public class CmeExperiment extends JPanel implements MouseListener
 	/** The image factory */
 	@SuppressWarnings("unused")
 	private CmeImageFactory m_ImageFactory;
-
+	
+	/** Current state */
+	CmeState m_CurState;
+	
 	/**
 	 * Experiment Handler Constructor
 	 * @param parent - parent app object
@@ -106,5 +109,10 @@ public class CmeExperiment extends JPanel implements MouseListener
 	//-------------------------------------------------------
 	public void mouseReleased(MouseEvent e)
 	{
+	}
+
+
+	public void setState(CmeState mCurState) {
+		m_CurState = mCurState;		
 	}
 }
