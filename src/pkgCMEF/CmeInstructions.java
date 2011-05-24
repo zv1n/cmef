@@ -49,14 +49,14 @@ public class CmeInstructions extends JPanel
 
 		this.setVisible(false);
 		this.setSize(parent.getSize());
-		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		this.setBorder(null);
 		
 		this.setLayout(null);
 		m_HtmlView = new JTextPane();
 		
 		m_HtmlView.setEditable(false);
 		m_HtmlView.setDoubleBuffered(true);
-		m_HtmlView.setBorder(null);
+		m_HtmlView.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 				
 		this.setLayout(null);
 		this.add(m_HtmlView);
@@ -70,21 +70,33 @@ public class CmeInstructions extends JPanel
 	//----------------------------------------------------------------
 	public void adjustLayout() {
 		Dimension newSz = this.getSize();
-		Dimension dimHtmlView = (Dimension) newSz.clone();
+		
+		Dimension border = new Dimension(10,10);
+		Dimension dimensions = (Dimension) newSz.clone();
+		Point location = new Point(border.width,border.height);
+		
+		int lower_offset = 0;
 
 		switch (m_CurState.getState()) 
 		{
 		case CmeState.STATE_FEEDBACK:
+			lower_offset = 256;
 			break;
 			
 		case CmeState.STATE_INSTRUCTION:
-			dimHtmlView.height = newSz.height-50;
-			m_HtmlView.setSize(dimHtmlView);
+			lower_offset = 32;
 			break;
 			
 		case CmeState.STATE_PROMPT:
 			break;
 		}
+
+		dimensions.height = newSz.height-(border.height + lower_offset);
+		dimensions.width -= border.width*2;
+		m_HtmlView.setSize(dimensions);
+		
+		m_HtmlView.setLocation(location);
+		
 	}
 	
 	//----------------------------------------------------------------
@@ -131,14 +143,13 @@ public class CmeInstructions extends JPanel
 			case CmeState.STATE_INSTRUCTION:
 				String instructionFile = m_CurState.getProperty("InstructionFile").toString();
 				this.showInstructions(instructionFile);
-				m_App.dmsg(8, "Instruction!");
 				break;
 				
 			case CmeState.STATE_PROMPT:
 				break;
 				
 			default: 
-				m_App.dmsg(9, "Default state hit on Instruction Handler!");
+				m_App.dmsg(0XFF, "Default state hit on Instruction Handler!");
 			case CmeState.STATE_TEST:
 			case CmeState.STATE_STUDY:
 				this.setVisible(false);
@@ -151,8 +162,7 @@ public class CmeInstructions extends JPanel
 		catch (Exception ex) {
 			throw new Exception ("Failed to set Instruction State!");
 		}
-
-		m_App.dmsg(8, "Entering Instruction State!");		
+		
 		this.setVisible(true);
 	}
 }

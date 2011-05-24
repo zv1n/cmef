@@ -388,7 +388,7 @@ public class CmeApp extends JFrame
 					else
 						thisState.setProperty("ValidConditions", ":" + valConditions + ":");
 				} else if(line.contains("FILE")) {
-					String insFile = line.substring(line.indexOf("\""), line.lastIndexOf("\""));
+					String insFile = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("InstructionFile", insFile);
 				} else if(line.contains("END")) {
 					if(line.contains("Click:Continue")) {
