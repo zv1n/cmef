@@ -6,17 +6,17 @@
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen1.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen2.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen3.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Feedback"
@@ -27,38 +27,38 @@
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen4.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Feedback"
 			TITLE="Estimate Number to Remember Pretrial"
 			FILE="Instructions/Screen5.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen6.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="../../Instructions/Screen7.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="../../Instructions/Screen8.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen9.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen10.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Study"
@@ -69,12 +69,12 @@
 			MODE="Feedback"
 			TITLE="Estimate Number to Remember Posttrial"
 			FILE="Instructions/Screen11.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen12.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			TITLE="Testing"
@@ -84,13 +84,13 @@
 			MODE="Feedback"
 			TITLE="Estimate Number Correct"
 			FILE="Instructions/Screen13.txt"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			CONDITIONS="AF,BF,CF,DF"
 			FILE="Instructions/Points.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Prompt"
@@ -103,12 +103,12 @@
 			MODe="Feedback"
 			TITLE="Estimate Number to Remember Pretrial"
 			FILE="Instructions/Screen14.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen15.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Study"
@@ -119,12 +119,12 @@
 			MODE="Feedback"
 			TITLE="Estimate Number to Remember Posttrial"
 			FILE="Instructions/Screen16.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen17.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			TITLE="Testing"
@@ -134,19 +134,19 @@
 			MODE="Feedback"
 			TITLE="Estimate Number Correct"
 			FILE="Instructions/Screen18.htm"
-			END="Click:Continue And Record"
+			END="Click:Next And Record"
 		</STATE>
 		<STATE>
 			MODE="Feedback"
 			TITLE="Show Point Notification"
 			CONDITIONS="AF,BF,CF,DF"
 			FILE="Instructions/Points.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen19.htm"
-			END="Click:Continue"
+			END="Click:Next"
 		</STATE>
 	</TRIAL>
 </EXPERIMENT>
