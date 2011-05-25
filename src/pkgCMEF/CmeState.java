@@ -41,7 +41,7 @@ public class CmeState {
 
 	// ---------- Events -------
 	/** Event for Clicking a Continue Button */
-	public static final int EVENT_CLICK_CONTINUE = 0;
+	public static final int EVENT_CLICK_PRIMARY = 0;
 	/** Number of events */
 	public static final int EVENT_MAX = 1;
 

@@ -74,7 +74,8 @@ public class CmeInstructions extends JPanel {
 		m_bNext.setVisible(true);
 		m_bNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				m_App.setNextState();
+				if (m_CurState != null)
+					m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
 			}
 		});
 		this.add(m_bNext);
@@ -196,6 +197,11 @@ public class CmeInstructions extends JPanel {
 			throw new Exception("IO Error: " + ex.getMessage());
 		} catch (Exception ex) {
 			throw new Exception("Failed to set Instruction State!");
+		}
+		
+		String pbText = m_CurState.getProperty("PrimaryButtonText").toString();
+		if (pbText != null) {
+			m_bNext.setText(pbText);
 		}
 
 		this.setVisible(true);

@@ -414,13 +414,17 @@ public class CmeApp extends JFrame
 					String insFile = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("InstructionFile", insFile);
 				} else if(line.contains("END")) {
-					if(line.contains("Click:Continue")) {
-						thisState.setEventResponse(CmeState.EVENT_CLICK_CONTINUE,
+					if(line.contains("Click:")) {
+						thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
 							new CmeEventResponse() {
 									public void Respond() {
 										thisApp.setNextState();
 									}
 							});
+					}
+					String primaryText = line.substring(line.indexOf(":")+1, line.lastIndexOf("\""));
+					if (primaryText != null && primaryText.length() > 0) {
+						thisState.setProperty("PrimaryButtonText", primaryText);
 					}
 				} else if(line.contains("MODE")) {			
 

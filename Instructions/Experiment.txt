@@ -16,7 +16,7 @@
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen3.htm"
-			END="Click:Next"
+			END="Click:Begin"
 		</STATE>
 		<STATE>
 			MODE="Feedback"
