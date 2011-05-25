@@ -92,8 +92,15 @@ public class CmeInstructions extends JPanel {
 	
 	private void adjustNextButton() {
 		Dimension newSz = this.getSize();
-		Point location = new Point(0, 720);
-		m_bNext.setSize(128,32);
+		
+		Dimension border = new Dimension(10, 10);
+		Dimension dimensions = new Dimension(128,24);
+		Point location = new Point(newSz.width, newSz.height);
+		
+		location.x -= border.width + dimensions.width;
+		location.y -= border.width + dimensions.height;
+		
+		m_bNext.setSize(dimensions);
 		m_bNext.setLocation(location);
 	}
 	
@@ -106,19 +113,23 @@ public class CmeInstructions extends JPanel {
 
 		int lower_offset = 0;
 
-		switch (m_CurState.getState()) {
-		case CmeState.STATE_FEEDBACK:
-			lower_offset = 256;
-			break;
-
-		case CmeState.STATE_INSTRUCTION:
-			lower_offset = 64;
-			break;
-
-		case CmeState.STATE_PROMPT:
-			break;
+		if (m_CurState == null)
+			lower_offset = 0;
+		else {
+			switch (m_CurState.getState()) {
+			case CmeState.STATE_FEEDBACK:
+				lower_offset = 256;
+				break;
+				
+			case CmeState.STATE_INSTRUCTION:
+				lower_offset = border.height + 24;
+				break;
+				
+			case CmeState.STATE_PROMPT:
+				break;
+			}	
 		}
-
+		
 		dimensions.height = newSz.height - (border.height * 2 + lower_offset);
 		dimensions.width -= border.width * 2;
 		
@@ -149,9 +160,7 @@ public class CmeInstructions extends JPanel {
 
 	/**
 	 * Paint function for the Instruction
-	 * 
-	 * @param g
-	 *            - graphics context for the current JPane
+	 * @param g - graphics context for the current JPane
 	 */
 	public void paint(Graphics g) {
 		super.paint(g);

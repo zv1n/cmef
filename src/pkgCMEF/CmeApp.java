@@ -1,6 +1,7 @@
 package pkgCMEF;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,10 +16,13 @@ import java.util.Vector;
 import java.util.Iterator;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 //====================================================================
 /** Custom Memory Experiment Framework
@@ -35,6 +39,8 @@ public class CmeApp extends JFrame
 {
 	/** Main panel */
 	private JPanel m_MainPanel;
+	
+	private Dimension m_dOldDims;
 	
 	/** Instructions Handler */
 	private CmeInstructions m_InstructionsHandler;
@@ -126,19 +132,7 @@ public class CmeApp extends JFrame
 
 		m_iDebugLevel = debugLevel;
 	
-		this.setSize(1024, 768);
-		this.setLocation(50, 50);
-		this.setTitle("CME Main Panel");
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		// Create the main panel
-		m_MainPanel = new JPanel();
-		m_MainPanel.setSize(1024, 768);
-		m_MainPanel.setLocation(0, 0);
-		m_MainPanel.setLayout(null);
-		m_MainPanel.setBackground(Color.LIGHT_GRAY);
-		m_MainPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		this.getContentPane().add(m_MainPanel);		
+		initMainWindow();
 
 		// Set up the property HashMap
 		m_eProperties = new HashMap<String, Object>();
@@ -191,11 +185,43 @@ public class CmeApp extends JFrame
 
 		// Show the window
 		this.setVisible(true);
+		this.adjustAllLayouts();
 		
 		// Set the initial state
 		this.setNextState();
 	}
 
+	private void initMainWindow() 
+	{
+		final CmeApp thisApp = this;
+		
+		this.setSize(1024, 768);
+		this.setLocation(50, 50);
+		this.setTitle("CME Main Panel");
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+				
+		// Create the main panel
+		m_MainPanel = new JPanel();
+		m_MainPanel.setSize(1024, 768);
+		m_MainPanel.setLocation(0, 0);
+		m_MainPanel.setLayout(new BoxLayout(m_MainPanel, BoxLayout.PAGE_AXIS));
+		m_MainPanel.setBackground(Color.LIGHT_GRAY);
+		m_MainPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		m_MainPanel.addAncestorListener(new AncestorListener(){
+			@Override public void ancestorRemoved(AncestorEvent arg0) {}
+			@Override public void ancestorAdded(AncestorEvent arg0) {}
+			@Override public void 
+			ancestorMoved(AncestorEvent e) {
+				JPanel pane = (JPanel)e.getComponent(); 
+				if (pane.getSize() != m_dOldDims) {
+					adjustAllLayouts();
+					m_dOldDims = (Dimension) pane.getSize().clone();
+				}
+			}
+		});
+		this.getContentPane().add(m_MainPanel);	
+	}
+	
 	/**
 	 * Initialization function for preparing all State handlers
 	 * (CmeExperiment,CmeInstructions,CmeStudy)
@@ -205,19 +231,16 @@ public class CmeApp extends JFrame
 		m_ImageFactory = new CmeImageFactory();
 		
 		m_InstructionsHandler = new CmeInstructions(this);
-		m_InstructionsHandler.setLocation(-1, -1);
 		m_InstructionsHandler.setVisible(false);
 		m_MainPanel.add(m_InstructionsHandler);		
 		
 		m_ExperimentHandler = new CmeExperiment(this);
 		m_ExperimentHandler.setImageFactory(m_ImageFactory);
-		m_ExperimentHandler.setLocation(-1, -1);
 		m_ExperimentHandler.setVisible(false);
 		m_MainPanel.add(m_ExperimentHandler);
 		
 		m_StudyHandler = new CmeStudy(this);
 		m_StudyHandler.setImageFactory(m_ImageFactory);
-		m_StudyHandler.setLocation(-1, -1);
 		m_StudyHandler.setVisible(false);
 		m_MainPanel.add(m_StudyHandler);
 
@@ -435,6 +458,17 @@ public class CmeApp extends JFrame
 		dmsg(5, "Experiment Init Successful!");
 	}
 
+	private void adjustAllLayouts() 
+	{
+		
+		m_InstructionsHandler.adjustLayout();
+		//m_ExperimentHandler.adjustLayout();
+		//m_StudyHandler.adjustLayout();
+		
+		/* Ensure adjustLayout gets called next time! */
+		m_dOldDims = (Dimension)this.getSize().clone();
+	}
+	
 	/** 
 	 * Validates that a given condition is valid.
 	 * 
