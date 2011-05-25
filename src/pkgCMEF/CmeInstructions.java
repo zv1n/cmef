@@ -178,9 +178,10 @@ public class CmeInstructions extends JPanel {
 				// this.showFeedbackArea();
 
 			case CmeState.STATE_INSTRUCTION:
-				String instructionFile = m_CurState.getProperty(
-						"InstructionFile").toString();
-				this.showInstructions(instructionFile);
+				Object instructionFile = m_CurState.getProperty(
+						"InstructionFile");
+				if (instructionFile != null)
+					this.showInstructions(instructionFile.toString());
 				break;
 
 			case CmeState.STATE_PROMPT:
@@ -196,7 +197,7 @@ public class CmeInstructions extends JPanel {
 		} catch (IOException ex) {
 			throw new Exception("IO Error: " + ex.getMessage());
 		} catch (Exception ex) {
-			throw new Exception("Failed to set Instruction State!");
+			throw new Exception("Failed to set Instruction State: " + ex.getMessage());
 		}
 		
 		String pbText = m_CurState.getProperty("PrimaryButtonText").toString();

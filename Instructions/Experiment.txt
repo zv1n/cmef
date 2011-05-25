@@ -22,7 +22,6 @@
 			MODE="Feedback"
 			TITLE="Rate Ease of Learning"
 			END="Click:Next"
-			REPEAT="Images"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
@@ -42,12 +41,12 @@
 		</STATE>
 		<STATE>
 			MODE="Instruction"
-			FILE="../../Instructions/Screen7.htm"
+			FILE="Instructions/Screen7.htm"
 			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
-			FILE="../../Instructions/Screen8.htm"
+			FILE="Instructions/Screen8.htm"
 			END="Click:Next"
 		</STATE>
 		<STATE>
