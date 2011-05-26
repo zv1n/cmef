@@ -119,7 +119,7 @@ public class CmeInstructions extends JPanel {
 		else {
 			switch (m_CurState.getState()) {
 			case CmeState.STATE_FEEDBACK:
-				lower_offset = 256;
+				lower_offset = border.height + 72;
 				break;
 				
 			case CmeState.STATE_INSTRUCTION:
@@ -138,7 +138,6 @@ public class CmeInstructions extends JPanel {
 		m_HtmlView.setLocation(location);
 	}
 
-	// ----------------------------------------------------------------
 	/**
 	 * Display the instructions
 	 * 
@@ -146,17 +145,22 @@ public class CmeInstructions extends JPanel {
 	 *            - name of instructions file to display
 	 * @throws IOException
 	 */
-	// ----------------------------------------------------------------
-	public boolean showInstructions(String fileName) throws IOException {
+	public boolean showInstructions(String fileName) throws IOException 
+	{
 		File instFile = new File(fileName);
 
 		this.adjustLayout();
-
-		// JEditorPane.registerEditorKitForContentType("text/html",
-		// "com.xxxxx.SynchronousHTMLEditorKit");
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
-
+		
 		return true;
+	}
+	
+	/**
+	 * Used to configure the feedback GUI components when feedback is requested. 
+	 */
+	private void showFeedbackArea() 
+	{
+		
 	}
 
 	/**
@@ -168,6 +172,11 @@ public class CmeInstructions extends JPanel {
 		// Paint the area
 	}
 
+	/**
+	 * Sets the current state and adjusts the layout appropriately
+	 * @param mCurState - the current state to be displayed
+	 * @throws Exception
+	 */
 	public void setState(CmeState mCurState) throws Exception {
 		m_CurState = mCurState;
 
@@ -175,11 +184,10 @@ public class CmeInstructions extends JPanel {
 		try {
 			switch (m_CurState.getState()) {
 			case CmeState.STATE_FEEDBACK:
-				// this.showFeedbackArea();
+				this.showFeedbackArea();
 
 			case CmeState.STATE_INSTRUCTION:
-				Object instructionFile = m_CurState.getProperty(
-						"InstructionFile");
+				Object instructionFile = m_CurState.getProperty("InstructionFile");
 				if (instructionFile != null)
 					this.showInstructions(instructionFile.toString());
 				break;

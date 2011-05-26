@@ -127,12 +127,8 @@ public class CmeApp extends JFrame
 	 */
 	public CmeApp(int debugLevel)
 	{
-		String sCondition;
-		String sSubjectId;
-
 		m_iDebugLevel = debugLevel;
 	
-		initMainWindow();
 
 		// Set up the property HashMap
 		m_eProperties = new HashMap<String, Object>();
@@ -141,47 +137,21 @@ public class CmeApp extends JFrame
 		m_vStates = new Vector<CmeState>();
 
 		try {
+
+			initMainWindow();
 			initStateHandlers();
 			initExperiment();
-
-			if ((m_iDebugLevel & 0x100) == 0x0) {
-				
-				do {
-					sSubjectId = JOptionPane.showInputDialog("Please enter your subject ID:");
-					if (sSubjectId == null) {
-						System.exit(0);
-					}
-				} while (sSubjectId == "");
-				
-				m_eProperties.put("SubjectID", sSubjectId);
-				dmsg(5, "Subject Complete!");
-			
-				do {
-					sCondition = JOptionPane.showInputDialog("Please enter the experimental Condition\n"
-							+ "(This should be given by the experimenter).");
-					if (sCondition == null) {
-						System.exit(0);
-					}
-				} while (!setCondition(sCondition.toUpperCase()));
-				dmsg(5, "Conditions Complete!");
-			
-			} else {
-				m_eProperties.put("SubjectID","TESTID");
-				m_eProperties.put("ExpCondition","B");
-			}
-
+			initExperimentData();
 			initOutputFile();
 			
 			this.setTitle(m_eProperties.get("Title").toString());
 			dmsg(5, "Title Set");
 			
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "FATAL Error:\n" + ex.toString() + 
 					"\n" + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
-
 
 		// Show the window
 		this.setVisible(true);
@@ -193,8 +163,6 @@ public class CmeApp extends JFrame
 
 	private void initMainWindow() 
 	{
-		final CmeApp thisApp = this;
-		
 		this.setSize(1024, 768);
 		this.setLocation(50, 50);
 		this.setTitle("CME Main Panel");
@@ -249,18 +217,12 @@ public class CmeApp extends JFrame
 	
 	public void initOutputFile() throws Exception 
 	{
-		Calendar		expCalendar;
-		// Create a unique report file name using the time
-		// Note: Calendar months are numbered from 0 so add 1 to Calendar.MONTH
-		expCalendar = Calendar.getInstance();
-		//int hr = expCalendar.get(Calendar.HOUR_OF_DAY);
-		//int min = expCalendar.get(Calendar.MINUTE);
-		//int sec = expCalendar.get(Calendar.SECOND);
+		Calendar	expCalendar = Calendar.getInstance();
+		
 		int day = expCalendar.get(Calendar.DAY_OF_MONTH);
 		int month = expCalendar.get(Calendar.MONTH)+1; // Calendar months are numbered from 0 
 		int year = expCalendar.get(Calendar.YEAR);
 		
-		// Create an image file name
 		String fileName = new String(
 				m_eProperties.get("StudyName").toString() + "_" +
 				m_eProperties.get("ExpCondition").toString() + "_SID" +
@@ -349,6 +311,41 @@ public class CmeApp extends JFrame
 			*/	
 		}	
 		catch(Exception e){}
+	}
+	
+	/**
+	 * Used to initialize the SubjectID and Experiment Condition.
+	 */
+	private void initExperimentData()
+	{
+		String sCondition;
+		String sSubjectId;
+
+		if ((m_iDebugLevel & 0x100) == 0x0) {
+			
+			do {
+				sSubjectId = JOptionPane.showInputDialog("Please enter your subject ID:");
+				if (sSubjectId == null) {
+					System.exit(0);
+				}	
+			} while (sSubjectId == "");
+		
+			m_eProperties.put("SubjectID", sSubjectId);
+			dmsg(5, "Subject Complete!");
+	
+			do {
+				sCondition = JOptionPane.showInputDialog("Please enter the experimental Condition\n"
+						+ "(This should be given by the experimenter).");
+				if (sCondition == null) {
+					System.exit(0);
+				}
+			} while (!setCondition(sCondition.toUpperCase()));
+			dmsg(5, "Conditions Complete!");
+		
+		} else {
+			m_eProperties.put("SubjectID","TESTID");
+			m_eProperties.put("ExpCondition","B");
+		}
 	}
 	
 	//-----------------------------------------------
@@ -449,6 +446,19 @@ public class CmeApp extends JFrame
 				} else if((line.contains("STUDY_TIMES")) && (!line.contains("/"))) {
 					// Get the number of study times to write out to report
 					line = bufReader.readLine().trim();
+				}
+				
+				if (thisState != null && thisState.getState() == CmeState.STATE_FEEDBACK) {
+					if (line.contains("INPUT")) {
+						String input = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
+						thisState.setProperty("InputType",input);
+					} else if (line.contains("CONSTRAINTS")) {
+						String ctype = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
+						String constraint = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
+
+						
+					}
+					
 				}
 			}
 		}

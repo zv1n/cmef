@@ -32,17 +32,20 @@
 			MODE="Feedback"
 			TITLE="Estimate Number to Remember Pretrial"
 			FILE="Instructions/Screen5.htm"
+			INPUT="numeric"
+			CONSTRAINT="range:0-18"
+			NAME="NC_trial_1"
 			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen6.htm"
-			END="Click:Next"
+			END="Click:Continue"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen7.htm"
-			END="Click:Next"
+			END="Click:Continue"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
