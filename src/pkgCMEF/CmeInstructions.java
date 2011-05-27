@@ -15,9 +15,12 @@ import javax.swing.text.ComponentView;
 import javax.swing.text.Element;
 import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+
 import com.sun.xml.internal.ws.api.ResourceLoader;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -27,6 +30,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -57,6 +61,12 @@ public class CmeInstructions extends JPanel {
 
 	/** JButton for primary button */
 	private JButton m_bNext;
+	
+	/** Vector store for the names of each editable component */
+	private Vector<String> m_ComponentList;
+	private Iterator<String> m_CompIter;
+	
+	private int MAX_DEPTH = 10;
 
 	// ----------------------------------------------------------------
 	/**
@@ -67,6 +77,8 @@ public class CmeInstructions extends JPanel {
 	// ----------------------------------------------------------------
 	public CmeInstructions(CmeApp parent) {
 		m_App = parent;
+		
+		m_ComponentList = new Vector<String>();
 
 		this.setVisible(false);
 		this.setSize(parent.getSize());
@@ -89,6 +101,16 @@ public class CmeInstructions extends JPanel {
 		m_HtmlView.setDoubleBuffered(true);
 		/*m_HtmlView.setBorder(BorderFactory
 				.createBevelBorder(BevelBorder.LOWERED));*/
+	
+		m_HtmlView.addContainerListener(new ContainerListener() {
+
+			@Override
+			public void componentAdded(ContainerEvent arg0) {	
+				if (m_ComponentList.isEmpty())
+					generateComponentList();
+			}
+			@Override public void componentRemoved(ContainerEvent arg0) {}
+		});
 		
 		m_ScrollPane = new JScrollPane(m_HtmlView);
 		m_ScrollPane.addAncestorListener(aListener);
@@ -110,21 +132,59 @@ public class CmeInstructions extends JPanel {
 
 	}
 	
+	private void generateComponentList() 
+	{
+		Element[] root = ((HTMLDocument)m_HtmlView.getDocument()).getRootElements();
+		for (int htm = 0; htm < root.length; htm++) {
+			if (root[htm].getName().equals("html")) {
+				recurseComponentList(root[htm], 0);
+			}
+		}
+	}
+	
+	private void recurseComponentList(Element node, int depth) 
+	{
+		if (node.getName() == "input") {
+			m_ComponentList.add("item_" + Integer.toString(m_ComponentList.size()));
+		}
+		for (int x = 0; x < node.getElementCount(); x++) {
+			if (depth < MAX_DEPTH) {
+				recurseComponentList(node.getElement(x), depth+1);
+			} else {
+				System.out.println("Max depth reached!");
+			}
+		}	
+	}
+	
 	private void generateFeedback(Container container)
 	{
+		if (m_CompIter == null) {
+			m_CompIter = m_ComponentList.iterator();
+		}
+		
 		Component[] components = container.getComponents();
+		System.out.println("Count: "+Integer.toString(components.length));
 		for (int x=0; x<components.length; x++) {
 			if (components[x] instanceof JTextField) {
 				JTextField tf = (JTextField) components[x];
-				System.out.print("d");
+				if (m_CompIter.hasNext())
+					System.out.println(m_CompIter.next());
+				else
+					System.out.println("oops... no next!?");
+				System.out.println("Value: " + tf.getText());
 			} else if (components[x] instanceof JRadioButton) {
 				JRadioButton rb = (JRadioButton) components[x];
-				System.out.print("d");
-			//} else if (components[x] instanceof FormView) {
-			//	generateFeedback((Container)components[x]);
+				if (m_CompIter.hasNext())
+					System.out.println(m_CompIter.next());
+				else
+					System.out.println("oops... no next!?");
+				System.out.println("Check: " + Boolean.toString(rb.isSelected()));
 			} else if (components[x] instanceof Container) {
 				generateFeedback((Container)components[x]);
 			}
+		}
+		if (!m_CompIter.hasNext()) {
+			m_CompIter = null;
 		}
 	}
 	
@@ -197,8 +257,10 @@ public class CmeInstructions extends JPanel {
 		File instFile = new File(fileName);
 
 		this.adjustLayout();
+		m_ComponentList.clear();
+		
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
-			
+		
 		return true;
 	}
 	
