@@ -3,6 +3,8 @@ package pkgCMEF;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -35,7 +37,7 @@ import javax.swing.event.AncestorListener;
  */
 //===================================================================
 @SuppressWarnings("serial")
-public class CmeApp extends JFrame
+public class CmeApp extends JFrame implements AncestorListener
 {
 	/** Main panel */
 	private JPanel m_MainPanel;
@@ -116,11 +118,22 @@ public class CmeApp extends JFrame
 	 */
 	public void dmsg(int level, String msg) {
 		if (level >= (m_iDebugLevel&0xFF)) {
-			JOptionPane.showMessageDialog(this, msg, 
-					"Debug Msg", JOptionPane.INFORMATION_MESSAGE);
+			System.out.print(msg);
 		}
 	}
-
+	
+	
+	@Override public void ancestorRemoved(AncestorEvent arg0) {}
+	@Override public void ancestorAdded(AncestorEvent arg0) {}
+	
+	@Override 
+	public void ancestorMoved(AncestorEvent e) {
+		JPanel pane = (JPanel)e.getComponent(); 
+		if (pane.getSize() != m_dOldDims) {
+			adjustAllLayouts();
+		}
+	}
+	
 	/**
 	 * The CmeApp class constructor.
 	 * @param debugLevel - initial application debug level
@@ -167,7 +180,7 @@ public class CmeApp extends JFrame
 		this.setLocation(50, 50);
 		this.setTitle("CME Main Panel");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-				
+		
 		// Create the main panel
 		m_MainPanel = new JPanel();
 		m_MainPanel.setSize(1024, 768);
@@ -175,19 +188,8 @@ public class CmeApp extends JFrame
 		m_MainPanel.setLayout(new BoxLayout(m_MainPanel, BoxLayout.PAGE_AXIS));
 		m_MainPanel.setBackground(Color.LIGHT_GRAY);
 		m_MainPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		m_MainPanel.addAncestorListener(new AncestorListener(){
-			@Override public void ancestorRemoved(AncestorEvent arg0) {}
-			@Override public void ancestorAdded(AncestorEvent arg0) {}
-			@Override public void 
-			ancestorMoved(AncestorEvent e) {
-				JPanel pane = (JPanel)e.getComponent(); 
-				if (pane.getSize() != m_dOldDims) {
-					adjustAllLayouts();
-					m_dOldDims = (Dimension) pane.getSize().clone();
-				}
-			}
-		});
-		this.getContentPane().add(m_MainPanel);	
+		m_MainPanel.addAncestorListener(this);
+		this.getContentPane().add(m_MainPanel);
 	}
 	
 	/**
@@ -200,15 +202,18 @@ public class CmeApp extends JFrame
 		
 		m_InstructionsHandler = new CmeInstructions(this);
 		m_InstructionsHandler.setVisible(false);
+		m_InstructionsHandler.addAncestorListener(this);
 		m_MainPanel.add(m_InstructionsHandler);		
 		
 		m_ExperimentHandler = new CmeExperiment(this);
 		m_ExperimentHandler.setImageFactory(m_ImageFactory);
+		m_ExperimentHandler.addAncestorListener(this);
 		m_ExperimentHandler.setVisible(false);
 		m_MainPanel.add(m_ExperimentHandler);
 		
 		m_StudyHandler = new CmeStudy(this);
 		m_StudyHandler.setImageFactory(m_ImageFactory);
+		m_StudyHandler.addAncestorListener(this);
 		m_StudyHandler.setVisible(false);
 		m_MainPanel.add(m_StudyHandler);
 
@@ -367,6 +372,9 @@ public class CmeApp extends JFrame
 		String			trialId = null;
 		BufferedReader	bufReader = null;
 		CmeState 		thisState = null;
+		
+		String validInput = "NUMERIC|TEXT|RADIAL|CHECK";
+		String validConstraints = "REGEX|RANGE";
 				
 		// Open the file
 		try {
@@ -451,12 +459,23 @@ public class CmeApp extends JFrame
 				if (thisState != null && thisState.getState() == CmeState.STATE_FEEDBACK) {
 					if (line.contains("INPUT")) {
 						String input = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
-						thisState.setProperty("InputType",input);
+						if (validInput.contains(input.toUpperCase())) {
+							thisState.setProperty("InputType",input);
+						} else {
+							dmsg(0xFF, "Invalid input type: " + input);
+							System.exit(0);
+						}
+						
 					} else if (line.contains("CONSTRAINTS")) {
 						String ctype = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
 						String constraint = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
-
-						
+						if (validConstraints.contains(ctype.toUpperCase())) {
+							thisState.setProperty("ConstraintType", ctype);
+							thisState.setProperty("Constraint", constraint);
+						} else {
+							dmsg(0xFF, "Invalid constraint type: " + ctype);
+							System.exit(0);
+						}
 					}
 					
 				}

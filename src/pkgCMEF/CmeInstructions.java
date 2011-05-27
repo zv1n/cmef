@@ -5,7 +5,16 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.ComponentView;
+import javax.swing.text.Element;
+import javax.swing.text.html.FormView;
+import javax.swing.text.html.HTMLDocument;
 import com.sun.xml.internal.ws.api.ResourceLoader;
 
 import java.awt.Color;
@@ -19,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
+
 
 //====================================================================
 /**
@@ -41,7 +51,11 @@ public class CmeInstructions extends JPanel {
 
 	/** Html Pane for Instructions */
 	private JEditorPane m_HtmlView;
+	
+	/** Scroll Pane for Instruction Scrolling */
+	private JScrollPane m_ScrollPane;
 
+	/** JButton for primary button */
 	private JButton m_bNext;
 
 	// ----------------------------------------------------------------
@@ -59,14 +73,26 @@ public class CmeInstructions extends JPanel {
 		this.setBorder(null);
 
 		this.setLayout(null);
+		
+		AncestorListener aListener = new AncestorListener(){
+			@Override public void ancestorRemoved(AncestorEvent arg0) {}
+			@Override public void ancestorAdded(AncestorEvent arg0) {}
+			@Override public void 
+			ancestorMoved(AncestorEvent e) {
+				adjustLayout();
+			}
+		};
 
 		/** Configure HTML View Pane */
 		m_HtmlView = new JTextPane();
 		m_HtmlView.setEditable(false);
 		m_HtmlView.setDoubleBuffered(true);
-		m_HtmlView.setBorder(BorderFactory
-				.createBevelBorder(BevelBorder.LOWERED));
-		this.add(m_HtmlView);
+		/*m_HtmlView.setBorder(BorderFactory
+				.createBevelBorder(BevelBorder.LOWERED));*/
+		
+		m_ScrollPane = new JScrollPane(m_HtmlView);
+		m_ScrollPane.addAncestorListener(aListener);
+		this.add(m_ScrollPane);
 
 		/** Configure Next JButton */
 		m_bNext = new JButton();
@@ -75,13 +101,33 @@ public class CmeInstructions extends JPanel {
 		m_bNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (m_CurState != null)
+					//if (m_CurState.getState() == CmeState.STATE_FEEDBACK) 
+						generateFeedback(m_HtmlView);
 					m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
 			}
 		});
 		this.add(m_bNext);
 
 	}
-
+	
+	private void generateFeedback(Container container)
+	{
+		Component[] components = container.getComponents();
+		for (int x=0; x<components.length; x++) {
+			if (components[x] instanceof JTextField) {
+				JTextField tf = (JTextField) components[x];
+				System.out.print("d");
+			} else if (components[x] instanceof JRadioButton) {
+				JRadioButton rb = (JRadioButton) components[x];
+				System.out.print("d");
+			//} else if (components[x] instanceof FormView) {
+			//	generateFeedback((Container)components[x]);
+			} else if (components[x] instanceof Container) {
+				generateFeedback((Container)components[x]);
+			}
+		}
+	}
+	
 	// ----------------------------------------------------------------
 	/**  
 	 * */
@@ -133,9 +179,10 @@ public class CmeInstructions extends JPanel {
 		
 		dimensions.height = newSz.height - (border.height * 2 + lower_offset);
 		dimensions.width -= border.width * 2;
-		
+
 		m_HtmlView.setSize(dimensions);
-		m_HtmlView.setLocation(location);
+		m_ScrollPane.setSize(dimensions);
+		m_ScrollPane.setLocation(location);
 	}
 
 	/**
@@ -151,7 +198,7 @@ public class CmeInstructions extends JPanel {
 
 		this.adjustLayout();
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
-		
+			
 		return true;
 	}
 	

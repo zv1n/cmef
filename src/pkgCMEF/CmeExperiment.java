@@ -49,7 +49,6 @@ public class CmeExperiment extends JPanel implements MouseListener
 		this.addMouseListener(this);
 	}
 
-
 	/**
 	 * Get a reference to the parent JFrame 
 	 */
@@ -67,49 +66,26 @@ public class CmeExperiment extends JPanel implements MouseListener
 		// Paint the area
 	}
 	
-	//-------------------------------------------------------
 	/** Set a reference to the image factory */
-	//-------------------------------------------------------
 	public void setImageFactory(CmeImageFactory iFact)
 	{
 		m_ImageFactory = iFact;
 	}
 		
-		//-------------------------------------------------------
 	/** Implement the mouseClicked function of MouseListener*/
-	//-------------------------------------------------------
-	public void mouseClicked(MouseEvent e)
-	{
-		// Ignore this event - handle clicks in mouseReleased
-	}
+	public void mouseClicked(MouseEvent e){}
 	
-	//-------------------------------------------------------
 	/** Implement the mouseEntered function of MouseListener*/
-	//-------------------------------------------------------
-	public void mouseEntered(MouseEvent e)
-	{
-		// Ignore this event
-	}
-	//-------------------------------------------------------
+	public void mouseEntered(MouseEvent e){}
+	
 	/** Implement the mouseExited function of MouseListener*/
-	//-------------------------------------------------------
-	public void mouseExited(MouseEvent e)
-	{
-		// Ignore this event
-	}
-	//-------------------------------------------------------
+	public void mouseExited(MouseEvent e){}
+
 	/** Implement the mousePressed function of MouseListener*/
-	//-------------------------------------------------------
-	public void mousePressed(MouseEvent e)
-	{
-		// Ignore this event
-	}
-	//-------------------------------------------------------
+	public void mousePressed(MouseEvent e){}
+
 	/** Implement the mouseReleased function of MouseListener*/
-	//-------------------------------------------------------
-	public void mouseReleased(MouseEvent e)
-	{
-	}
+	public void mouseReleased(MouseEvent e){}
 
 
 	public void setState(CmeState mCurState) {
