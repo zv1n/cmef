@@ -13,6 +13,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.Iterator;
@@ -141,7 +144,6 @@ public class CmeApp extends JFrame implements AncestorListener
 	public CmeApp(int debugLevel)
 	{
 		m_iDebugLevel = debugLevel;
-	
 
 		// Set up the property HashMap
 		m_eProperties = new HashMap<String, Object>();
@@ -396,7 +398,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if(line.contains("/TRIAL")) {
 					trialId = null;
 				} else if((line.contains("STATE")) && (!(line.contains("/STATE")))) {
-					thisState = new CmeState();
+					thisState = new CmeState(this);
 					if (trialId != null)
 						thisState.setProperty("TrialID", trialId);
 				} else if(line.contains("TITLE")) {	
@@ -418,6 +420,9 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if(line.contains("FILE")) {
 					String insFile = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("InstructionFile", insFile);
+				} else if(line.contains("PROMPT")) {
+					String promptText = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
+					thisState.setProperty("PromptText", promptText);
 				} else if(line.contains("END")) {
 					if(line.contains("Click:")) {
 						thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
@@ -500,6 +505,76 @@ public class CmeApp extends JFrame implements AncestorListener
 		
 		/* Ensure adjustLayout gets called next time! */
 		m_dOldDims = (Dimension)this.getSize().clone();
+	}
+	
+	public String translateString(String text)
+	{
+		return CmeApp.translateString(m_eProperties,text);
+	}
+	
+	public static String translateString(HashMap<String, Object> Properties, String text) 
+	{	
+		text = text.replace("$$", "$ ");
+		
+		Vector<String> propList = getVariableList(text);
+		Comparator<String> comparator = Collections.reverseOrder();
+		Collections.sort(propList, comparator);
+		
+		Iterator<String> viter = propList.iterator();
+		while (viter.hasNext()) {
+			String variable = (String)viter.next();
+			String value = (String)Properties.get(variable);
+			
+			if (value == null)
+				value = "";
+
+			System.out.println(variable);
+			System.out.println(text);
+			text = text.replace("$"+variable, value);			
+		}
+
+		text = text.replace("$ ", "$");
+		System.out.println(text);
+		
+		return text;
+	}
+	
+	private static Vector<String> getVariableList(String text) 
+	{
+		Vector<String> propertyList = new Vector<String>();
+		
+		int lastOccurance = text.indexOf('$', 0);
+		int endCharacter = 0;
+			
+		while(lastOccurance != -1 && lastOccurance < text.length()) {
+			 
+			for(int x = lastOccurance+1; x < text.length(); x++) {
+				if (!Character.isDigit(text.charAt(x)) && 
+					!Character.isLetter(text.charAt(x)) && 
+					text.charAt(x) != '_') {
+					
+					endCharacter = x;
+					break;
+				} else if (x == text.length()-1) {
+					endCharacter = x+1;
+					break;
+				}
+			}
+
+			/* is the variable name valid? */
+			if (Character.isDigit(text.charAt(lastOccurance+1)) ||
+				Character.isLetter(text.charAt(lastOccurance+1)) || 
+				text.charAt(lastOccurance+1) == '_') {
+				propertyList.add(text.substring(lastOccurance+1, endCharacter));
+			}
+
+			if (endCharacter >= text.length() || text.charAt(endCharacter) == '$')
+				lastOccurance = endCharacter;
+			else
+				lastOccurance = text.indexOf('$', endCharacter);
+		}
+		
+		return propertyList;
 	}
 	
 	/** 

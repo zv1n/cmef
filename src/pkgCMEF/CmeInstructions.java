@@ -11,11 +11,14 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.ComponentView;
 import javax.swing.text.Element;
 import javax.swing.text.html.FormView;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.HTML.Attribute;
 
 import com.sun.xml.internal.ws.api.ResourceLoader;
 
@@ -23,6 +26,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
@@ -134,6 +138,7 @@ public class CmeInstructions extends JPanel {
 	
 	private void generateComponentList() 
 	{
+		m_App.dmsg(10, "Generate component list!");
 		Element[] root = ((HTMLDocument)m_HtmlView.getDocument()).getRootElements();
 		for (int htm = 0; htm < root.length; htm++) {
 			if (root[htm].getName().equals("html")) {
@@ -145,7 +150,15 @@ public class CmeInstructions extends JPanel {
 	private void recurseComponentList(Element node, int depth) 
 	{
 		if (node.getName() == "input") {
-			m_ComponentList.add("item_" + Integer.toString(m_ComponentList.size()));
+			AttributeSet attr = node.getAttributes();
+			String name = (String) attr.getAttribute(HTML.Attribute.NAME);
+			if (name == null) 
+				name = (String) attr.getAttribute(HTML.Attribute.ID);
+			if (name == null) {
+				m_App.dmsg(10, "No Name Input or ID!");
+				System.exit(1);
+			}
+			m_ComponentList.add(name);
 		}
 		for (int x = 0; x < node.getElementCount(); x++) {
 			if (depth < MAX_DEPTH) {
@@ -163,40 +176,37 @@ public class CmeInstructions extends JPanel {
 		}
 		
 		Component[] components = container.getComponents();
-		System.out.println("Count: "+Integer.toString(components.length));
 		for (int x=0; x<components.length; x++) {
 			if (components[x] instanceof JTextField) {
 				JTextField tf = (JTextField) components[x];
-				if (m_CompIter.hasNext())
-					System.out.println(m_CompIter.next());
-				else
-					System.out.println("oops... no next!?");
-				System.out.println("Value: " + tf.getText());
+				/*if (m_CompIter.hasNext())
+					System.out.println(m_CompIter.next());*/
 			} else if (components[x] instanceof JRadioButton) {
 				JRadioButton rb = (JRadioButton) components[x];
-				if (m_CompIter.hasNext())
-					System.out.println(m_CompIter.next());
-				else
-					System.out.println("oops... no next!?");
-				System.out.println("Check: " + Boolean.toString(rb.isSelected()));
+				/*if (m_CompIter.hasNext())
+					System.out.println(m_CompIter.next());*/
 			} else if (components[x] instanceof Container) {
 				generateFeedback((Container)components[x]);
 			}
 		}
-		if (!m_CompIter.hasNext()) {
+		
+		if (m_CompIter != null && !m_CompIter.hasNext()) {
+			System.out.println("No Next!");
 			m_CompIter = null;
 		}
 	}
 	
-	// ----------------------------------------------------------------
-	/**  
+	/**
+	 * Adjust all component present for the current window size.  
 	 * */
-	// ----------------------------------------------------------------
 	public void adjustLayout() {
 		adjustHtmlView();
 		adjustNextButton();
 	}
 	
+	/**
+	 * Adjust the Next Button for the current window size.
+	 */
 	private void adjustNextButton() {
 		Dimension newSz = this.getSize();
 		
@@ -211,6 +221,9 @@ public class CmeInstructions extends JPanel {
 		m_bNext.setLocation(location);
 	}
 	
+	/**
+	 * Adjust the HTML View for the current window size. 	
+	 */
 	private void adjustHtmlView() {
 		Dimension newSz = this.getSize();
 
@@ -218,24 +231,7 @@ public class CmeInstructions extends JPanel {
 		Dimension dimensions = (Dimension) newSz.clone();
 		Point location = new Point(border.width, border.height);
 
-		int lower_offset = 0;
-
-		if (m_CurState == null)
-			lower_offset = 0;
-		else {
-			switch (m_CurState.getState()) {
-			case CmeState.STATE_FEEDBACK:
-				lower_offset = border.height + 72;
-				break;
-				
-			case CmeState.STATE_INSTRUCTION:
-				lower_offset = border.height + 24;
-				break;
-				
-			case CmeState.STATE_PROMPT:
-				break;
-			}	
-		}
+		int lower_offset = border.height + 24;
 		
 		dimensions.height = newSz.height - (border.height * 2 + lower_offset);
 		dimensions.width -= border.width * 2;
@@ -252,7 +248,7 @@ public class CmeInstructions extends JPanel {
 	 *            - name of instructions file to display
 	 * @throws IOException
 	 */
-	public boolean showInstructions(String fileName) throws IOException 
+	private void showInstructions(String fileName) throws IOException 
 	{
 		File instFile = new File(fileName);
 
@@ -260,16 +256,18 @@ public class CmeInstructions extends JPanel {
 		m_ComponentList.clear();
 		
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
-		
-		return true;
 	}
 	
-	/**
-	 * Used to configure the feedback GUI components when feedback is requested. 
-	 */
-	private void showFeedbackArea() 
+	private void showInputPrompt(String msg) throws Exception 
 	{
+		String input;
 		
+		msg = m_CurState.translateString(msg);
+		msg = m_App.translateString(msg);
+		
+		do {
+			input = JOptionPane.showInputDialog(msg);
+		} while (!m_CurState.validateInput(input));
 	}
 
 	/**
@@ -293,8 +291,6 @@ public class CmeInstructions extends JPanel {
 		try {
 			switch (m_CurState.getState()) {
 			case CmeState.STATE_FEEDBACK:
-				this.showFeedbackArea();
-
 			case CmeState.STATE_INSTRUCTION:
 				Object instructionFile = m_CurState.getProperty("InstructionFile");
 				if (instructionFile != null)
@@ -302,7 +298,9 @@ public class CmeInstructions extends JPanel {
 				break;
 
 			case CmeState.STATE_PROMPT:
-				break;
+				showInputPrompt((String)m_CurState.getProperty("PromptText"));
+				this.setVisible(false);
+				return;
 
 			default:
 				m_App.dmsg(0XFF, "Default state hit on Instruction Handler!");

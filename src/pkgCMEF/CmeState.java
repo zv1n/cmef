@@ -17,6 +17,10 @@ import javax.swing.JOptionPane;
 // ===================================================================
 
 public class CmeState {
+	
+	/** Effectively the parent application instance */
+	private CmeApp m_App;
+	
 	/** State for this state */
 	private int m_iState;
 	
@@ -45,67 +49,107 @@ public class CmeState {
 	/** Number of events */
 	public static final int EVENT_MAX = 1;
 
-	// ---------------------------------------------------------
-	/** Default constructor */
-	// ---------------------------------------------------------
-	public CmeState() {
+	/** 
+	 * Default constructor 
+	 */
+	public CmeState(CmeApp thisApp) {
+		m_App = thisApp;
 	}
 
-	// ---------------------------------------------------------
-	/** Set the mode */
-	// ---------------------------------------------------------
+	/** 
+	 * Set the mode 
+	 */
 	public void setState(int m) {
 		m_iState = m;
 	}
 
-	// ---------------------------------------------------------
-	/** Set the mode */
-	// ---------------------------------------------------------
+	/** 
+	 * Set the mode 
+	 */
 	public int getState() {
 		return m_iState;
 	}
 
-	// ---------------------------------------------------------
-	/** Set the change by action */
-	// ---------------------------------------------------------
+	/**
+	 * Set the change by action 
+	 */
 	public void TriggerEvent(int event) {
 		if(event < 0 || event >= EVENT_MAX || m_erEvent[event] == null)
 			return;
 		m_erEvent[event].Respond();
 	}
 	
-	// ---------------------------------------------------------
-	/** Set event response */
-	// ---------------------------------------------------------
+	/**
+	 * Set event response 
+	 */
 	public void setEventResponse(int eventId, CmeEventResponse event) {
 			m_erEvent[eventId] = event;
 	}
 	
-	// ---------------------------------------------------------
-	/** Set a PropertyValue*/
-	// ---------------------------------------------------------
+	/** 
+	 * Set a PropertyValue
+	 */
 	public void setProperty(String name, Object prop) {
 		m_sProperties.put(name, prop);
 	}
 	
-	// ---------------------------------------------------------
-	/** Set event response */
-	// ---------------------------------------------------------
+	/** 
+	 * Set event response 
+	 */
 	public Object getProperty(String name) {
 		return m_sProperties.get(name);
 	}
 	
-	// ---------------------------------------------------------
-	/** Set a PropertyValue*/
-	// ---------------------------------------------------------
+	/** 
+	 * Set a PropertyValue
+	 */
 	public void setPreviousState(CmeState state) {
 		m_sPrevState = state;
 	}
 	
-	// ---------------------------------------------------------
-	/** Set event response */
-	// ---------------------------------------------------------
+	/** 
+	 * Set event response 
+	 */
 	public Object getPreviousState() {
 		return m_sPrevState;
+	}
+
+	/**
+	 * Validate input string conforms to the State input specifications
+	 * @param text - the input string to be validated
+	 * @return boolean - true if valid string; false else
+	 */
+	public boolean validateInput(String text) throws Exception
+	{
+		if (text == null) {
+			throw new Exception("State::ValidateInput: Null text!");
+		}
+		text = translateString(text);
+		text = m_App.translateString(text);
+
+		String constraintType = m_sProperties.get("ContraintType").toString().toLowerCase();
+		String constraint = (String)m_sProperties.get("Contraint");
+		
+		if (constraintType == null || constraint == null) {
+			throw new Exception("State::ValidateInput: Null constraint type or value!");
+		}		
+		
+		if (constraintType == "regex") {
+		} else if (constraintType == "range") {
+		} else if (constraintType == "value") {
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Translate the string -- any variables that exist as properties are replaced...
+	 * Any variables that don't are replaced with ""
+	 * @param text - text containing the elements to be replaced
+	 * @return String - string with all the variables replaced
+	 */
+	public String translateString(String text)
+	{
+		return m_App.translateString(m_sProperties,text);
 	}
 }
