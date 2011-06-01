@@ -4,35 +4,16 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.ComponentView;
+import javax.swing.event.AncestorListener;import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
-import javax.swing.text.html.FormView;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.HTML.Attribute;
 
-import com.sun.xml.internal.ws.api.ResourceLoader;
-
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.HeadlessException;
-import java.awt.Image;
-import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
@@ -127,13 +108,17 @@ public class CmeInstructions extends JPanel {
 		m_bNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (m_CurState != null)
-					//if (m_CurState.getState() == CmeState.STATE_FEEDBACK) 
-						generateFeedback(m_HtmlView);
+					if (m_CurState.getState() == CmeState.STATE_FEEDBACK) {
+						try {
+							generateFeedbackInfo(m_HtmlView);
+						} catch (Exception ex) {
+							System.out.println("Failed to generate output for feedback:\n" + ex.getMessage());
+						}
+					}
 					m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
 			}
 		});
 		this.add(m_bNext);
-
 	}
 	
 	private void generateComponentList() 
@@ -169,7 +154,7 @@ public class CmeInstructions extends JPanel {
 		}	
 	}
 	
-	private void generateFeedback(Container container)
+	private void generateFeedbackInfo(Container container) throws Exception
 	{
 		if (m_CompIter == null) {
 			m_CompIter = m_ComponentList.iterator();
@@ -177,21 +162,31 @@ public class CmeInstructions extends JPanel {
 		
 		Component[] components = container.getComponents();
 		for (int x=0; x<components.length; x++) {
+			
 			if (components[x] instanceof JTextField) {
 				JTextField tf = (JTextField) components[x];
-				/*if (m_CompIter.hasNext())
-					System.out.println(m_CompIter.next());*/
+				
+				if (m_CompIter.hasNext()) {
+					System.out.println(m_CompIter.next() + "|" + tf.getText());
+				} else {
+					throw new Exception("Invalid number of components! (tf)");
+				}
+				
 			} else if (components[x] instanceof JRadioButton) {
 				JRadioButton rb = (JRadioButton) components[x];
-				/*if (m_CompIter.hasNext())
-					System.out.println(m_CompIter.next());*/
+				
+				if (m_CompIter.hasNext()) {
+					System.out.println(m_CompIter.next() + "|" + Boolean.toString(rb.isSelected()));
+				} else {
+					throw new Exception("Invalid number of components! (rb)");
+				}
+				
 			} else if (components[x] instanceof Container) {
-				generateFeedback((Container)components[x]);
+				generateFeedbackInfo((Container)components[x]);
 			}
 		}
 		
 		if (m_CompIter != null && !m_CompIter.hasNext()) {
-			System.out.println("No Next!");
 			m_CompIter = null;
 		}
 	}
@@ -316,7 +311,7 @@ public class CmeInstructions extends JPanel {
 		}
 		
 		String pbText = m_CurState.getProperty("PrimaryButtonText").toString();
-		if (pbText != null) {
+		if (pbText != null) {	
 			m_bNext.setText(pbText);
 		}
 

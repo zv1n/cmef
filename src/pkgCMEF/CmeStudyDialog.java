@@ -2,7 +2,6 @@ package pkgCMEF;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -92,7 +91,7 @@ public class CmeStudyDialog extends JDialog
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-		Image img = m_cImage.getImage();
+/*		Image img = m_cImage.getImage();
 		// Paint the area
 		g.setColor(Color.white);
 		
@@ -105,6 +104,6 @@ public class CmeStudyDialog extends JDialog
 //		g.drawString(String.valueOf(m_cImage.getImageValue()),
 //				m_iImgAreaX+(m_iImgAreaWt / 2)+125,	245);
 //		g.drawString(str, m_iImgAreaX+m_PImage.getImage().getWidth(null)+20, 
-//				100);
+//				100);*/
 	}
 }

@@ -3,8 +3,6 @@ package pkgCMEF;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ContainerEvent;
-import java.awt.event.ContainerListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,7 +11,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -121,7 +118,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	 */
 	public void dmsg(int level, String msg) {
 		if (level >= (m_iDebugLevel&0xFF)) {
-			System.out.print(msg);
+			System.out.println(msg);
 		}
 	}
 	
@@ -710,7 +707,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	public static void main(String[] args)
 	{
 		int len = args.length;
-		int debug = 0;
+		int debug = 0x107;
 		for (int x = 0; x < len; x++) {
 			if(args[x] == "-d" || args[x] == "--debug") {
 				try {
@@ -723,7 +720,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 		
 		@SuppressWarnings("unused")
-		CmeApp theApp = new CmeApp(0x107);
+		CmeApp theApp = new CmeApp(debug);
 	}
 
 }

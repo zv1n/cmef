@@ -2,7 +2,6 @@ package pkgCMEF;
 
 import java.util.HashMap;
 
-import javax.swing.JOptionPane;
 
 //====================================================================
 /**
@@ -11,8 +10,8 @@ import javax.swing.JOptionPane;
  * Purpose: This class defines the different states in which an experiment can
  * exist in.
  * 
- * @author Terry Meacham, Dr. Rick Coleman
- * @version 1.1 Date: February, 2009
+ * @author Terry Meacham
+ * @version 2.0, June 2011
  */
 // ===================================================================
 
@@ -115,6 +114,54 @@ public class CmeState {
 	}
 
 	/**
+	 * Validate a regular expression.
+	 * 
+	 * @param regex - regular expression to evaluate
+	 * @param input - the input string to validate
+	 * @return true on regex match; false else
+	 */
+	private boolean validateRegex(String regex, String input) {
+		return input.matches(regex);
+	}
+	
+	/**
+	 * Validate the range of an input.
+	 * 
+	 * @param range - the range to be evaluate.
+	 * @param input - the input string to validate.
+	 * @return true on range; false else
+	 */
+	private boolean validateRange(String range, String input) throws Exception {
+		range = range.replace(" ", "").replace("\t", "");
+		String[] rangeData = range.split("-");
+		int value = Integer.parseInt(input);
+		
+		if (rangeData.length > 2 || rangeData.length < 1) { 
+			throw new Exception("To many numbers in the expected range!");
+		} else if (rangeData.length == 2) {
+			int lValue = Integer.parseInt(rangeData[0]);
+			int hValue = Integer.parseInt(rangeData[1]);
+			return (value <= lValue && value >= hValue);
+		} else if (rangeData.length == 1) {
+			int expValue = Integer.parseInt(rangeData[0]);
+			return (value == expValue);
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Validate the value of an input.
+	 * 
+	 * @param value - the value to be evaluate.
+	 * @param input - the input string to validate.
+	 * @return true on valid value; false else
+	 */
+	private boolean validateValue(String value, String input) {
+		return (value == input);
+	}
+	
+	/**
 	 * Validate input string conforms to the State input specifications
 	 * @param text - the input string to be validated
 	 * @return boolean - true if valid string; false else
@@ -125,21 +172,32 @@ public class CmeState {
 			throw new Exception("State::ValidateInput: Null text!");
 		}
 		text = translateString(text);
-		text = m_App.translateString(text);
+		text = m_App.translateString(text).trim();
 
 		String constraintType = m_sProperties.get("ContraintType").toString().toLowerCase();
 		String constraint = (String)m_sProperties.get("Contraint");
 		
 		if (constraintType == null || constraint == null) {
 			throw new Exception("State::ValidateInput: Null constraint type or value!");
-		}		
-		
-		if (constraintType == "regex") {
-		} else if (constraintType == "range") {
-		} else if (constraintType == "value") {
 		}
+
+		constraint = translateString(constraint);
+		constraint = m_App.translateString(constraint).trim();
 		
-		return true;
+		try {
+			if (constraintType == "regex") {
+				return validateRegex(constraint, text);
+			} else if (constraintType == "range") {
+				return validateRange(constraint, text);
+			} else if (constraintType == "value") {
+				return validateValue(constraint, text);
+			}
+		}
+		catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			return false;
+		}
+		return false;
 	}
 	
 	/**
@@ -150,6 +208,6 @@ public class CmeState {
 	 */
 	public String translateString(String text)
 	{
-		return m_App.translateString(m_sProperties,text);
+		return CmeApp.translateString(m_sProperties,text);
 	}
 }
