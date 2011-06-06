@@ -37,10 +37,12 @@ public class CmeState {
 	public static final int STATE_FEEDBACK = 2;
 	/** Display prompt mode */
 	public static final int STATE_PROMPT = 3;
+	/** Display rating mode */
+	public static final int STATE_RATING = 4;
 	/** Learning mode */
-	public static final int STATE_STUDY = 4;
+	public static final int STATE_STUDY = 5;
 	/** Testing mode */
-	public static final int STATE_TEST = 5;
+	public static final int STATE_TEST = 6;
 
 	// ---------- Events -------
 	/** Event for Clicking a Continue Button */
@@ -121,6 +123,7 @@ public class CmeState {
 	 * @return true on regex match; false else
 	 */
 	private boolean validateRegex(String regex, String input) {
+		m_App.dmsg(11, "Regex: " + regex + "\nInput: |" + input + "|");
 		return input.matches(regex);
 	}
 	
@@ -136,14 +139,23 @@ public class CmeState {
 		String[] rangeData = range.split("-");
 		int value = Integer.parseInt(input);
 		
+		m_App.dmsg(10, Integer.toString(value));
+		
 		if (rangeData.length > 2 || rangeData.length < 1) { 
 			throw new Exception("To many numbers in the expected range!");
 		} else if (rangeData.length == 2) {
 			int lValue = Integer.parseInt(rangeData[0]);
 			int hValue = Integer.parseInt(rangeData[1]);
-			return (value <= lValue && value >= hValue);
+			
+			m_App.dmsg(10, Integer.toString(lValue));
+			m_App.dmsg(10, Integer.toString(hValue));
+			
+			return (value >= lValue && value <= hValue);
 		} else if (rangeData.length == 1) {
 			int expValue = Integer.parseInt(rangeData[0]);
+			
+			m_App.dmsg(10, Integer.toString(expValue));
+			
 			return (value == expValue);
 		}
 		
@@ -168,35 +180,45 @@ public class CmeState {
 	 */
 	public boolean validateInput(String text) throws Exception
 	{
-		if (text == null) {
-			throw new Exception("State::ValidateInput: Null text!");
-		}
+		if (text == null)
+			return true;
+
 		text = translateString(text);
 		text = m_App.translateString(text).trim();
 
-		String constraintType = m_sProperties.get("ContraintType").toString().toLowerCase();
-		String constraint = (String)m_sProperties.get("Contraint");
+		String constraintType = (String)m_sProperties.get("ConstraintType");
+		String constraint = (String)m_sProperties.get("Constraint");
+
+		System.out.println(m_sProperties);
 		
 		if (constraintType == null || constraint == null) {
 			throw new Exception("State::ValidateInput: Null constraint type or value!");
 		}
-
+		
+		constraintType = constraintType.toLowerCase();
+		
 		constraint = translateString(constraint);
 		constraint = m_App.translateString(constraint).trim();
 		
+		m_App.dmsg(10, "Type: |" + constraintType + "|\nConstraint: " + constraint);
+		
 		try {
-			if (constraintType == "regex") {
+			if (constraintType.equals("regex")) {
+				m_App.dmsg(10, "Regex");
 				return validateRegex(constraint, text);
-			} else if (constraintType == "range") {
+			} else if (constraintType.equals("range")) {
+				m_App.dmsg(10, "Range");
 				return validateRange(constraint, text);
-			} else if (constraintType == "value") {
+			} else if (constraintType.equals("value")) {
+				m_App.dmsg(10, "Value!");
 				return validateValue(constraint, text);
-			}
+			} else m_App.dmsg(10, "None!");
 		}
 		catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			return false;
 		}
+
 		return false;
 	}
 	

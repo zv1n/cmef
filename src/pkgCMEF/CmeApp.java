@@ -31,7 +31,7 @@ import javax.swing.event.AncestorListener;
  *  <P>Purpose: This application was designed and written for use
  *  as the primary experimental software for an experiment in 
  *  learning conducted by Jodi Price.
- *  @author Terry Meacham, Dr. Rick Coleman
+ *  @author Terry Meacham
  *  @version 2.0
  *  Date: May 2011
  */
@@ -55,6 +55,10 @@ public class CmeApp extends JFrame implements AncestorListener
 	
 	/** HashMap of all experiment properties */
 	private HashMap<String, Object> m_eProperties;
+
+	/** Variables used to hold the feedback values */
+	private Vector<String> m_fbName;
+	private Vector<String> m_fbValue;
 
 	/** Debug Level */
 	private int m_iDebugLevel;
@@ -117,9 +121,9 @@ public class CmeApp extends JFrame implements AncestorListener
 	 * @param msg - the msg to be displayed
 	 */
 	public void dmsg(int level, String msg) {
-		if (level >= (m_iDebugLevel&0xFF)) {
+		//if (level >= (m_iDebugLevel&0xFF)) {
 			System.out.println(msg);
-		}
+		//}
 	}
 	
 	
@@ -352,14 +356,12 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 	}
 	
-	//-----------------------------------------------
 	/** 
 	 * Initialization function for preparing all States
 	 *  Reads in experiment configuration file and generates 
 	 *  all configured state information.
 	 * @throws Exception 
 	 * */
-	//-----------------------------------------------
 	public void initExperiment() throws Exception
 	{
 		final CmeApp thisApp = this;
@@ -389,6 +391,10 @@ public class CmeApp extends JFrame implements AncestorListener
 			bufReader = new BufferedReader(instFile);
 			while((line = bufReader.readLine()) != null)
 			{
+				line = line.trim();
+				if(line.trim().charAt(0) == '#')
+					continue;
+				
 				// See if we need to create a new State
 				if((line.contains("TRIAL")) && (!(line.contains("/TRIAL")))) {
 					trialId = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
@@ -414,12 +420,30 @@ public class CmeApp extends JFrame implements AncestorListener
 						m_eProperties.put("ValidConditions",":" + valConditions + ":");
 					else
 						thisState.setProperty("ValidConditions", ":" + valConditions + ":");
-				} else if(line.contains("FILE")) {
+				} 
+
+				if (thisState == null)
+					continue;
+
+				if(line.contains("FILE")) {
 					String insFile = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("InstructionFile", insFile);
 				} else if(line.contains("PROMPT")) {
 					String promptText = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("PromptText", promptText);
+				} else if(line.contains("NEXT") && thisState != null) {
+					if(line.contains("Click:")) {
+						thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
+							new CmeEventResponse() {
+									public void Respond() {
+										thisApp.setNextState();
+									}
+							});
+					}
+					String primaryText = line.substring(line.indexOf(":")+1, line.lastIndexOf("\""));
+					if (primaryText != null && primaryText.length() > 0) {
+						thisState.setProperty("PrimaryButtonText", primaryText);
+					}
 				} else if(line.contains("END")) {
 					if(line.contains("Click:")) {
 						thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
@@ -441,6 +465,8 @@ public class CmeApp extends JFrame implements AncestorListener
 						thisState.setState(CmeState.STATE_FEEDBACK);
 					else if (line.toUpperCase().contains("PROMPT"))
 						thisState.setState(CmeState.STATE_PROMPT);
+					else if (line.toUpperCase().contains("RATING"))
+						thisState.setState(CmeState.STATE_RATING);
 					else if (line.toUpperCase().contains("STUDY"))
 						thisState.setState(CmeState.STATE_STUDY);
 					else if (line.toUpperCase().contains("TEST"))
@@ -456,9 +482,20 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if((line.contains("STUDY_TIMES")) && (!line.contains("/"))) {
 					// Get the number of study times to write out to report
 					line = bufReader.readLine().trim();
-				}
-				
-				if (thisState != null && thisState.getState() == CmeState.STATE_FEEDBACK) {
+				} else if (line.contains("NAME") && thisState != null) {
+					String name = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
+					thisState.setProperty("FeedbackName", name);
+				} else if (line.contains("CONSTRAINTS")) {
+					String ctype = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
+					String constraint = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
+					if (validConstraints.contains(ctype.toUpperCase())) {
+						thisState.setProperty("ConstraintType", ctype);
+						thisState.setProperty("Constraint", constraint);
+					} else {
+						dmsg(0xFF, "Invalid constraint type: " + ctype);
+						System.exit(0);
+					}
+				} else if (thisState != null && thisState.getState() == CmeState.STATE_FEEDBACK) {
 					if (line.contains("INPUT")) {
 						String input = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
 						if (validInput.contains(input.toUpperCase())) {
@@ -468,26 +505,15 @@ public class CmeApp extends JFrame implements AncestorListener
 							System.exit(0);
 						}
 						
-					} else if (line.contains("CONSTRAINTS")) {
-						String ctype = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
-						String constraint = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
-						if (validConstraints.contains(ctype.toUpperCase())) {
-							thisState.setProperty("ConstraintType", ctype);
-							thisState.setProperty("Constraint", constraint);
-						} else {
-							dmsg(0xFF, "Invalid constraint type: " + ctype);
-							System.exit(0);
-						}
 					}
-					
 				}
 			}
 		}
 		catch(IOException e) {
-			throw new Exception(e.getMessage() + m_sExpFileName);
+			throw new Exception(e.getMessage() + ": " + m_sExpFileName);
 		}
 		catch(Exception e) {
-			throw new Exception("Error parsing configuration file!");
+			throw new Exception("Whoel: " +e.toString());
 		}
 		
 		dmsg(5, "Experiment Init Successful!");
@@ -516,22 +542,19 @@ public class CmeApp extends JFrame implements AncestorListener
 		Vector<String> propList = getVariableList(text);
 		Comparator<String> comparator = Collections.reverseOrder();
 		Collections.sort(propList, comparator);
-		
+
 		Iterator<String> viter = propList.iterator();
 		while (viter.hasNext()) {
 			String variable = (String)viter.next();
 			String value = (String)Properties.get(variable);
-			
-			if (value == null)
-				value = "";
 
-			System.out.println(variable);
-			System.out.println(text);
+			if (value == null)
+				continue;
+
 			text = text.replace("$"+variable, value);			
 		}
 
 		text = text.replace("$ ", "$");
-		System.out.println(text);
 		
 		return text;
 	}
@@ -544,12 +567,12 @@ public class CmeApp extends JFrame implements AncestorListener
 		int endCharacter = 0;
 			
 		while(lastOccurance != -1 && lastOccurance < text.length()) {
-			 
+
 			for(int x = lastOccurance+1; x < text.length(); x++) {
 				if (!Character.isDigit(text.charAt(x)) && 
 					!Character.isLetter(text.charAt(x)) && 
 					text.charAt(x) != '_') {
-					
+			
 					endCharacter = x;
 					break;
 				} else if (x == text.length()-1) {
@@ -558,6 +581,9 @@ public class CmeApp extends JFrame implements AncestorListener
 				}
 			}
 
+			if (lastOccurance+1 >= text.length())
+				break;
+			
 			/* is the variable name valid? */
 			if (Character.isDigit(text.charAt(lastOccurance+1)) ||
 				Character.isLetter(text.charAt(lastOccurance+1)) || 
@@ -701,9 +727,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		return tStr;
 	}
 	
-	//-----------------------------------------------
 	/** Everything states in main */
-	//-----------------------------------------------
 	public static void main(String[] args)
 	{
 		int len = args.length;
@@ -721,6 +745,17 @@ public class CmeApp extends JFrame implements AncestorListener
 		
 		@SuppressWarnings("unused")
 		CmeApp theApp = new CmeApp(debug);
+	}
+	
+	public void addFeedback(String name, String value) throws Exception {
+		if (name == null || value == null)
+			throw new Exception("Invalid name or value!");
+			
+		if (name.length() == 0)
+			throw new Exception("Invalid feedback name!");
+		
+		m_fbName.add(name);
+		m_fbValue.add(value);
 	}
 
 }

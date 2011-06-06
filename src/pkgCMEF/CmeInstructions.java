@@ -53,13 +53,11 @@ public class CmeInstructions extends JPanel {
 	
 	private int MAX_DEPTH = 10;
 
-	// ----------------------------------------------------------------
 	/**
 	 * Default constructor
 	 * 
 	 * @throws IOException
 	 */
-	// ----------------------------------------------------------------
 	public CmeInstructions(CmeApp parent) {
 		m_App = parent;
 		
@@ -88,12 +86,12 @@ public class CmeInstructions extends JPanel {
 				.createBevelBorder(BevelBorder.LOWERED));*/
 	
 		m_HtmlView.addContainerListener(new ContainerListener() {
-
 			@Override
 			public void componentAdded(ContainerEvent arg0) {	
 				if (m_ComponentList.isEmpty())
 					generateComponentList();
 			}
+			
 			@Override public void componentRemoved(ContainerEvent arg0) {}
 		});
 		
@@ -154,7 +152,7 @@ public class CmeInstructions extends JPanel {
 		}	
 	}
 	
-	private void generateFeedbackInfo(Container container) throws Exception
+	private boolean generateFeedbackInfo(Container container) throws Exception
 	{
 		if (m_CompIter == null) {
 			m_CompIter = m_ComponentList.iterator();
@@ -167,7 +165,9 @@ public class CmeInstructions extends JPanel {
 				JTextField tf = (JTextField) components[x];
 				
 				if (m_CompIter.hasNext()) {
-					System.out.println(m_CompIter.next() + "|" + tf.getText());
+					m_App.dmsg(10, m_CompIter.next() + "|" + tf.getText());
+					if (!m_CurState.validateInput(tf.getText()))
+						return false;
 				} else {
 					throw new Exception("Invalid number of components! (tf)");
 				}
@@ -182,13 +182,15 @@ public class CmeInstructions extends JPanel {
 				}
 				
 			} else if (components[x] instanceof Container) {
-				generateFeedbackInfo((Container)components[x]);
-			}
+				return generateFeedbackInfo((Container)components[x]);
+			}	
 		}
 		
 		if (m_CompIter != null && !m_CompIter.hasNext()) {
 			m_CompIter = null;
 		}
+		
+		return true;
 	}
 	
 	/**
@@ -253,16 +255,39 @@ public class CmeInstructions extends JPanel {
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
 	}
 	
-	private void showInputPrompt(String msg) throws Exception 
+	private void showRatingInstructions(String fileName) throws IOException 
+	{	
+		File instFile = new File(fileName);
+
+		this.adjustLayout();
+		m_ComponentList.clear();
+	
+		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
+	}
+	
+	private boolean showInputPrompt(String msg) throws Exception 
 	{
 		String input;
+
+		if (msg == null)
+			throw new Exception("Invalid prompt message specified!");
 		
 		msg = m_CurState.translateString(msg);
 		msg = m_App.translateString(msg);
-		
+
 		do {
 			input = JOptionPane.showInputDialog(msg);
+			if (input == null)
+				return false;
 		} while (!m_CurState.validateInput(input));
+		
+		String name = (String)m_CurState.getProperty("FeedbackName");
+		if (name == null)
+			throw new Exception("Feedback name is null!");
+		
+		m_App.addFeedback(name, input);
+		
+		return true;
 	}
 
 	/**
@@ -280,6 +305,7 @@ public class CmeInstructions extends JPanel {
 	 * @throws Exception
 	 */
 	public void setState(CmeState mCurState) throws Exception {
+		Object instructionFile = null;
 		m_CurState = mCurState;
 
 		// Begin!
@@ -287,14 +313,21 @@ public class CmeInstructions extends JPanel {
 			switch (m_CurState.getState()) {
 			case CmeState.STATE_FEEDBACK:
 			case CmeState.STATE_INSTRUCTION:
-				Object instructionFile = m_CurState.getProperty("InstructionFile");
+				instructionFile = m_CurState.getProperty("InstructionFile");
 				if (instructionFile != null)
-					this.showInstructions(instructionFile.toString());
+					this.showInstructions((String)instructionFile);
 				break;
 
+			case CmeState.STATE_RATING:
+				instructionFile = m_CurState.getProperty("InstructionFile");
+				if (instructionFile != null)
+					this.showRatingInstructions((String)instructionFile);
+				break;
+				
 			case CmeState.STATE_PROMPT:
-				showInputPrompt((String)m_CurState.getProperty("PromptText"));
 				this.setVisible(false);
+				showInputPrompt((String)m_CurState.getProperty("PromptText"));
+				m_App.setNextState();
 				return;
 
 			default:

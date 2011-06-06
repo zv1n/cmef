@@ -9,6 +9,12 @@
 			END="Click:Next"
 		</STATE>
 		<STATE>
+			MODE="Prompt"
+			NAME="EOLTrial1"
+			PROMPT="Enter the number $ValidConditions:"
+#			CONSTRAINTS="regex:^a"
+		</STATE>
+		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen2.htm"
 			END="Click:Next"
@@ -20,6 +26,7 @@
 		</STATE>
 		<STATE>
 			MODE="Feedback"
+			NAME="EOLRatingTrial1"
 			TITLE="Rate Ease of Learning"
 			END="Click:Next"
 		</STATE>
@@ -32,9 +39,9 @@
 			MODE="Feedback"
 			TITLE="Estimate Number to Remember Pretrial"
 			FILE="Instructions/Screen5.htm"
-			INPUT="numeric"
-			CONSTRAINT="range:0-18"
-			NAME="NC_trial_1"
+#			INPUT="numeric"
+#			CONSTRAINTS="range:0-18"
+#			NAME="NC_trial_1"
 			END="Click:Next"
 		</STATE>
 		<STATE>
@@ -97,7 +104,6 @@
 		<STATE>
 			MODE="Prompt"
 			CONDITIONS="AF,BF,CF,DF"
-			VALUE="$points_this_trial"
 		</STATE>
 	</TRIAL>
 	<TRIAL ID="2">
