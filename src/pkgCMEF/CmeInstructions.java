@@ -5,7 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;import javax.swing.text.AttributeSet;
+import javax.swing.event.AncestorListener;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.Element;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
@@ -13,11 +14,12 @@ import javax.swing.text.html.HTMLDocument;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
-
 
 //====================================================================
 /**
@@ -40,17 +42,23 @@ public class CmeInstructions extends JPanel {
 
 	/** Html Pane for Instructions */
 	private JEditorPane m_HtmlView;
-	
+
 	/** Scroll Pane for Instruction Scrolling */
 	private JScrollPane m_ScrollPane;
 
 	/** JButton for primary button */
 	private JButton m_bNext;
-	
+
 	/** Vector store for the names of each editable component */
-	private Vector<String> m_ComponentList;
-	private Iterator<String> m_CompIter;
+	private Vector<String> m_EditList;
+	private Iterator<String> m_EditIter;
+
+	private Vector<String> m_RadioList;
+	private Iterator<String> m_RadioIter;
 	
+	private Vector<String> m_RadioValueList;
+	private Iterator<String> m_RadioValueIter;
+
 	private int MAX_DEPTH = 10;
 
 	/**
@@ -60,20 +68,28 @@ public class CmeInstructions extends JPanel {
 	 */
 	public CmeInstructions(CmeApp parent) {
 		m_App = parent;
-		
-		m_ComponentList = new Vector<String>();
+
+		m_EditList = new Vector<String>();
+		m_RadioList = new Vector<String>();
+		m_RadioValueList = new Vector<String>();
 
 		this.setVisible(false);
 		this.setSize(parent.getSize());
 		this.setBorder(null);
 
 		this.setLayout(null);
-		
-		AncestorListener aListener = new AncestorListener(){
-			@Override public void ancestorRemoved(AncestorEvent arg0) {}
-			@Override public void ancestorAdded(AncestorEvent arg0) {}
-			@Override public void 
-			ancestorMoved(AncestorEvent e) {
+
+		AncestorListener aListener = new AncestorListener() {
+			@Override
+			public void ancestorRemoved(AncestorEvent arg0) {
+			}
+
+			@Override
+			public void ancestorAdded(AncestorEvent arg0) {
+			}
+
+			@Override
+			public void ancestorMoved(AncestorEvent e) {
 				adjustLayout();
 			}
 		};
@@ -82,19 +98,23 @@ public class CmeInstructions extends JPanel {
 		m_HtmlView = new JTextPane();
 		m_HtmlView.setEditable(false);
 		m_HtmlView.setDoubleBuffered(true);
-		/*m_HtmlView.setBorder(BorderFactory
-				.createBevelBorder(BevelBorder.LOWERED));*/
-	
+		/*
+		 * m_HtmlView.setBorder(BorderFactory
+		 * .createBevelBorder(BevelBorder.LOWERED));
+		 */
+
 		m_HtmlView.addContainerListener(new ContainerListener() {
 			@Override
-			public void componentAdded(ContainerEvent arg0) {	
-				if (m_ComponentList.isEmpty())
+			public void componentAdded(ContainerEvent arg0) {
+				if (m_EditList.isEmpty())
 					generateComponentList();
 			}
-			
-			@Override public void componentRemoved(ContainerEvent arg0) {}
+
+			@Override
+			public void componentRemoved(ContainerEvent arg0) {
+			}
 		});
-		
+
 		m_ScrollPane = new JScrollPane(m_HtmlView);
 		m_ScrollPane.addAncestorListener(aListener);
 		this.add(m_ScrollPane);
@@ -110,116 +130,185 @@ public class CmeInstructions extends JPanel {
 						try {
 							generateFeedbackInfo(m_HtmlView);
 						} catch (Exception ex) {
-							System.out.println("Failed to generate output for feedback:\n" + ex.getMessage());
+							System.out.println(
+									"Failed to generate output for feedback:\n" + ex.getMessage());
 						}
 					}
-					m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
+				m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
 			}
 		});
 		this.add(m_bNext);
 	}
-	
-	private void generateComponentList() 
-	{
-		m_App.dmsg(10, "Generate component list!");
-		Element[] root = ((HTMLDocument)m_HtmlView.getDocument()).getRootElements();
+
+	private void generateComponentList() {
+		m_App.dmsg(10, "Generate Component List!");
+
+		Element[] root = ((HTMLDocument) m_HtmlView.getDocument())
+				.getRootElements();
+		
 		for (int htm = 0; htm < root.length; htm++) {
 			if (root[htm].getName().equals("html")) {
 				recurseComponentList(root[htm], 0);
 			}
 		}
+		
+		m_App.dmsg(11, m_EditList.toString());
+
+		m_App.dmsg(10, "Componet List Generation Complete!");
 	}
-	
-	private void recurseComponentList(Element node, int depth) 
-	{
+
+	private void recurseComponentList(Element node, int depth) {
+		m_App.dmsg(10, "Recursing Component List!");
+
 		if (node.getName() == "input") {
 			AttributeSet attr = node.getAttributes();
+			
+			String type = (String) attr.getAttribute(HTML.Attribute.TYPE);
 			String name = (String) attr.getAttribute(HTML.Attribute.NAME);
-			if (name == null) 
-				name = (String) attr.getAttribute(HTML.Attribute.ID);
+			String value = (String) attr.getAttribute(HTML.Attribute.VALUE);
+
 			if (name == null) {
-				m_App.dmsg(10, "No Name Input or ID!");
+				System.out.println("All inputs must have a name!");
 				System.exit(1);
 			}
-			m_ComponentList.add(name);
+
+			m_App.dmsg(10, "|" + type.toLowerCase() + "|");
+			if (type.toLowerCase().equals("radio")) {
+				if (value == null) {
+					System.out.println("Radio buttons must have an input Value!");
+					System.exit(1);
+				}
+				m_RadioList.add(name);
+				m_RadioValueList.add(value);
+			} else { /*if (type.toLowerCase() == "text")*/
+				m_EditList.add(name);
+			}
 		}
+
 		for (int x = 0; x < node.getElementCount(); x++) {
 			if (depth < MAX_DEPTH) {
-				recurseComponentList(node.getElement(x), depth+1);
+				recurseComponentList(node.getElement(x), depth + 1);
 			} else {
 				System.out.println("Max depth reached!");
 			}
-		}	
+		}
+
+		m_App.dmsg(10, "Recurse Component List Complete!");
 	}
-	
-	private boolean generateFeedbackInfo(Container container) throws Exception
-	{
-		if (m_CompIter == null) {
-			m_CompIter = m_ComponentList.iterator();
+
+	/**
+	 * Iterate through the containers and pull out the necessary information.
+	 * 
+	 * @param container
+	 *            - container from the HTMLView
+	 * @return true
+	 * @throws Exception
+	 */
+	private boolean generateFeedbackInfo(Container container) throws Exception {
+		boolean ret = true;
+		Component[] components = null;
+
+		if (m_EditIter == null) {
+			m_EditIter = m_EditList.iterator();
+			m_App.dmsg(10, "Edit: " + String.valueOf(m_EditList.size()));
+		}
+
+		if (m_RadioIter == null) {
+			m_RadioIter = m_RadioList.iterator();
+			m_App.dmsg(10, "Radio: " + String.valueOf(m_RadioList.size()));
 		}
 		
-		Component[] components = container.getComponents();
-		for (int x=0; x<components.length; x++) {
-			
+		if (m_RadioValueIter == null) {
+			m_RadioValueIter = m_RadioValueList.iterator();
+			m_App.dmsg(10, "RadioId: " + String.valueOf(m_RadioValueList.size()));
+		}
+
+		components = container.getComponents();
+		m_App.dmsg(10, String.valueOf(components.length));
+
+		for (int x = 0; x < components.length; x++) {
+
 			if (components[x] instanceof JTextField) {
 				JTextField tf = (JTextField) components[x];
-				
-				if (m_CompIter.hasNext()) {
-					m_App.dmsg(10, m_CompIter.next() + "|" + tf.getText());
-					if (!m_CurState.validateInput(tf.getText()))
-						return false;
+
+				if (m_EditIter.hasNext()) {
+					if (!m_CurState.validateInput(tf.getText())) {
+						ret = false;
+						m_App.dmsg(10, tf.getText() + "\nFailed to validate input!");
+					} else 
+						m_App.addFeedback(m_EditIter.next(), tf.getText());
 				} else {
 					throw new Exception("Invalid number of components! (tf)");
 				}
-				
+
 			} else if (components[x] instanceof JRadioButton) {
+				
 				JRadioButton rb = (JRadioButton) components[x];
 				
-				if (m_CompIter.hasNext()) {
-					System.out.println(m_CompIter.next() + "|" + Boolean.toString(rb.isSelected()));
+				if (m_RadioIter == null)
+					m_App.dmsg(10, "Null Radio Iterator!");
+				
+				if (m_RadioValueIter == null)
+					m_App.dmsg(10, "Null Radio Value Iterator!");
+				
+				if (m_RadioIter.hasNext() && m_RadioValueIter.hasNext()) {
+					String radioName = m_RadioIter.next();
+					String radioId = m_RadioValueIter.next();
+						
+					if (rb.isSelected()) {
+						m_App.addFeedback(radioName, radioId);
+					}
 				} else {
 					throw new Exception("Invalid number of components! (rb)");
 				}
-				
+
 			} else if (components[x] instanceof Container) {
-				return generateFeedbackInfo((Container)components[x]);
-			}	
+				ret &= generateFeedbackInfo((Container) components[x]);
+			}
+		}
+
+		if (m_EditIter != null && !m_EditIter.hasNext()) {
+			m_EditIter = null;
+		}
+
+		if (m_RadioIter != null && !m_RadioIter.hasNext()) {
+			m_RadioIter = null;
 		}
 		
-		if (m_CompIter != null && !m_CompIter.hasNext()) {
-			m_CompIter = null;
+		if (m_RadioValueIter != null && !m_RadioValueIter.hasNext()) {
+			m_RadioValueIter = null;
 		}
-		
-		return true;
+
+		return ret;
 	}
-	
+
 	/**
-	 * Adjust all component present for the current window size.  
+	 * Adjust all component present for the current window size.
 	 * */
 	public void adjustLayout() {
 		adjustHtmlView();
 		adjustNextButton();
 	}
-	
+
 	/**
 	 * Adjust the Next Button for the current window size.
 	 */
 	private void adjustNextButton() {
 		Dimension newSz = this.getSize();
-		
+
 		Dimension border = new Dimension(10, 10);
-		Dimension dimensions = new Dimension(128,24);
+		Dimension dimensions = new Dimension(128, 24);
 		Point location = new Point(newSz.width, newSz.height);
-		
+
 		location.x -= border.width + dimensions.width;
 		location.y -= border.width + dimensions.height;
-		
+
 		m_bNext.setSize(dimensions);
 		m_bNext.setLocation(location);
 	}
-	
+
 	/**
-	 * Adjust the HTML View for the current window size. 	
+	 * Adjust the HTML View for the current window size.
 	 */
 	private void adjustHtmlView() {
 		Dimension newSz = this.getSize();
@@ -229,7 +318,7 @@ public class CmeInstructions extends JPanel {
 		Point location = new Point(border.width, border.height);
 
 		int lower_offset = border.height + 24;
-		
+
 		dimensions.height = newSz.height - (border.height * 2 + lower_offset);
 		dimensions.width -= border.width * 2;
 
@@ -245,33 +334,73 @@ public class CmeInstructions extends JPanel {
 	 *            - name of instructions file to display
 	 * @throws IOException
 	 */
-	private void showInstructions(String fileName) throws IOException 
-	{
+	private void showInstructions(String fileName) throws IOException {
 		File instFile = new File(fileName);
 
 		this.adjustLayout();
-		m_ComponentList.clear();
-		
+		m_EditList.clear();
+		m_RadioList.clear();
+		m_RadioValueList.clear();
+
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
 	}
-	
-	private void showRatingInstructions(String fileName) throws IOException 
-	{	
-		File instFile = new File(fileName);
+
+	/**
+	 * Used to determine if the Ratings are complete.
+	 * 
+	 * @return true if the number of iterations has been met; false else.
+	 */
+	public boolean isDoneRating() {
+		return true;
+	}
+
+	/**
+	 * @param filePath
+	 *            the name of the file to open.
+	 */
+	private static String readFile(String filePath) throws java.io.IOException {
+		String fileData = new String();
+		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+		char[] buf = new char[1024];
+
+		while (reader.read(buf) > 0)
+			fileData += buf;
+
+		reader.close();
+		return fileData;
+	}
+
+	/**
+	 * Show the rating instructions with the current selected image.
+	 * 
+	 * @param fileName
+	 *            - name of the instruction file to show.
+	 * @throws IOException
+	 */
+	private void showRatingInstructions(String fileName) throws Exception {
+		String fileContents = readFile(fileName);
 
 		this.adjustLayout();
-		m_ComponentList.clear();
-	
-		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
+		m_EditList.clear();
+		m_RadioList.clear();
+
+		m_HtmlView.setText(fileContents);
 	}
-	
-	private boolean showInputPrompt(String msg) throws Exception 
-	{
+
+	/**
+	 * Show the input prompt.
+	 * 
+	 * @param msg
+	 *            - the message to display to the user
+	 * @return true if successful; false else
+	 * @throws Exception
+	 */
+	private boolean showInputPrompt(String msg) throws Exception {
 		String input;
 
 		if (msg == null)
 			throw new Exception("Invalid prompt message specified!");
-		
+
 		msg = m_CurState.translateString(msg);
 		msg = m_App.translateString(msg);
 
@@ -280,19 +409,21 @@ public class CmeInstructions extends JPanel {
 			if (input == null)
 				return false;
 		} while (!m_CurState.validateInput(input));
-		
-		String name = (String)m_CurState.getProperty("FeedbackName");
+
+		String name = (String) m_CurState.getProperty("FeedbackName");
 		if (name == null)
 			throw new Exception("Feedback name is null!");
-		
+
 		m_App.addFeedback(name, input);
-		
+
 		return true;
 	}
 
 	/**
 	 * Paint function for the Instruction
-	 * @param g - graphics context for the current JPane
+	 * 
+	 * @param g
+	 *            - graphics context for the current JPane
 	 */
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -301,7 +432,9 @@ public class CmeInstructions extends JPanel {
 
 	/**
 	 * Sets the current state and adjusts the layout appropriately
-	 * @param mCurState - the current state to be displayed
+	 * 
+	 * @param mCurState
+	 *            - the current state to be displayed
 	 * @throws Exception
 	 */
 	public void setState(CmeState mCurState) throws Exception {
@@ -315,18 +448,18 @@ public class CmeInstructions extends JPanel {
 			case CmeState.STATE_INSTRUCTION:
 				instructionFile = m_CurState.getProperty("InstructionFile");
 				if (instructionFile != null)
-					this.showInstructions((String)instructionFile);
+					this.showInstructions((String) instructionFile);
 				break;
 
 			case CmeState.STATE_RATING:
 				instructionFile = m_CurState.getProperty("InstructionFile");
 				if (instructionFile != null)
-					this.showRatingInstructions((String)instructionFile);
+					this.showRatingInstructions((String) instructionFile);
 				break;
-				
+
 			case CmeState.STATE_PROMPT:
 				this.setVisible(false);
-				showInputPrompt((String)m_CurState.getProperty("PromptText"));
+				showInputPrompt((String) m_CurState.getProperty("PromptText"));
 				m_App.setNextState();
 				return;
 
@@ -340,14 +473,17 @@ public class CmeInstructions extends JPanel {
 		} catch (IOException ex) {
 			throw new Exception("IO Error: " + ex.getMessage());
 		} catch (Exception ex) {
-			throw new Exception("Failed to set Instruction State: " + ex.getMessage());
+			throw new Exception("Failed to set Instruction State: "
+					+ ex.getMessage());
 		}
-		
-		String pbText = m_CurState.getProperty("PrimaryButtonText").toString();
-		if (pbText != null) {	
-			m_bNext.setText(pbText);
+
+		Object pbText = m_CurState.getProperty("PrimaryButtonText");
+		if (pbText != null) {
+			m_bNext.setText(pbText.toString());
 		}
 
 		this.setVisible(true);
+
+		m_App.dmsg(10, "Setup of Instructions Handler complete.");
 	}
 }

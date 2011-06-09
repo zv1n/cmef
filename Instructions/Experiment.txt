@@ -9,10 +9,9 @@
 			END="Click:Next"
 		</STATE>
 		<STATE>
-			MODE="Prompt"
-			NAME="EOLTrial1"
-			PROMPT="Enter the number $ValidConditions:"
-#			CONSTRAINTS="regex:^a"
+			MODE="Feedback"
+			FILE="Instructions/feedback_test.htm"
+			CONSTRAINTS="range:0-18"
 		</STATE>
 		<STATE>
 			MODE="Instruction"

@@ -11,9 +11,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.Vector;
 import java.util.Iterator;
 
@@ -57,8 +59,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	private HashMap<String, Object> m_eProperties;
 
 	/** Variables used to hold the feedback values */
-	private Vector<String> m_fbName;
-	private Vector<String> m_fbValue;
+	private HashMap<String, String> m_fbHashmap = new HashMap<String, String>();
 
 	/** Debug Level */
 	private int m_iDebugLevel;
@@ -431,19 +432,6 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if(line.contains("PROMPT")) {
 					String promptText = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("PromptText", promptText);
-				} else if(line.contains("NEXT") && thisState != null) {
-					if(line.contains("Click:")) {
-						thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
-							new CmeEventResponse() {
-									public void Respond() {
-										thisApp.setNextState();
-									}
-							});
-					}
-					String primaryText = line.substring(line.indexOf(":")+1, line.lastIndexOf("\""));
-					if (primaryText != null && primaryText.length() > 0) {
-						thisState.setProperty("PrimaryButtonText", primaryText);
-					}
 				} else if(line.contains("END")) {
 					if(line.contains("Click:")) {
 						thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
@@ -672,12 +660,17 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (m_cIterator == null)
 			m_cIterator = m_vStates.iterator();	
 		
-		if (m_cIterator.hasNext())
+		if (m_cIterator.hasNext()) {
 			m_CurState = (CmeState)m_cIterator.next();
-		else
+		} else {
 			System.exit(0);
+		}
 		
 		dmsg(5, "Next State!");
+		
+		if (m_CurState.getState() == CmeState.STATE_RATING &&
+			m_InstructionsHandler.isDoneRating()) {
+		}
 		
 		try {
 			m_InstructionsHandler.setState(m_CurState);
@@ -754,8 +747,15 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (name.length() == 0)
 			throw new Exception("Invalid feedback name!");
 		
-		m_fbName.add(name);
-		m_fbValue.add(value);
+		m_fbHashmap.put(name, value);
+		
+		Set<String> c = m_fbHashmap.keySet();
+		Iterator<String> itor = c.iterator();
+		
+		while (itor.hasNext()) {
+			String key = itor.next();
+			dmsg(10, key + ":" + m_fbHashmap.get(key));
+		}
 	}
 
 }

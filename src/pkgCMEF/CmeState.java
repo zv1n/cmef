@@ -183,7 +183,7 @@ public class CmeState {
 		if (text == null)
 			return true;
 
-		text = translateString(text);
+ 		text = translateString(text);
 		text = m_App.translateString(text).trim();
 
 		String constraintType = (String)m_sProperties.get("ConstraintType");
