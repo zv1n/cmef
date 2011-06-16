@@ -12,6 +12,7 @@
 			MODE="Feedback"
 			FILE="Instructions/feedback_test.htm"
 			CONSTRAINTS="range:0-18"
+			END="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Instruction"

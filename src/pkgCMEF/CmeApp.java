@@ -122,9 +122,9 @@ public class CmeApp extends JFrame implements AncestorListener
 	 * @param msg - the msg to be displayed
 	 */
 	public void dmsg(int level, String msg) {
-		//if (level >= (m_iDebugLevel&0xFF)) {
+		if (level >= (m_iDebugLevel&0xFF)) {
 			System.out.println(msg);
-		//}
+		}
 	}
 	
 	
@@ -748,14 +748,8 @@ public class CmeApp extends JFrame implements AncestorListener
 			throw new Exception("Invalid feedback name!");
 		
 		m_fbHashmap.put(name, value);
-		
-		Set<String> c = m_fbHashmap.keySet();
-		Iterator<String> itor = c.iterator();
-		
-		while (itor.hasNext()) {
-			String key = itor.next();
-			dmsg(10, key + ":" + m_fbHashmap.get(key));
-		}
+
+		dmsg(10, m_fbHashmap.toString());
 	}
 
 }

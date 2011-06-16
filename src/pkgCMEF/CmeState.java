@@ -147,14 +147,13 @@ public class CmeState {
 			int lValue = Integer.parseInt(rangeData[0]);
 			int hValue = Integer.parseInt(rangeData[1]);
 			
-			m_App.dmsg(10, Integer.toString(lValue));
-			m_App.dmsg(10, Integer.toString(hValue));
+			m_App.dmsg(10, Integer.toString(lValue) + "<=" + Integer.toString(value)  + "<=" + Integer.toString(hValue));
 			
 			return (value >= lValue && value <= hValue);
 		} else if (rangeData.length == 1) {
 			int expValue = Integer.parseInt(rangeData[0]);
 			
-			m_App.dmsg(10, Integer.toString(expValue));
+			m_App.dmsg(10, Integer.toString(expValue) + "==" + Integer.toString(value));
 			
 			return (value == expValue);
 		}

@@ -18,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -48,6 +50,10 @@ public class CmeInstructions extends JPanel {
 
 	/** JButton for primary button */
 	private JButton m_bNext;
+	
+	//------------------------------------------------------
+	//An attempt to interface with the HTMLView component...
+	//Definitely not ideal... but they work for... immediate response....
 
 	/** Vector store for the names of each editable component */
 	private Vector<String> m_EditList;
@@ -58,8 +64,11 @@ public class CmeInstructions extends JPanel {
 	
 	private Vector<String> m_RadioValueList;
 	private Iterator<String> m_RadioValueIter;
+	
+	/** Keep track to ensure at least one radio button is true for each set */
+	private HashMap<String, Boolean> m_hRadResults;
 
-	private int MAX_DEPTH = 10;
+	private int MAX_DEPTH = 30;
 
 	/**
 	 * Default constructor
@@ -72,6 +81,7 @@ public class CmeInstructions extends JPanel {
 		m_EditList = new Vector<String>();
 		m_RadioList = new Vector<String>();
 		m_RadioValueList = new Vector<String>();
+		m_hRadResults = new HashMap<String, Boolean>();
 
 		this.setVisible(false);
 		this.setSize(parent.getSize());
@@ -125,16 +135,23 @@ public class CmeInstructions extends JPanel {
 		m_bNext.setVisible(true);
 		m_bNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (m_CurState != null)
-					if (m_CurState.getState() == CmeState.STATE_FEEDBACK) {
+				if (m_CurState != null) {
+					boolean nextState = true;
+					if (m_CurState.getState() == CmeState.STATE_FEEDBACK ||
+						m_CurState.getState() == CmeState.STATE_RATING) 
+					{
 						try {
-							generateFeedbackInfo(m_HtmlView);
+							nextState = generateFeedbackInfo(m_HtmlView, 0);
 						} catch (Exception ex) {
 							System.out.println(
 									"Failed to generate output for feedback:\n" + ex.getMessage());
+							System.exit(1);
 						}
 					}
-				m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
+					
+					if (nextState)
+						m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
+				}
 			}
 		});
 		this.add(m_bNext);
@@ -152,13 +169,12 @@ public class CmeInstructions extends JPanel {
 			}
 		}
 		
-		m_App.dmsg(11, m_EditList.toString());
-
+		m_App.dmsg(11, "Edit List:\n" + m_EditList.toString());
 		m_App.dmsg(10, "Componet List Generation Complete!");
 	}
 
 	private void recurseComponentList(Element node, int depth) {
-		m_App.dmsg(10, "Recursing Component List!");
+		m_App.dmsg(10, "Recursing Component List! (" + node.getName() + ")");
 
 		if (node.getName() == "input") {
 			AttributeSet attr = node.getAttributes();
@@ -172,12 +188,13 @@ public class CmeInstructions extends JPanel {
 				System.exit(1);
 			}
 
-			m_App.dmsg(10, "|" + type.toLowerCase() + "|");
+			m_App.dmsg(25, "|" + type.toLowerCase() + "|");
 			if (type.toLowerCase().equals("radio")) {
 				if (value == null) {
 					System.out.println("Radio buttons must have an input Value!");
 					System.exit(1);
 				}
+
 				m_RadioList.add(name);
 				m_RadioValueList.add(value);
 			} else { /*if (type.toLowerCase() == "text")*/
@@ -196,18 +213,21 @@ public class CmeInstructions extends JPanel {
 		m_App.dmsg(10, "Recurse Component List Complete!");
 	}
 
-	/**
+	/**	
 	 * Iterate through the containers and pull out the necessary information.
 	 * 
 	 * @param container
 	 *            - container from the HTMLView
-	 * @return true
+	 * @return true if the feedback given is valid, false else.
 	 * @throws Exception
 	 */
-	private boolean generateFeedbackInfo(Container container) throws Exception {
+	private boolean generateFeedbackInfo(Container container, int depth) throws Exception {
 		boolean ret = true;
 		Component[] components = null;
-
+		
+		if (depth == 0)
+			m_hRadResults.clear();
+		
 		if (m_EditIter == null) {
 			m_EditIter = m_EditList.iterator();
 			m_App.dmsg(10, "Edit: " + String.valueOf(m_EditList.size()));
@@ -224,8 +244,6 @@ public class CmeInstructions extends JPanel {
 		}
 
 		components = container.getComponents();
-		m_App.dmsg(10, String.valueOf(components.length));
-
 		for (int x = 0; x < components.length; x++) {
 
 			if (components[x] instanceof JTextField) {
@@ -234,7 +252,7 @@ public class CmeInstructions extends JPanel {
 				if (m_EditIter.hasNext()) {
 					if (!m_CurState.validateInput(tf.getText())) {
 						ret = false;
-						m_App.dmsg(10, tf.getText() + "\nFailed to validate input!");
+						m_App.dmsg(10, "Failed to validate input: " + tf.getText());
 					} else 
 						m_App.addFeedback(m_EditIter.next(), tf.getText());
 				} else {
@@ -242,28 +260,32 @@ public class CmeInstructions extends JPanel {
 				}
 
 			} else if (components[x] instanceof JRadioButton) {
-				
+
 				JRadioButton rb = (JRadioButton) components[x];
-				
+
 				if (m_RadioIter == null)
 					m_App.dmsg(10, "Null Radio Iterator!");
-				
+
 				if (m_RadioValueIter == null)
 					m_App.dmsg(10, "Null Radio Value Iterator!");
-				
+
 				if (m_RadioIter.hasNext() && m_RadioValueIter.hasNext()) {
 					String radioName = m_RadioIter.next();
 					String radioId = m_RadioValueIter.next();
-						
+
 					if (rb.isSelected()) {
+						m_hRadResults.put(radioName, true);
 						m_App.addFeedback(radioName, radioId);
-					}
+					} else if (!m_hRadResults.containsKey(radioName)) 
+						m_hRadResults.put(radioName, false);
+				
+					m_App.dmsg(12, "Radio Button Names: " + radioName);
 				} else {
 					throw new Exception("Invalid number of components! (rb)");
 				}
 
 			} else if (components[x] instanceof Container) {
-				ret &= generateFeedbackInfo((Container) components[x]);
+				ret &= generateFeedbackInfo((Container) components[x], depth+1);
 			}
 		}
 
@@ -272,13 +294,28 @@ public class CmeInstructions extends JPanel {
 		}
 
 		if (m_RadioIter != null && !m_RadioIter.hasNext()) {
-			m_RadioIter = null;
+			m_RadioIter = null;	
 		}
 		
 		if (m_RadioValueIter != null && !m_RadioValueIter.hasNext()) {
 			m_RadioValueIter = null;
 		}
 
+		/* Iterator through the current results for radial sets without a selection */
+		if (depth == 0) {
+			Collection<Boolean> col = m_hRadResults.values();
+			Iterator<Boolean> iter = col.iterator();
+			
+			m_App.dmsg(10, "Rad Results:\n" + m_hRadResults.toString());
+			
+			while(iter.hasNext()) {
+				if (iter.next() == false)
+					return false;
+			}
+			
+			m_App.dmsg(10, "Final return: " + String.valueOf(ret));
+		}
+		
 		return ret;
 	}
 
@@ -383,6 +420,7 @@ public class CmeInstructions extends JPanel {
 		this.adjustLayout();
 		m_EditList.clear();
 		m_RadioList.clear();
+		m_RadioValueList.clear();
 
 		m_HtmlView.setText(fileContents);
 	}
