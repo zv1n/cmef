@@ -18,7 +18,7 @@ public class CmeStudy extends JPanel implements MouseListener
 
 	/** The image factory */
 	@SuppressWarnings("unused")
-	private CmeImageFactory m_ImageFactory;
+	private CmePairFactory m_PairFactory;
 
 	/** Current state */
 	CmeState m_CurState;
@@ -41,9 +41,9 @@ public class CmeStudy extends JPanel implements MouseListener
 	//-------------------------------------------------------
 	/** Set a reference to the image factory */
 	//-------------------------------------------------------
-	public void setImageFactory(CmeImageFactory iFact)
+	public void setPairFactory(CmePairFactory iFact)
 	{
-		m_ImageFactory = iFact;
+		m_PairFactory = iFact;
 	}
 		
 	//--------------------------------------------

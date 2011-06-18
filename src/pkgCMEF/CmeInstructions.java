@@ -387,10 +387,54 @@ public class CmeInstructions extends JPanel {
 	 * 
 	 * @return true if the number of iterations has been met; false else.
 	 */
-	public boolean isDoneRating() {
-		return true;
+	public boolean isDoneRating() throws Exception {
+		if (m_CurState.getState() != CmeState.STATE_RATING)
+			throw new Exception("Tested if a rating was done when NOT in a rating step!");
+
+		String sstep = null;
+		int istep;
+		String ssmax = null;
+		int ismax;
+		
+		try {
+			sstep = (String)m_CurState.getProperty("RatingStep");
+			istep = Integer.parseInt(sstep);
+		} catch (Exception ex) {
+			m_App.dmsg(10, "Error in getting rating step: " + ex.getMessage());
+			throw new Exception("Failed to get RatingStep in a STATE_RATING state!");
+		}
+		
+		try {
+			ssmax = (String)m_CurState.getProperty("RatingMaxStep");
+			ismax = Integer.parseInt(ssmax);
+		} catch (Exception ex) {
+			m_App.dmsg(10, "Error in getting rating step max: " + ex.getMessage());
+			throw new Exception("Failed to get RatingStepMax in a STATE_RATING state!");
+		}
+				
+		return (istep >= ismax);
 	}
 
+	/**
+	 * Used to set the next rating environment.
+	 * 
+	 * @return true if the number of iterations has been met; false else.
+	 */
+	public boolean setNextRating() throws Exception {
+		String instructionFile = null;
+		
+		if (isDoneRating())
+			return false;
+		
+		instructionFile = (String)m_CurState.getProperty("InstructionFile");
+		if (instructionFile != null)
+			this.showRatingInstructions((String) instructionFile);
+		else
+			throw new Exception("Failed to set instruction file! (InstructionFile == null)");
+		
+		return true;
+	}
+	
 	/**
 	 * @param filePath
 	 *            the name of the file to open.
@@ -421,6 +465,9 @@ public class CmeInstructions extends JPanel {
 		m_EditList.clear();
 		m_RadioList.clear();
 		m_RadioValueList.clear();
+
+		fileContents = m_CurState.translateString(fileContents);
+		fileContents = m_App.translateString(fileContents);
 
 		m_HtmlView.setText(fileContents);
 	}

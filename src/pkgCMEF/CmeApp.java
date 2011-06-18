@@ -11,11 +11,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Vector;
 import java.util.Iterator;
 
@@ -69,6 +67,9 @@ public class CmeApp extends JFrame implements AncestorListener
 
 	/** Name of the experiment definition file */
 	private String m_sExpFileName = "Instructions/Experiment.txt";
+
+	/** Name of the data definition file */
+	private String m_sDataFileName = "Instructions/Pairs.txt";
 	
 	//------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
@@ -83,7 +84,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	private CmeState m_CurState;
 	
 	/** Reference to the image factory */
-	private CmeImageFactory m_ImageFactory;
+	private CmePairFactory m_PairFactory;
 
 	//------------------------------------------------------------------
 	// Data storage components
@@ -158,7 +159,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			initMainWindow();
 			initStateHandlers();
 			initExperiment();
-			initExperimentData();
+			initParticipantData();
 			initOutputFile();
 			
 			this.setTitle(m_eProperties.get("Title").toString());
@@ -202,7 +203,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	 */
 	private void initStateHandlers() throws Exception {
 		// Create the image factory
-		m_ImageFactory = new CmeImageFactory();
+		m_PairFactory = new CmePairFactory();
 		
 		m_InstructionsHandler = new CmeInstructions(this);
 		m_InstructionsHandler.setVisible(false);
@@ -210,13 +211,13 @@ public class CmeApp extends JFrame implements AncestorListener
 		m_MainPanel.add(m_InstructionsHandler);		
 		
 		m_ExperimentHandler = new CmeExperiment(this);
-		m_ExperimentHandler.setImageFactory(m_ImageFactory);
+		m_ExperimentHandler.setPairFactory(m_PairFactory);
 		m_ExperimentHandler.addAncestorListener(this);
 		m_ExperimentHandler.setVisible(false);
 		m_MainPanel.add(m_ExperimentHandler);
 		
 		m_StudyHandler = new CmeStudy(this);
-		m_StudyHandler.setImageFactory(m_ImageFactory);
+		m_StudyHandler.setPairFactory(m_PairFactory);
 		m_StudyHandler.addAncestorListener(this);
 		m_StudyHandler.setVisible(false);
 		m_MainPanel.add(m_StudyHandler);
@@ -325,7 +326,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	/**
 	 * Used to initialize the SubjectID and Experiment Condition.
 	 */
-	private void initExperimentData()
+	private void initParticipantData()
 	{
 		String sCondition;
 		String sSubjectId;
@@ -445,6 +446,26 @@ public class CmeApp extends JFrame implements AncestorListener
 					if (primaryText != null && primaryText.length() > 0) {
 						thisState.setProperty("PrimaryButtonText", primaryText);
 					}
+				} else if(line.contains("NEXT")) {
+					if(line.contains("Click:")) {
+						if (thisState.getState() == CmeState.STATE_RATING) {
+							thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
+								new CmeEventResponse() {
+									public void Respond() {
+										try {
+											if (!m_InstructionsHandler.setNextRating())
+												thisApp.setNextState();
+										} catch (Exception ex) {
+											thisApp.dmsg(0, ex.getMessage());
+										}
+									}
+								});
+						}
+					}
+					String primaryText = line.substring(line.indexOf(":")+1, line.lastIndexOf("\""));
+					if (primaryText != null && primaryText.length() > 0) {
+						thisState.setProperty("PrimaryButtonText", primaryText);
+					}
 				} else if(line.contains("MODE")) {			
 
 					if (line.toUpperCase().contains("INSTRUCTION"))
@@ -506,7 +527,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		
 		dmsg(5, "Experiment Init Successful!");
 	}
-
+	
 	private void adjustAllLayouts() 
 	{
 		
@@ -667,10 +688,6 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 		
 		dmsg(5, "Next State!");
-		
-		if (m_CurState.getState() == CmeState.STATE_RATING &&
-			m_InstructionsHandler.isDoneRating()) {
-		}
 		
 		try {
 			m_InstructionsHandler.setState(m_CurState);

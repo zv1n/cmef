@@ -32,7 +32,7 @@ public class CmeStudyDialog extends JDialog
 	private JPanel m_MainPanel;
 	
 	/** Image to draw */
-	private CmeImage m_cImage;
+	private CmePair m_cImage;
 	
 	//---------------------------------------------------
 	/** Default constructor */
@@ -72,7 +72,7 @@ public class CmeStudyDialog extends JDialog
 	//----------------------------------------------------
 	/** Set the PCLE_Image to display */
 	//----------------------------------------------------
-	public void setImage(CmeImage img)
+	public void setImage(CmePair img)
 	{
 		m_cImage = img;
 	}
@@ -80,7 +80,7 @@ public class CmeStudyDialog extends JDialog
 	//----------------------------------------------------
 	/** Get the PCLE_Image displayed */
 	//----------------------------------------------------
-	public CmeImage getImage()
+	public CmePair getImage()
 	{
 		return m_cImage;
 	}

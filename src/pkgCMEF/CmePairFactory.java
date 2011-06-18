@@ -18,18 +18,18 @@ import javax.swing.JOptionPane;
  */
 //=============================================================================
 
-public class CmeImageFactory
+public class CmePairFactory
 {
 	/** Vector of PCLE_Image objects */
-	private Vector<CmeImage> m_vImages;
+	private Vector<CmePair> m_vPairs;
 	
 	//-------------------------------------------------
 	/** Default constructor */
 	//-------------------------------------------------
-	public CmeImageFactory()
+	public CmePairFactory()
 	{
 		// Create the vector to hold all images
-		m_vImages = new Vector<CmeImage>();
+		m_vPairs = new Vector<CmePair>();
 		
 		// Open the ImageList.txt file
 		FileReader		instFile;
@@ -38,7 +38,7 @@ public class CmeImageFactory
 		// Open the file
 		try
 		{
-			instFile = new FileReader("Instructions/ImageList.txt");
+			instFile = new FileReader("Instructions/DataList.txt");
 		}
 		catch(FileNotFoundException e1) // If we failed to opened it
 		{
@@ -51,7 +51,7 @@ public class CmeImageFactory
 		try
 		{
 			bufReader = new BufferedReader(instFile);
-			CmeImage img;
+			CmePair img;
 			
 			// For each line in the file
 			while((line = bufReader.readLine()) != null)
@@ -59,8 +59,10 @@ public class CmeImageFactory
 				// Parse the name key and image name
 				String[] strs = line.split(" ");
 				// Create the image and add to the vector of images
-				img = new CmeImage(strs[0], strs[1]);
-				m_vImages.add(img);
+				img = new CmePair();
+				img.SetNameA(strs[0]);
+				img.SetImageB(strs[1]);
+				m_vPairs.add(img);
 			}
 		}
 		catch(IOException e)
@@ -77,12 +79,12 @@ public class CmeImageFactory
 	//-------------------------------------------------------------
 	public Image getImage(String refName)
 	{
-		for(int i=0; i<m_vImages.size(); i++)
+		for(int i=0; i<m_vPairs.size(); i++)
 		{
-			CmeImage img = (CmeImage)m_vImages.elementAt(i);
-			if(refName.compareTo(img.getReferenceName()) == 0)
+			CmePair img = (CmePair)m_vPairs.elementAt(i);
+			if(refName.compareTo(img.getNameA()) == 0)
 			{
-				return img.getImage();
+				return img.getImageB();
 			}
 		}
 		return null; // Oops!
@@ -93,8 +95,8 @@ public class CmeImageFactory
 	//-------------------------------------------------------------
 	public Image getImage(int idx)
 	{
-		if((idx < 0) || (idx >= m_vImages.size())) return null;
-		return ((CmeImage)m_vImages.elementAt(idx)).getImage();
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return ((CmePair)m_vPairs.elementAt(idx)).getImageB();
 	}
 	
 	//-------------------------------------------------------------
@@ -102,8 +104,8 @@ public class CmeImageFactory
 	//-------------------------------------------------------------
 	public String getReferenceName(int idx)
 	{
-		if((idx < 0) || (idx >= m_vImages.size())) return null;
-		return ((CmeImage)m_vImages.elementAt(idx)).getReferenceName();
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return ((CmePair)m_vPairs.elementAt(idx)).getNameA();
 	}
 	
 	//-------------------------------------------------------------
@@ -111,16 +113,16 @@ public class CmeImageFactory
 	//-------------------------------------------------------------
 	public String getImageValue(int idx)
 	{
-		if((idx < 0) || (idx >= m_vImages.size())) return null;
-		return String.valueOf(((CmeImage)m_vImages.elementAt(idx)).getImageValue());
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getImageValue());
 	}
 	
 	//-------------------------------------------------------------
 	/** Get the image vector. */
 	//-------------------------------------------------------------
-	public Vector<CmeImage> getImagesVector()
+	public Vector<CmePair> getImagesVector()
 	{
-		return this.m_vImages;
+		return this.m_vPairs;
 	}
 
 }
