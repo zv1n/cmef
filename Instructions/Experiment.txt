@@ -4,9 +4,10 @@
 	CONDITIONS="A,B,C,D,AF,BF,CF,DF"
 	<TRIAL ID="1">
 		<STATE>
-			MODE="Instruction"
+			MODE="Rating"
 			FILE="Instructions/Screen1.htm"
-			END="Click:Next"
+			ITERATOR="random"
+			NEXT="Click:Next"
 		</STATE>
 		<STATE>
 			MODE="Feedback"

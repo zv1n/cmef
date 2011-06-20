@@ -51,9 +51,8 @@ public class CmeInstructions extends JPanel {
 	/** JButton for primary button */
 	private JButton m_bNext;
 	
-	//------------------------------------------------------
-	//An attempt to interface with the HTMLView component...
-	//Definitely not ideal... but they work for... immediate response....
+	/** Reference to the image factory */
+	private CmePairFactory m_PairFactory;
 
 	/** Vector store for the names of each editable component */
 	private Vector<String> m_EditList;
@@ -155,6 +154,12 @@ public class CmeInstructions extends JPanel {
 			}
 		});
 		this.add(m_bNext);
+	}
+	
+	/** Set a reference to the image factory */
+	public void setPairFactory(CmePairFactory iFact)
+	{
+		m_PairFactory = iFact;
 	}
 
 	private void generateComponentList() {
@@ -391,26 +396,8 @@ public class CmeInstructions extends JPanel {
 		if (m_CurState.getState() != CmeState.STATE_RATING)
 			throw new Exception("Tested if a rating was done when NOT in a rating step!");
 
-		String sstep = null;
-		int istep;
-		String ssmax = null;
-		int ismax;
-		
-		try {
-			sstep = (String)m_CurState.getProperty("RatingStep");
-			istep = Integer.parseInt(sstep);
-		} catch (Exception ex) {
-			m_App.dmsg(10, "Error in getting rating step: " + ex.getMessage());
-			throw new Exception("Failed to get RatingStep in a STATE_RATING state!");
-		}
-		
-		try {
-			ssmax = (String)m_CurState.getProperty("RatingMaxStep");
-			ismax = Integer.parseInt(ssmax);
-		} catch (Exception ex) {
-			m_App.dmsg(10, "Error in getting rating step max: " + ex.getMessage());
-			throw new Exception("Failed to get RatingStepMax in a STATE_RATING state!");
-		}
+		int istep = m_CurState.getRatingStep();
+		int ismax = m_CurState.getRatingStepMax();
 				
 		return (istep >= ismax);
 	}
@@ -425,6 +412,9 @@ public class CmeInstructions extends JPanel {
 		
 		if (isDoneRating())
 			return false;
+		
+		int cstep = m_CurState.getRatingStep();
+		m_CurState.setRatingStep(cstep+1);
 		
 		instructionFile = (String)m_CurState.getProperty("InstructionFile");
 		if (instructionFile != null)
@@ -454,8 +444,8 @@ public class CmeInstructions extends JPanel {
 	/**
 	 * Show the rating instructions with the current selected image.
 	 * 
-	 * @param fileName
-	 *            - name of the instruction file to show.
+	 * @param fileName - name of the instruction file to show.
+	 * 
 	 * @throws IOException
 	 */
 	private void showRatingInstructions(String fileName) throws Exception {
@@ -538,6 +528,10 @@ public class CmeInstructions extends JPanel {
 
 			case CmeState.STATE_RATING:
 				instructionFile = m_CurState.getProperty("InstructionFile");
+				
+				m_CurState.setRatingStep(0);
+				m_CurState.setRatingStepMax(m_PairFactory.getCount());
+				
 				if (instructionFile != null)
 					this.showRatingInstructions((String) instructionFile);
 				break;

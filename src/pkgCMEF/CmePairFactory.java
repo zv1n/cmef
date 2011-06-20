@@ -56,12 +56,19 @@ public class CmePairFactory
 			// For each line in the file
 			while((line = bufReader.readLine()) != null)
 			{
+				if (line.trim().charAt(0) == '#')
+					continue;
+				
 				// Parse the name key and image name
-				String[] strs = line.split(" ");
+				String[] strs = line.split(",");
 				// Create the image and add to the vector of images
 				img = new CmePair();
+
 				img.SetNameA(strs[0]);
-				img.SetImageB(strs[1]);
+				img.SetImageA(strs[1]);
+				img.SetNameB(strs[2]);
+				img.SetImageB(strs[3]);
+				
 				m_vPairs.add(img);
 			}
 		}
@@ -73,39 +80,41 @@ public class CmePairFactory
 			return;
 		}
 	}
-	
+
 	//-------------------------------------------------------------
-	/** Get an image from the factory by reference name */
+	/** Get an image from the factory by vector index */
 	//-------------------------------------------------------------
-	public Image getImage(String refName)
+	public Image getImageA(int idx)
 	{
-		for(int i=0; i<m_vPairs.size(); i++)
-		{
-			CmePair img = (CmePair)m_vPairs.elementAt(i);
-			if(refName.compareTo(img.getNameA()) == 0)
-			{
-				return img.getImageB();
-			}
-		}
-		return null; // Oops!
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return ((CmePair)m_vPairs.elementAt(idx)).getImageA();
 	}
 	
 	//-------------------------------------------------------------
 	/** Get an image from the factory by vector index */
 	//-------------------------------------------------------------
-	public Image getImage(int idx)
+	public Image getImageB(int idx)
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getImageB();
 	}
-	
+
 	//-------------------------------------------------------------
 	/** Get the name of an image from the factory by vector index */
 	//-------------------------------------------------------------
-	public String getReferenceName(int idx)
+	public String getNameA(int idx)
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getNameA();
+	}
+
+	//-------------------------------------------------------------
+	/** Get the name of an image from the factory by vector index */
+	//-------------------------------------------------------------
+	public String getNameB(int idx)
+	{
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return ((CmePair)m_vPairs.elementAt(idx)).getNameB();
 	}
 	
 	//-------------------------------------------------------------
@@ -115,6 +124,10 @@ public class CmePairFactory
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
 		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getImageValue());
+	}
+	
+	public int getCount() {
+		return m_vPairs.size();
 	}
 	
 	//-------------------------------------------------------------

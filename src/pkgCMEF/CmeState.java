@@ -19,9 +19,15 @@ public class CmeState {
 	
 	/** Effectively the parent application instance */
 	private CmeApp m_App;
-	
+
 	/** State for this state */
 	private int m_iState;
+	
+	/** Current rating step (if this is a STATE_RATING state). */
+	private int m_iRatingStep;
+
+	/** Maximum rating step (if this is a STATE_RATING state). */
+	private int m_iRatingStepMax;
 	
 	private CmeState m_sPrevState;
 	
@@ -58,14 +64,14 @@ public class CmeState {
 	}
 
 	/** 
-	 * Set the mode 
+	 * Set the current state. 
 	 */
 	public void setState(int m) {
 		m_iState = m;
 	}
 
 	/** 
-	 * Set the mode 
+	 * Get the current state. 
 	 */
 	public int getState() {
 		return m_iState;
@@ -115,6 +121,26 @@ public class CmeState {
 		return m_sPrevState;
 	}
 
+	/** Set the current rating step */
+	public void setRatingStep(int step) {
+		m_iRatingStep = step;
+	}
+
+	/** Set the current max rating step */
+	public void setRatingStepMax(int step) {
+		m_iRatingStepMax = step;
+	}
+
+	/** Get the current rating step */
+	public int getRatingStep() {
+		return m_iRatingStep;
+	}
+
+	/** Get the current max rating step */
+	public int getRatingStepMax() {
+		return m_iRatingStepMax;
+	}
+	
 	/**
 	 * Validate a regular expression.
 	 * 

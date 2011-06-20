@@ -67,9 +67,6 @@ public class CmeApp extends JFrame implements AncestorListener
 
 	/** Name of the experiment definition file */
 	private String m_sExpFileName = "Instructions/Experiment.txt";
-
-	/** Name of the data definition file */
-	private String m_sDataFileName = "Instructions/Pairs.txt";
 	
 	//------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
@@ -206,8 +203,9 @@ public class CmeApp extends JFrame implements AncestorListener
 		m_PairFactory = new CmePairFactory();
 		
 		m_InstructionsHandler = new CmeInstructions(this);
-		m_InstructionsHandler.setVisible(false);
+		m_InstructionsHandler.setPairFactory(m_PairFactory);
 		m_InstructionsHandler.addAncestorListener(this);
+		m_InstructionsHandler.setVisible(false);
 		m_MainPanel.add(m_InstructionsHandler);		
 		
 		m_ExperimentHandler = new CmeExperiment(this);
@@ -491,9 +489,12 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if((line.contains("STUDY_TIMES")) && (!line.contains("/"))) {
 					// Get the number of study times to write out to report
 					line = bufReader.readLine().trim();
-				} else if (line.contains("NAME") && thisState != null) {
+				} else if (line.contains("NAME")) {
 					String name = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
 					thisState.setProperty("FeedbackName", name);
+				} else if (line.contains("ITERATOR")) {
+					String iterator = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
+					thisState.setProperty("PairIterator", iterator);
 				} else if (line.contains("CONSTRAINTS")) {
 					String ctype = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
 					String constraint = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
