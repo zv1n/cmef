@@ -416,6 +416,8 @@ public class CmeInstructions extends JPanel {
 		int cstep = m_CurState.getRatingStep();
 		m_CurState.setRatingStep(cstep+1);
 		
+		setRatingProperties(cstep+1);
+		
 		instructionFile = (String)m_CurState.getProperty("InstructionFile");
 		if (instructionFile != null)
 			this.showRatingInstructions((String) instructionFile);
@@ -425,20 +427,30 @@ public class CmeInstructions extends JPanel {
 		return true;
 	}
 	
+
+	private void setRatingProperties(int step) {
+		
+		if (m_CurState == null)
+			return;
+		
+		m_CurState.setProperty("RatingItemA", m_PairFactory.getFeedbackA(step));
+		m_CurState.setProperty("RatingItemB", m_PairFactory.getFeedbackB(step));
+	}
+	
 	/**
 	 * @param filePath
 	 *            the name of the file to open.
 	 */
 	private static String readFile(String filePath) throws java.io.IOException {
-		String fileData = new String();
+		StringBuilder fileData = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
-		char[] buf = new char[1024];
+		String line = new String();
 
-		while (reader.read(buf) > 0)
-			fileData += buf;
+		while ((line = reader.readLine()) != null)
+			fileData.append(line);
 
 		reader.close();
-		return fileData;
+		return fileData.toString();
 	}
 
 	/**
@@ -450,6 +462,7 @@ public class CmeInstructions extends JPanel {
 	 */
 	private void showRatingInstructions(String fileName) throws Exception {
 		String fileContents = readFile(fileName);
+		File instFile = new File(fileName);
 
 		this.adjustLayout();
 		m_EditList.clear();
@@ -459,8 +472,11 @@ public class CmeInstructions extends JPanel {
 		fileContents = m_CurState.translateString(fileContents);
 		fileContents = m_App.translateString(fileContents);
 
+		m_HtmlView.setContentType("text/html");
+		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
 		m_HtmlView.setText(fileContents);
 	}
+	
 
 	/**
 	 * Show the input prompt.
@@ -531,6 +547,8 @@ public class CmeInstructions extends JPanel {
 				
 				m_CurState.setRatingStep(0);
 				m_CurState.setRatingStepMax(m_PairFactory.getCount());
+				
+				setRatingProperties(0);
 				
 				if (instructionFile != null)
 					this.showRatingInstructions((String) instructionFile);

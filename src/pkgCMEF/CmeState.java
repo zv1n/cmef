@@ -56,6 +56,9 @@ public class CmeState {
 	/** Number of events */
 	public static final int EVENT_MAX = 1;
 
+	/** Iterators */
+	private CmeIterator m_Iterator;
+
 	/** 
 	 * Default constructor 
 	 */
@@ -63,6 +66,27 @@ public class CmeState {
 		m_App = thisApp;
 	}
 
+	/**
+	 * Sets the interface for the given iterator.
+	 * @return -1 is invalid; 0 else
+	 */
+	public int setIterator(CmeIterator iterator) {
+		if (iterator == null)
+			return -1;
+		
+		m_Iterator = iterator;
+		
+		return 0;
+	}
+	
+	/**
+	 * Returns the interface for the given iterator.
+	 * @return CmeIterator interface
+	 */
+	public CmeIterator getIterator() {
+		return m_Iterator;
+	}
+	
 	/** 
 	 * Set the current state. 
 	 */

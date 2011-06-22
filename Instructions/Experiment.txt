@@ -5,8 +5,8 @@
 	<TRIAL ID="1">
 		<STATE>
 			MODE="Rating"
-			FILE="Instructions/Screen1.htm"
-			ITERATOR="random"
+			FILE="Instructions/Rating.htm"
+			ITERATOR="random:exclusive"
 			NEXT="Click:Next"
 		</STATE>
 		<STATE>

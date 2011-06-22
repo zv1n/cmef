@@ -12,6 +12,9 @@ import javax.swing.JOptionPane;
 //=====================================================================
 public class CmePair
 {
+	/** Pointer to app instance */
+	CmeApp m_App;
+	
     /** Reference to the image icon */
 	private Image[]		m_Image;
 
@@ -31,29 +34,44 @@ public class CmePair
 	//-------------------------------------------------
 	/** Default constructor */
 	//-------------------------------------------------
-	public CmePair() {
+	public CmePair(CmeApp app) {
+		m_App = app;
 		m_Image = new Image[2];
 		m_sName = new String[2];
 		m_sFile = new String[2];
 	}
+
+	private String getFeedback(int idx) {
+		if (m_sFile[idx] == null || m_sFile[idx].length() == 0)
+			return "Name: <h1>" + m_sName[idx] + "</h1>";
+		return "File: <img src=\"" + m_App.getImagePrefix() + m_sFile[idx] + "\" alt=\"" + m_sName[idx] + "\">";
+	}
+
+	public String getFeedbackA() {
+		return getFeedback(0);
+	}
 	
-	public void SetNameA(String name) {
+	public String getFeedbackB() {
+		return getFeedback(1);
+	}
+	
+	public void setNameA(String name) {
 		m_sName[0] = name;
 	}
 	
-	public void SetNameB(String name) {
+	public void setNameB(String name) {
 		m_sName[1] = name;
 	}
 
-	public boolean SetImageA(String file) {
-		return SetImage(0, file);
+	public boolean setImageA(String file) {
+		return setImage(0, file);
 	}
 	
-	public boolean SetImageB(String file) {
-		return SetImage(1, file);
+	public boolean setImageB(String file) {
+		return setImage(1, file);
 	}
 	
-	private boolean SetImage(int ind, String file) {
+	private boolean setImage(int ind, String file) {
 		if (ind > m_sFile.length)
 			return false;
 		

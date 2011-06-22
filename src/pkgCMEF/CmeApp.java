@@ -125,6 +125,9 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 	}
 	
+	public String getImagePrefix() {
+		return "../";
+	}
 	
 	@Override public void ancestorRemoved(AncestorEvent arg0) {}
 	@Override public void ancestorAdded(AncestorEvent arg0) {}
@@ -200,7 +203,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	 */
 	private void initStateHandlers() throws Exception {
 		// Create the image factory
-		m_PairFactory = new CmePairFactory();
+		m_PairFactory = new CmePairFactory(this);
 		
 		m_InstructionsHandler = new CmeInstructions(this);
 		m_InstructionsHandler.setPairFactory(m_PairFactory);
@@ -356,6 +359,22 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 	}
 	
+	private int setIterator(String iterator, String type, CmeState state) {
+		if (iterator != "random")
+			return -1;
+		
+		int itype = -1;
+		
+		if (type == "exclusive")
+			itype = CmeRandom.EXCLUSIVE;
+		else if (type == "nonexclusive")
+			itype = CmeRandom.NONEXCLUSIVE;
+		else 
+			return -1;
+		
+		return state.setIterator(new CmeRandom(itype, 0, m_PairFactory.getCount()-1));	
+	}
+	
 	/** 
 	 * Initialization function for preparing all States
 	 *  Reads in experiment configuration file and generates 
@@ -493,8 +512,9 @@ public class CmeApp extends JFrame implements AncestorListener
 					String name = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
 					thisState.setProperty("FeedbackName", name);
 				} else if (line.contains("ITERATOR")) {
-					String iterator = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
-					thisState.setProperty("PairIterator", iterator);
+					String iterator = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
+					String type = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
+					setIterator(iterator, type, thisState);
 				} else if (line.contains("CONSTRAINTS")) {
 					String ctype = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
 					String constraint = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
@@ -523,7 +543,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			throw new Exception(e.getMessage() + ": " + m_sExpFileName);
 		}
 		catch(Exception e) {
-			throw new Exception("Whoel: " +e.toString());
+			throw new Exception("Configuration File Parsing Failure: " +e.toString());
 		}
 		
 		dmsg(5, "Experiment Init Successful!");

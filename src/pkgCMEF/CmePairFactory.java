@@ -20,14 +20,20 @@ import javax.swing.JOptionPane;
 
 public class CmePairFactory
 {
+	/** Pointer to app instance */
+	private CmeApp m_App;
+	
 	/** Vector of PCLE_Image objects */
 	private Vector<CmePair> m_vPairs;
 	
 	//-------------------------------------------------
-	/** Default constructor */
+	/** Default constructor 
+	 * @throws Exception */
 	//-------------------------------------------------
-	public CmePairFactory()
+	public CmePairFactory(CmeApp app)
 	{
+		m_App = app;
+		
 		// Create the vector to hold all images
 		m_vPairs = new Vector<CmePair>();
 		
@@ -62,12 +68,18 @@ public class CmePairFactory
 				// Parse the name key and image name
 				String[] strs = line.split(",");
 				// Create the image and add to the vector of images
-				img = new CmePair();
+				img = new CmePair(m_App);
 
-				img.SetNameA(strs[0]);
-				img.SetImageA(strs[1]);
-				img.SetNameB(strs[2]);
-				img.SetImageB(strs[3]);
+				img.setNameA(strs[0]);
+				img.setImageA(strs[1]);
+				img.setNameB(strs[2]);
+				
+				/* if there is nothing between the last ',' and the new line, then the last
+				 * array element will get culled.
+				 */
+				if (strs.length > 3)
+					img.setImageB(strs[3]);
+				
 				
 				m_vPairs.add(img);
 			}
@@ -115,6 +127,24 @@ public class CmePairFactory
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getNameB();
+	}
+
+	//-------------------------------------------------------------
+	/** Get the name of an image from the factory by vector index */
+	//-------------------------------------------------------------
+	public String getFeedbackA(int idx)
+	{
+		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor</h1>";
+		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackA();
+	}
+
+	//-------------------------------------------------------------
+	/** Get the name of an image from the factory by vector index */
+	//-------------------------------------------------------------
+	public String getFeedbackB(int idx)
+	{
+		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor</h1>";
+		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackB();
 	}
 	
 	//-------------------------------------------------------------

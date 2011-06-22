@@ -3,7 +3,7 @@ package pkgCMEF;
 import java.util.Random;
 import java.util.Vector;
 
-public class CmeRandom {
+public class CmeRandom implements CmeIterator {
 	
 	/** Exclusive - no repetition */
 	public static final int EXCLUSIVE = 0;
