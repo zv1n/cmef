@@ -472,7 +472,7 @@ public class CmeInstructions extends JPanel {
 		fileContents = m_CurState.translateString(fileContents);
 		fileContents = m_App.translateString(fileContents);
 
-		m_HtmlView.setContentType("text/html");
+		m_HtmlView.setContentType("text/html");		
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
 		m_HtmlView.setText(fileContents);
 	}
