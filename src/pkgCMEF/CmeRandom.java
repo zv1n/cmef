@@ -44,7 +44,7 @@ public class CmeRandom implements CmeIterator {
 		if (m_RandomGen == null)
 			m_RandomGen = new Random();
 		
-		return ((m_RandomGen.nextInt() % range) + low);
+		return ((Math.abs(m_RandomGen.nextInt()) % range) + low);
 	}
 
 	private void genExclusive() {
@@ -61,6 +61,8 @@ public class CmeRandom implements CmeIterator {
 		int rand = m_iExclusiveList.get(idx);
 		
 		m_iExclusiveList.remove(idx);
+		
+		System.out.println("idx:" + Integer.toString(idx));
 		
 		return rand;
 	}

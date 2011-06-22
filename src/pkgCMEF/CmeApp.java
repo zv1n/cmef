@@ -360,18 +360,19 @@ public class CmeApp extends JFrame implements AncestorListener
 	}
 	
 	private int setIterator(String iterator, String type, CmeState state) {
-		if (iterator != "random")
+		if (!iterator.equals("random"))
 			return -1;
 		
 		int itype = -1;
 		
-		if (type == "exclusive")
+		if (type.equals("exclusive"))
 			itype = CmeRandom.EXCLUSIVE;
-		else if (type == "nonexclusive")
+		else if (type.equals("nonexclusive"))
 			itype = CmeRandom.NONEXCLUSIVE;
 		else 
 			return -1;
 		
+		dmsg(0xFF, "Set Iterator!");
 		return state.setIterator(new CmeRandom(itype, 0, m_PairFactory.getCount()-1));	
 	}
 	
@@ -514,7 +515,9 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.contains("ITERATOR")) {
 					String iterator = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
 					String type = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
-					setIterator(iterator, type, thisState);
+					if (setIterator(iterator, type, thisState) != 0) {
+						dmsg(0xFF, "Invalid iterator: " + iterator + "|" + type);
+					}
 				} else if (line.contains("CONSTRAINTS")) {
 					String ctype = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
 					String constraint = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));

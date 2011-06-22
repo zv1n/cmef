@@ -43,8 +43,8 @@ public class CmePair
 
 	private String getFeedback(int idx) {
 		if (m_sFile[idx] == null || m_sFile[idx].length() == 0)
-			return "Name: <h1>" + m_sName[idx] + "</h1>";
-		return "File: <img src=\"" + m_App.getImagePrefix() + m_sFile[idx] + "\" alt=\"" + m_sName[idx] + "\">";
+			return "<h1>" + m_sName[idx] + "</h1>";
+		return "<img src=\"" + m_App.getImagePrefix() + m_sFile[idx] + "\" alt=\"" + m_sName[idx] + "\">";
 	}
 
 	public String getFeedbackA() {
