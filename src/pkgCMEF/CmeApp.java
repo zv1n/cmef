@@ -360,20 +360,25 @@ public class CmeApp extends JFrame implements AncestorListener
 	}
 	
 	private int setIterator(String iterator, String type, CmeState state) {
-		if (!iterator.equals("random"))
-			return -1;
-		
+		String validIterators = "RANDOM";
+		String validTypes = "NONEXCLUSIVE";
 		int itype = -1;
 		
-		if (type.equals("exclusive"))
+		if (!validIterators.contains(iterator))
+			return -1;
+		
+		if (!validTypes.contains(type))
+			return -1;
+		
+		if (type.equals("EXCLUSIVE"))
 			itype = CmeRandom.EXCLUSIVE;
-		else if (type.equals("nonexclusive"))
+		else if (type.equals("NONEXCLUSIVE"))
 			itype = CmeRandom.NONEXCLUSIVE;
 		else 
 			return -1;
 		
 		dmsg(0xFF, "Set Iterator!");
-		return state.setIterator(new CmeRandom(itype, 0, m_PairFactory.getCount()-1));	
+		return state.setIterator(new CmeRandom(itype, 0, m_PairFactory.getCount()+1));	
 	}
 	
 	/** 
@@ -396,6 +401,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		
 		String validInput = "NUMERIC|TEXT|RADIAL|CHECK";
 		String validConstraints = "REGEX|RANGE";
+		
 				
 		// Open the file
 		try {
@@ -423,7 +429,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if((line.contains("STATE")) && (!(line.contains("/STATE")))) {
 					thisState = new CmeState(this);
 					if (trialId != null)
-						thisState.setProperty("TrialID", trialId);
+						thisState.setProperty("CurrentTrial", trialId);
 				} else if(line.contains("TITLE")) {	
 					String title = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));					
 					if (thisState == null)
@@ -466,12 +472,12 @@ public class CmeApp extends JFrame implements AncestorListener
 					}
 				} else if(line.contains("NEXT")) {
 					if(line.contains("Click:")) {
-						if (thisState.getState() == CmeState.STATE_RATING) {
+						if (thisState.getState() == CmeState.STATE_SEQUENTIAL) {
 							thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
 								new CmeEventResponse() {
 									public void Respond() {
 										try {
-											if (!m_InstructionsHandler.setNextRating())
+											if (!m_InstructionsHandler.setNextInSequence())
 												thisApp.setNextState();
 										} catch (Exception ex) {
 											thisApp.dmsg(0, ex.getMessage());
@@ -492,14 +498,12 @@ public class CmeApp extends JFrame implements AncestorListener
 						thisState.setState(CmeState.STATE_FEEDBACK);
 					else if (line.toUpperCase().contains("PROMPT"))
 						thisState.setState(CmeState.STATE_PROMPT);
-					else if (line.toUpperCase().contains("RATING"))
-						thisState.setState(CmeState.STATE_RATING);
-					else if (line.toUpperCase().contains("STUDY"))
-						thisState.setState(CmeState.STATE_STUDY);
-					else if (line.toUpperCase().contains("TEST"))
-						thisState.setState(CmeState.STATE_TEST);
+					else if (line.toUpperCase().contains("SEQUENTIAL"))
+						thisState.setState(CmeState.STATE_SEQUENTIAL);
+					else if (line.toUpperCase().contains("SIMULTANEOUS"))
+						thisState.setState(CmeState.STATE_SIMULTANEOUS);
 					else {
-						dmsg(0xFF, "Invalid State Mode!");
+						dmsg(0xFF, "Invalid State Mode: " + line);
 						System.exit(0);
 					}
 					
@@ -512,9 +516,12 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.contains("NAME")) {
 					String name = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
 					thisState.setProperty("FeedbackName", name);
+				} else if(line.contains("COUNT")) {
+					String count = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
+					thisState.setProperty("Count", count);
 				} else if (line.contains("ITERATOR")) {
-					String iterator = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":"));
-					String type = line.substring(line.indexOf(":")+1,line.lastIndexOf("\""));
+					String iterator = line.substring(line.indexOf("\"")+1,line.lastIndexOf(":")).toUpperCase();
+					String type = line.substring(line.indexOf(":")+1,line.lastIndexOf("\"")).toUpperCase();
 					if (setIterator(iterator, type, thisState) != 0) {
 						dmsg(0xFF, "Invalid iterator: " + iterator + "|" + type);
 					}
@@ -790,7 +797,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		
 		m_fbHashmap.put(name, value);
 
-		dmsg(10, m_fbHashmap.toString());
+		dmsg(0xFF, "Current Feedback: " + m_fbHashmap.toString());
 	}
 
 }

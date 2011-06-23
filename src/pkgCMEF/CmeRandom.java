@@ -40,10 +40,13 @@ public class CmeRandom implements CmeIterator {
 	
 	private int getRange(int low, int high) {
 		int range = high-low;
-		
+
 		if (m_RandomGen == null)
 			m_RandomGen = new Random();
 		
+		if (range == 0)
+			return low;
+
 		return ((Math.abs(m_RandomGen.nextInt()) % range) + low);
 	}
 

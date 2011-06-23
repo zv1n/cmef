@@ -1,23 +1,32 @@
 <EXPERIMENT>
-	TITLE="PCLE Test Experiment"
+	TITLE="LE Test Experiment"
 	STUDYNAME="PCLE"
 	CONDITIONS="A,B,C,D,AF,BF,CF,DF"
 	<TRIAL ID="1">
 		<STATE>
-			MODE="Rating"
-			FILE="Instructions/Rating.htm"
+			MODE="Simultaneous"
+			FILE="Instructions/Sim.htm"
 			ITERATOR="random:exclusive"
+			COUNT="36"
+			SCALE="100.0"
 			NEXT="Click:Next"
 		</STATE>
+#		<STATE>
+#			MODE="Sequential"
+#			FILE="Instructions/Rating.htm"
+#			ITERATOR="random:exclusive"
+#			NEXT="Click:Next"
+#		</STATE>
+#		<STATE>
+#			MODE="Sequential"
+#			FILE="Instructions/Recall.htm"
+#			ITERATOR="random:exclusive"
+#			NEXT="Click:Next"
+#		</STATE>
 		<STATE>
 			MODE="Feedback"
 			FILE="Instructions/feedback_test.htm"
 			CONSTRAINTS="range:0-18"
-			END="Click:Next"
-		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/Screen2.htm"
 			END="Click:Next"
 		</STATE>
 		<STATE>
@@ -42,7 +51,6 @@
 			FILE="Instructions/Screen5.htm"
 #			INPUT="numeric"
 #			CONSTRAINTS="range:0-18"
-#			NAME="NC_trial_1"
 			END="Click:Next"
 		</STATE>
 		<STATE>
@@ -71,7 +79,7 @@
 			END="Click:Begin"
 		</STATE>
 		<STATE>
-			MODE="Study"
+			MODE="Sequential"
 			TITLE="Image Study - Trial 1"
 			TIME="10"
 		</STATE>
@@ -85,10 +93,6 @@
 			MODE="Instruction"
 			FILE="Instructions/Screen12.htm"
 			END="Click:Next"
-		</STATE>
-		<STATE>
-			TITLE="Testing"
-			MODE="Test"
 		</STATE>
 		<STATE>
 			MODE="Feedback"
@@ -120,7 +124,7 @@
 			END="Click:Next"
 		</STATE>
 		<STATE>
-			MODE="Study"
+			MODE="Simultaneous"
 			TITLE="Image Study - Trial 2"
 			TIME="10"
 		</STATE>
@@ -134,10 +138,6 @@
 			MODE="Instruction"
 			FILE="Instructions/Screen17.htm"
 			END="Click:Next"
-		</STATE>
-		<STATE>
-			TITLE="Testing"
-			MODE="Test"
 		</STATE>
 		<STATE>
 			MODE="Feedback"

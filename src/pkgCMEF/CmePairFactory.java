@@ -132,19 +132,19 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	/** Get the name of an image from the factory by vector index */
 	//-------------------------------------------------------------
-	public String getFeedbackA(int idx)
+	public String getFeedbackA(int idx, int scale)
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor</h1>";
-		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackA();
+		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackA(scale);
 	}
 
 	//-------------------------------------------------------------
 	/** Get the name of an image from the factory by vector index */
 	//-------------------------------------------------------------
-	public String getFeedbackB(int idx)
+	public String getFeedbackB(int idx, int scale)
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor</h1>";
-		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackB();
+		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackB(scale);
 	}
 	
 	//-------------------------------------------------------------

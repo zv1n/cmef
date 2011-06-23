@@ -18,7 +18,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -105,25 +104,13 @@ public class CmeInstructions extends JPanel {
 		};
 
 		/** Configure HTML View Pane */
-		m_HtmlView = new JTextPane();
+		m_HtmlView = new JEditorPane();
 		m_HtmlView.setEditable(false);
 		m_HtmlView.setDoubleBuffered(true);
 		/*
 		 * m_HtmlView.setBorder(BorderFactory
 		 * .createBevelBorder(BevelBorder.LOWERED));
 		 */
-
-		m_HtmlView.addContainerListener(new ContainerListener() {
-			@Override
-			public void componentAdded(ContainerEvent arg0) {
-				if (m_EditList.isEmpty())
-					generateComponentList();
-			}
-
-			@Override
-			public void componentRemoved(ContainerEvent arg0) {
-			}
-		});
 
 		m_ScrollPane = new JScrollPane(m_HtmlView);
 		m_ScrollPane.addAncestorListener(aListener);
@@ -138,7 +125,8 @@ public class CmeInstructions extends JPanel {
 				if (m_CurState != null) {
 					boolean nextState = true;
 					if (m_CurState.getState() == CmeState.STATE_FEEDBACK ||
-						m_CurState.getState() == CmeState.STATE_RATING) 
+						m_CurState.getState() == CmeState.STATE_SEQUENTIAL||
+						m_CurState.getState() == CmeState.STATE_SIMULTANEOUS) 
 					{
 						try {
 							nextState = generateFeedbackInfo(m_HtmlView, 0);
@@ -163,9 +151,14 @@ public class CmeInstructions extends JPanel {
 		m_PairFactory = iFact;
 	}
 
+
 	private void generateComponentList() {
+		clearSequenceInfo();
 		m_App.dmsg(10, "Generate Component List!");
 
+		if (!(m_HtmlView.getDocument() instanceof HTMLDocument))
+			return;
+		
 		Element[] root = ((HTMLDocument) m_HtmlView.getDocument())
 				.getRootElements();
 		
@@ -180,7 +173,6 @@ public class CmeInstructions extends JPanel {
 	}
 
 	private void recurseComponentList(Element node, int depth) {
-		m_App.dmsg(10, "Recursing Component List! (" + node.getName() + ")");
 
 		if (node.getName() == "input") {
 			AttributeSet attr = node.getAttributes();
@@ -216,7 +208,6 @@ public class CmeInstructions extends JPanel {
 			}
 		}
 
-		m_App.dmsg(10, "Recurse Component List Complete!");
 	}
 
 	/**	
@@ -251,7 +242,6 @@ public class CmeInstructions extends JPanel {
 
 		components = container.getComponents();
 		for (int x = 0; x < components.length; x++) {
-
 			if (components[x] instanceof JTextField) {
 				JTextField tf = (JTextField) components[x];
 
@@ -266,25 +256,28 @@ public class CmeInstructions extends JPanel {
 				}
 
 			} else if (components[x] instanceof JRadioButton) {
-
+				
 				JRadioButton rb = (JRadioButton) components[x];
 
 				if (m_RadioIter == null)
-					m_App.dmsg(10, "Null Radio Iterator!");
+					throw new Exception("Ack, Radio Object, but no radio Iterator!");
 
 				if (m_RadioValueIter == null)
-					m_App.dmsg(10, "Null Radio Value Iterator!");
-
+					throw new Exception("Ack, Radio Object, but no radio Value Iterator!");
+				
 				if (m_RadioIter.hasNext() && m_RadioValueIter.hasNext()) {
-					String radioName = m_RadioIter.next();
-					String radioId = m_RadioValueIter.next();
-
+					String radioName = new String();
+					String radioId = new String();
+					
+					radioName = m_RadioIter.next();
+					radioId = m_RadioValueIter.next();
+					
 					if (rb.isSelected()) {
 						m_hRadResults.put(radioName, true);
 						m_App.addFeedback(radioName, radioId);
 					} else if (!m_hRadResults.containsKey(radioName)) 
 						m_hRadResults.put(radioName, false);
-				
+
 					m_App.dmsg(12, "Radio Button Names: " + radioName);
 				} else {
 					throw new Exception("Invalid number of components! (rb)");
@@ -294,7 +287,7 @@ public class CmeInstructions extends JPanel {
 				ret &= generateFeedbackInfo((Container) components[x], depth+1);
 			}
 		}
-
+	
 		if (m_EditIter != null && !m_EditIter.hasNext()) {
 			m_EditIter = null;
 		}
@@ -386,19 +379,20 @@ public class CmeInstructions extends JPanel {
 		m_RadioValueList.clear();
 
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
+		generateComponentList();
 	}
 
 	/**
-	 * Used to determine if the Ratings are complete.
+	 * Used to determine if the Sequentials are complete.
 	 * 
 	 * @return true if the number of iterations has been met; false else.
 	 */
-	public boolean isDoneRating() throws Exception {
-		if (m_CurState.getState() != CmeState.STATE_RATING)
+	public boolean isDoneSequential() throws Exception {
+		if (m_CurState.getState() != CmeState.STATE_SEQUENTIAL)
 			throw new Exception("Tested if a rating was done when NOT in a rating step!");
 
-		int istep = m_CurState.getRatingStep();
-		int ismax = m_CurState.getRatingStepMax();
+		int istep = m_CurState.getSequentialStep();
+		int ismax = m_CurState.getSequentialStepMax();
 				
 		return (istep >= ismax);
 	}
@@ -408,40 +402,124 @@ public class CmeInstructions extends JPanel {
 	 * 
 	 * @return true if the number of iterations has been met; false else.
 	 */
-	public boolean setNextRating() throws Exception {
+	public boolean setNextInSequence() throws Exception {
 		String instructionFile = null;
 		
-		if (isDoneRating())
+		if (isDoneSequential())
 			return false;
 		
-		int cstep = m_CurState.getRatingStep();
-		m_CurState.setRatingStep(cstep+1);
+		int cstep = m_CurState.getSequentialStep();
+		m_CurState.setSequentialStep(cstep+1);
 
 		CmeIterator iterator = m_CurState.getIterator();
 		
 		if (iterator == null)
-			throw new Exception("Failed to retreive iterator from current state (setNextRating)!");
+			throw new Exception("Failed to retreive iterator from current state (setNextSequential)!");
 		
-		setRatingProperties(iterator.getNext());
+		setSequentialProperties(iterator.getNext());
 		
 		instructionFile = (String)m_CurState.getProperty("InstructionFile");
 		if (instructionFile != null)
-			this.showRatingInstructions((String) instructionFile);
+			this.showProcessedInstructions((String) instructionFile);
 		else
 			throw new Exception("Failed to set instruction file! (InstructionFile == null)");
 		
 		return true;
 	}
 	
-
-	private void setRatingProperties(int step) {
+	private void setSequentialProperties(int step) throws Exception {
 		
 		if (m_CurState == null)
 			return;
 		
-		m_CurState.setProperty("RatingItemA", m_PairFactory.getFeedbackA(step));
-		m_CurState.setProperty("RatingItemB", m_PairFactory.getFeedbackB(step));
-		m_CurState.setProperty("RatingStep", Integer.toString(step));
+		int sscale = 0;
+		String scale = (String) m_CurState.getProperty("Scale");
+		assert(scale != null);
+		
+		try {
+			sscale = Integer.parseInt(scale);
+		} catch (Exception ex) {
+			System.out.println("Ooops, no scale defined! Using 100.0.");
+			sscale = 1000;
+		}
+		
+		
+		m_CurState.setProperty("CurrentPairA", m_PairFactory.getFeedbackA(step, sscale));
+		m_CurState.setProperty("CurrentPairB", m_PairFactory.getFeedbackB(step, sscale));
+		m_CurState.setProperty("CurrentPair", Integer.toString(step));
+	}
+	
+	/**
+	 * Configure the view for Simultaneous presentation.
+	 * @throws Exception 
+	 */
+	private void setSimultaneous() throws Exception {
+		Object instructionFile = m_CurState.getProperty("InstructionFile");
+		assert(instructionFile != null);
+		
+		String count = (String) m_CurState.getProperty("Count");
+		assert(count != null);
+		
+		System.out.println("Count: " + count);
+		
+		int icount = 0;
+		
+		try {
+			icount = Integer.parseInt(count);
+		} 
+		catch (Exception ex) {
+			throw new Exception("Invalid Simultaneous Count: " + ex.getMessage());
+		}
+		
+		setSimultaneousProperties(icount);
+		showProcessedInstructions((String) instructionFile);
+	}
+	
+	/**
+	 * Set the simultaneous display properties for this state.
+	 * 
+	 * @param count - number of items to be displayed at once.
+	 * @throws Exception 
+	 */
+	private void setSimultaneousProperties(int count) throws Exception {
+		if (m_CurState == null)
+			return;
+
+		int sscale = 0;
+		CmeIterator iter = m_CurState.getIterator();
+		String scale = (String) m_CurState.getProperty("Scale");
+		
+		assert(scale != null);
+		
+		try {
+			sscale = Integer.parseInt(scale);
+		} catch (Exception ex) {
+			System.out.println("Ooops, no scale defined! Using 100.0.");
+			sscale = 100;
+		}
+		
+		for (int x=0; x<count; x++) {
+			int step = iter.getNext();
+			String vx = Integer.toString(x+1);
+			
+			m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, sscale));
+			m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, sscale));
+			m_CurState.setProperty("Pair" + vx, Integer.toString(step));
+		}
+	}
+	
+	/**
+	 * Clear the sequence data from m_RadioIter, m_RadioValIter, etc.
+	 */
+	private void clearSequenceInfo() {	
+		m_EditList.clear();
+		m_EditIter = null;
+
+		m_RadioList.clear();
+		m_RadioIter = null;
+		
+		m_RadioValueList.clear();
+		m_RadioValueIter = null;
 	}
 	
 	/**
@@ -461,13 +539,13 @@ public class CmeInstructions extends JPanel {
 	}
 
 	/**
-	 * Show the rating instructions with the current selected image.
+	 * Show the processed instructions with the current selected image.
 	 * 
 	 * @param fileName - name of the instruction file to show.
 	 * 
 	 * @throws IOException
 	 */
-	private void showRatingInstructions(String fileName) throws Exception {
+	private void showProcessedInstructions(String fileName) throws Exception {
 		String fileContents = readFile(fileName);
 
 		this.adjustLayout();
@@ -478,10 +556,12 @@ public class CmeInstructions extends JPanel {
 		fileContents = m_CurState.translateString(fileContents);
 		fileContents = m_App.translateString(fileContents);
 
+		//m_HtmlView.setContentType("text/plain");
 		m_HtmlView.setContentType("text/html");
+		((HTMLDocument)m_HtmlView.getDocument()).setBase(ClassLoader.getSystemResource("."));
 		m_HtmlView.setText(fileContents);
+		generateComponentList();
 	}
-	
 
 	/**
 	 * Show the input prompt.
@@ -536,6 +616,7 @@ public class CmeInstructions extends JPanel {
 	public void setState(CmeState mCurState) throws Exception {
 		Object instructionFile = null;
 		m_CurState = mCurState;
+		clearSequenceInfo();
 
 		// Begin!
 		try {
@@ -543,25 +624,20 @@ public class CmeInstructions extends JPanel {
 			case CmeState.STATE_FEEDBACK:
 			case CmeState.STATE_INSTRUCTION:
 				instructionFile = m_CurState.getProperty("InstructionFile");
-				if (instructionFile != null)
-					this.showInstructions((String) instructionFile);
+				assert(instructionFile != null);
+				
+				this.showInstructions((String) instructionFile);
 				break;
 
-			case CmeState.STATE_RATING:
-				instructionFile = m_CurState.getProperty("InstructionFile");
+			case CmeState.STATE_SEQUENTIAL:
+				m_CurState.setSequentialStep(0);
+				m_CurState.setSequentialStepMax(m_PairFactory.getCount());
+				/** This calls showProcessedInstructions... */
+				setNextInSequence();
+				break;
 				
-				m_CurState.setRatingStep(0);
-				m_CurState.setRatingStepMax(m_PairFactory.getCount());
-				
-				CmeIterator iterator = m_CurState.getIterator();
-				
-				if (iterator == null)
-					throw new Exception("Failed to retreive iterator from current state!");
-				
-				setRatingProperties(iterator.getNext());
-				
-				if (instructionFile != null)
-					this.showRatingInstructions((String) instructionFile);
+			case CmeState.STATE_SIMULTANEOUS:
+				setSimultaneous();
 				break;
 
 			case CmeState.STATE_PROMPT:
@@ -571,11 +647,7 @@ public class CmeInstructions extends JPanel {
 				return;
 
 			default:
-				m_App.dmsg(0XFF, "Default state hit on Instruction Handler!");
-			case CmeState.STATE_TEST:
-			case CmeState.STATE_STUDY:
-				this.setVisible(false);
-				return;
+				throw new Exception("Default state handler hit!");
 			}
 		} catch (IOException ex) {
 			throw new Exception("IO Error: " + ex.getMessage());

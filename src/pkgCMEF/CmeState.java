@@ -24,10 +24,10 @@ public class CmeState {
 	private int m_iState;
 	
 	/** Current rating step (if this is a STATE_RATING state). */
-	private int m_iRatingStep;
+	private int m_iSequentialStep;
 
 	/** Maximum rating step (if this is a STATE_RATING state). */
-	private int m_iRatingStepMax;
+	private int m_iSequentialStepMax;
 	
 	private CmeState m_sPrevState;
 	
@@ -44,11 +44,9 @@ public class CmeState {
 	/** Display prompt mode */
 	public static final int STATE_PROMPT = 3;
 	/** Display rating mode */
-	public static final int STATE_RATING = 4;
+	public static final int STATE_SEQUENTIAL = 4;
 	/** Learning mode */
-	public static final int STATE_STUDY = 5;
-	/** Testing mode */
-	public static final int STATE_TEST = 6;
+	public static final int STATE_SIMULTANEOUS = 5;
 
 	// ---------- Events -------
 	/** Event for Clicking a Continue Button */
@@ -146,23 +144,23 @@ public class CmeState {
 	}
 
 	/** Set the current rating step */
-	public void setRatingStep(int step) {
-		m_iRatingStep = step;
+	public void setSequentialStep(int step) {
+		m_iSequentialStep = step;
 	}
 
 	/** Set the current max rating step */
-	public void setRatingStepMax(int step) {
-		m_iRatingStepMax = step;
+	public void setSequentialStepMax(int step) {
+		m_iSequentialStepMax = step;
 	}
 
 	/** Get the current rating step */
-	public int getRatingStep() {
-		return m_iRatingStep;
+	public int getSequentialStep() {
+		return m_iSequentialStep;
 	}
 
 	/** Get the current max rating step */
-	public int getRatingStepMax() {
-		return m_iRatingStepMax;
+	public int getSequentialStepMax() {
+		return m_iSequentialStepMax;
 	}
 	
 	/**

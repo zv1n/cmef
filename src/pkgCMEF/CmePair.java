@@ -41,18 +41,24 @@ public class CmePair
 		m_sFile = new String[2];
 	}
 
-	private String getFeedback(int idx) {
+	private String getFeedback(int idx, int scale) {
 		if (m_sFile[idx] == null || m_sFile[idx].length() == 0)
 			return "<h1>" + m_sName[idx] + "</h1>";
-		return "<img src=\"" + m_App.getImagePrefix() + m_sFile[idx] + "\" alt=\"" + m_sName[idx] + "\">";
+		
+		String sscale = Integer.toString(scale);
+		assert(sscale != null);
+		
+		/** Display the image... */
+		return "<img src=\"" + m_App.getImagePrefix() + m_sFile[idx] + "\" alt=\"" +
+				m_sName[idx] + "\" width=\"" + sscale + "%\" height=\"" + sscale + "%\">";
 	}
 
-	public String getFeedbackA() {
-		return getFeedback(0);
+	public String getFeedbackA(int scale) {
+		return getFeedback(0, scale);
 	}
 	
-	public String getFeedbackB() {
-		return getFeedback(1);
+	public String getFeedbackB(int scale) {
+		return getFeedback(1, scale);
 	}
 	
 	public void setNameA(String name) {
