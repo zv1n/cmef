@@ -9,7 +9,13 @@
 			ITERATOR="random:exclusive"
 			COUNT="36"
 			SCALE="100.0"
-			NEXT="Click:Next"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/feedback_test.htm"
+			CONSTRAINTS="range:0-18"
+			END="Click:Next"
 		</STATE>
 #		<STATE>
 #			MODE="Sequential"
@@ -24,12 +30,6 @@
 #			NEXT="Click:Next"
 #		</STATE>
 		<STATE>
-			MODE="Feedback"
-			FILE="Instructions/feedback_test.htm"
-			CONSTRAINTS="range:0-18"
-			END="Click:Next"
-		</STATE>
-		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/Screen3.htm"
 			END="Click:Begin"
@@ -37,6 +37,7 @@
 		<STATE>
 			MODE="Feedback"
 			NAME="EOLRatingTrial1"
+			FILE="Instructions/feedback_test.htm"
 			TITLE="Rate Ease of Learning"
 			END="Click:Next"
 		</STATE>
@@ -81,6 +82,7 @@
 		<STATE>
 			MODE="Sequential"
 			TITLE="Image Study - Trial 1"
+			ITERATOR="random:exclusive"
 			TIME="10"
 		</STATE>
 		<STATE>

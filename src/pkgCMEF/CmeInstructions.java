@@ -169,11 +169,13 @@ public class CmeInstructions extends JPanel {
 		}
 		
 		m_App.dmsg(11, "Edit List:\n" + m_EditList.toString());
+		m_App.dmsg(11, "Radio List:\n" + m_RadioList.toString());
 		m_App.dmsg(10, "Componet List Generation Complete!");
 	}
 
 	private void recurseComponentList(Element node, int depth) {
 
+		m_App.dmsg(11, "|" + node.getName().toLowerCase() + "|");
 		if (node.getName() == "input") {
 			AttributeSet attr = node.getAttributes();
 			
@@ -186,7 +188,7 @@ public class CmeInstructions extends JPanel {
 				System.exit(1);
 			}
 
-			m_App.dmsg(25, "|" + type.toLowerCase() + "|");
+			m_App.dmsg(11, "|" + type.toLowerCase() + "|");
 			if (type.toLowerCase().equals("radio")) {
 				if (value == null) {
 					System.out.println("Radio buttons must have an input Value!");
@@ -200,6 +202,7 @@ public class CmeInstructions extends JPanel {
 			}
 		}
 
+		m_App.dmsg(11, "Node Depth: " + Integer.toString(node.getElementCount()));
 		for (int x = 0; x < node.getElementCount(); x++) {
 			if (depth < MAX_DEPTH) {
 				recurseComponentList(node.getElement(x), depth + 1);
@@ -377,7 +380,8 @@ public class CmeInstructions extends JPanel {
 		m_EditList.clear();
 		m_RadioList.clear();
 		m_RadioValueList.clear();
-
+		
+		m_HtmlView.removeAll();
 		m_HtmlView.setPage("file://" + instFile.getCanonicalPath());
 		generateComponentList();
 	}
@@ -555,12 +559,15 @@ public class CmeInstructions extends JPanel {
 
 		fileContents = m_CurState.translateString(fileContents);
 		fileContents = m_App.translateString(fileContents);
+		
+		m_HtmlView.removeAll();
 
 		//m_HtmlView.setContentType("text/plain");
 		m_HtmlView.setContentType("text/html");
 		((HTMLDocument)m_HtmlView.getDocument()).setBase(ClassLoader.getSystemResource("."));
 		m_HtmlView.setText(fileContents);
 		generateComponentList();
+		System.out.println(m_RadioList.size());
 	}
 
 	/**
@@ -625,8 +632,8 @@ public class CmeInstructions extends JPanel {
 			case CmeState.STATE_INSTRUCTION:
 				instructionFile = m_CurState.getProperty("InstructionFile");
 				assert(instructionFile != null);
-				
-				this.showInstructions((String) instructionFile);
+
+				showProcessedInstructions((String) instructionFile);
 				break;
 
 			case CmeState.STATE_SEQUENTIAL:

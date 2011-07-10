@@ -82,6 +82,9 @@ public class CmeApp extends JFrame implements AncestorListener
 	
 	/** Reference to the image factory */
 	private CmePairFactory m_PairFactory;
+	
+	/** Iterator for exp objects */
+	private CmeIteratorFactory m_IteratorFactory;
 
 	//------------------------------------------------------------------
 	// Data storage components
@@ -153,6 +156,9 @@ public class CmeApp extends JFrame implements AncestorListener
 		
 		// Set up the experiment states
 		m_vStates = new Vector<CmeState>();
+		
+		// INit the iterator Factory for the app
+		m_IteratorFactory = new CmeIteratorFactory(this);
 
 		try {
 
@@ -370,15 +376,15 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (!validTypes.contains(type))
 			return -1;
 		
-		if (type.equals("EXCLUSIVE"))
-			itype = CmeRandom.EXCLUSIVE;
-		else if (type.equals("NONEXCLUSIVE"))
-			itype = CmeRandom.NONEXCLUSIVE;
-		else 
-			return -1;
+		if (type.equals("NONEXCLUSIVE"))
+			itype |= CmeIterator.NONEXCLUSIVE;
 		
 		dmsg(0xFF, "Set Iterator!");
-		return state.setIterator(new CmeRandom(itype, 0, m_PairFactory.getCount()+1));	
+		
+		CmeIterator iter = m_IteratorFactory.createIterator(itype);
+		iter.initIterator(itype, 0, this.m_PairFactory.getCount()-1);
+		
+		return state.setIterator(iter);	
 	}
 	
 	/** 
@@ -484,6 +490,9 @@ public class CmeApp extends JFrame implements AncestorListener
 										}
 									}
 								});
+						} else {
+							dmsg(0xFF, "Invalid State Mode: " + line);
+							System.exit(0);
 						}
 					}
 					String primaryText = line.substring(line.indexOf(":")+1, line.lastIndexOf("\""));

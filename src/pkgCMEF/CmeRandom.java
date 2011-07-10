@@ -4,12 +4,6 @@ import java.util.Random;
 import java.util.Vector;
 
 public class CmeRandom implements CmeIterator {
-	
-	/** Exclusive - no repetition */
-	public static final int EXCLUSIVE = 0;
-	
-	/** Non exclusive (possible repetition) */
-	public static final int NONEXCLUSIVE = 1;
 
 	/** Lower number limit */
 	private int m_iLowerBound;
@@ -26,16 +20,25 @@ public class CmeRandom implements CmeIterator {
 	/** Random number gen */
 	private Random m_RandomGen;
 	
-	public CmeRandom(int type, int lower, int upper) {
-		m_iUpperBound = upper;
-		m_iLowerBound = lower;
+	public boolean initIterator(int type, int lowerBound, int upperBound) {
+		
+		m_iUpperBound = upperBound;
+		m_iLowerBound = lowerBound;
 		m_iType = type;
+		
+		boolean ret = true;
 		
 		switch(m_iType) {
 		case CmeRandom.EXCLUSIVE:
-			genExclusive();
+			ret = genExclusive();
 			break;
 		}
+		
+		return ret;
+	}
+	
+	public CmeRandom() {
+		m_iType = -1;
 	}
 	
 	private int getRange(int low, int high) {
@@ -50,10 +53,11 @@ public class CmeRandom implements CmeIterator {
 		return ((Math.abs(m_RandomGen.nextInt()) % range) + low);
 	}
 
-	private void genExclusive() {
+	private boolean genExclusive() {
 		m_iExclusiveList = new Vector<Integer>(m_iUpperBound-m_iLowerBound);
 		for(int x = m_iLowerBound; x < m_iUpperBound; x++)
 			m_iExclusiveList.add(x);
+		return true;
 	}
 	
 	private int getExclusive() {
@@ -79,13 +83,10 @@ public class CmeRandom implements CmeIterator {
 	 * @return next random integer; -1 if invalid.
 	 */
 	public int getNext() {
-		switch(m_iType) {
-		case CmeRandom.EXCLUSIVE:
-			return getExclusive();
-		case CmeRandom.NONEXCLUSIVE:
+		if ((m_iType&CmeIterator.NONEXCLUSIVE) == CmeIterator.NONEXCLUSIVE) {
 			return getNonExclusive();
-		}
-		return -1;
+		} 
+		return getExclusive();
 	}
 
 	/** 
