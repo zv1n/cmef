@@ -11,7 +11,9 @@ public class CmeIteratorFactory {
 	
 	public CmeIterator createIterator(int flags) {
 		if ((flags&CmeIterator.RANDOM) == CmeIterator.RANDOM) {
-			return new CmeRandom();
+			return new CmeRandomIter();
+		} else if ((flags&CmeIterator.SELECTIVE) == CmeIterator.SELECTIVE) {
+			return new CmeSelectiveIter(m_App);
 		}
 		return null;
 	}

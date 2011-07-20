@@ -3,7 +3,7 @@ package pkgCMEF;
 import java.util.Random;
 import java.util.Vector;
 
-public class CmeRandom implements CmeIterator {
+public class CmeRandomIter implements CmeIterator {
 
 	/** Lower number limit */
 	private int m_iLowerBound;
@@ -29,7 +29,7 @@ public class CmeRandom implements CmeIterator {
 		boolean ret = true;
 		
 		switch(m_iType) {
-		case CmeRandom.EXCLUSIVE:
+		case CmeRandomIter.EXCLUSIVE:
 			ret = genExclusive();
 			break;
 		}
@@ -37,12 +37,12 @@ public class CmeRandom implements CmeIterator {
 		return ret;
 	}
 	
-	public CmeRandom() {
+	public CmeRandomIter() {
 		m_iType = -1;
 	}
 	
 	private int getRange(int low, int high) {
-		int range = high-low;
+		int range = high-low+1;
 
 		if (m_RandomGen == null)
 			m_RandomGen = new Random();
@@ -55,21 +55,23 @@ public class CmeRandom implements CmeIterator {
 
 	private boolean genExclusive() {
 		m_iExclusiveList = new Vector<Integer>(m_iUpperBound-m_iLowerBound);
-		for(int x = m_iLowerBound; x < m_iUpperBound; x++)
+		for(int x = m_iLowerBound; x <= m_iUpperBound; x++)
 			m_iExclusiveList.add(x);
+
 		return true;
 	}
 	
 	private int getExclusive() {
-		if (m_iExclusiveList == null || m_iExclusiveList.size() == 0)
+		if (m_iExclusiveList == null)
+			return -2;
+
+		if (m_iExclusiveList.size() == 0)
 			return -1;
 		
 		int idx = getRange(0, m_iExclusiveList.size()-1);
 		int rand = m_iExclusiveList.get(idx);
-		
+
 		m_iExclusiveList.remove(idx);
-		
-		System.out.println("idx:" + Integer.toString(idx));
 		
 		return rand;
 	}
@@ -83,9 +85,9 @@ public class CmeRandom implements CmeIterator {
 	 * @return next random integer; -1 if invalid.
 	 */
 	public int getNext() {
-		if ((m_iType&CmeIterator.NONEXCLUSIVE) == CmeIterator.NONEXCLUSIVE) {
+		if (m_iType == CmeIterator.NONEXCLUSIVE) {
 			return getNonExclusive();
-		} 
+		}
 		return getExclusive();
 	}
 

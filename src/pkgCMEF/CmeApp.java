@@ -366,22 +366,32 @@ public class CmeApp extends JFrame implements AncestorListener
 	}
 	
 	private int setIterator(String iterator, String type, CmeState state) {
-		String validIterators = "RANDOM";
+		String validIterators = "RANDOM:SELECTIVE";
 		String validTypes = "NONEXCLUSIVE";
-		int itype = -1;
+		int itype = 0;
+		int iiter = 0;
 		
 		if (!validIterators.contains(iterator))
 			return -1;
 		
 		if (!validTypes.contains(type))
 			return -1;
+
+		if (iterator.equals("RANDOM"))
+			iiter = CmeIterator.RANDOM;
+		
+		if (iterator.equals("SELECTIVE"))
+			iiter = CmeIterator.SELECTIVE;
+
+		if (type.equals("EXCLUSIVE"))
+			itype = CmeIterator.EXCLUSIVE;
 		
 		if (type.equals("NONEXCLUSIVE"))
-			itype |= CmeIterator.NONEXCLUSIVE;
+			itype = CmeIterator.NONEXCLUSIVE;
 		
-		dmsg(0xFF, "Set Iterator!");
-		
-		CmeIterator iter = m_IteratorFactory.createIterator(itype);
+		dmsg(0xFF, "Set Iterator: " + Integer.toString(this.m_PairFactory.getCount()));
+
+		CmeIterator iter = m_IteratorFactory.createIterator(iiter);		
 		iter.initIterator(itype, 0, this.m_PairFactory.getCount()-1);
 		
 		return state.setIterator(iter);	
@@ -463,6 +473,9 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if(line.contains("PROMPT")) {
 					String promptText = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("PromptText", promptText);
+				} else if(line.contains("SCALE")) {
+					String scaleText = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
+					thisState.setProperty("Scale", scaleText);
 				} else if(line.contains("END")) {
 					if(line.contains("Click:")) {
 						thisState.setEventResponse(CmeState.EVENT_CLICK_PRIMARY,
@@ -781,7 +794,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	public static void main(String[] args)
 	{
 		int len = args.length;
-		int debug = 0x107;
+		int debug = 0x100;
 		for (int x = 0; x < len; x++) {
 			if(args[x] == "-d" || args[x] == "--debug") {
 				try {

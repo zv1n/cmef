@@ -45,12 +45,13 @@ public class CmePair
 		if (m_sFile[idx] == null || m_sFile[idx].length() == 0)
 			return "<h1>" + m_sName[idx] + "</h1>";
 		
-		String sscale = Integer.toString(scale);
-		assert(sscale != null);
+		int xsize = m_Image[idx].getWidth(null)*scale/1000;
+		int ysize = m_Image[idx].getHeight(null)*scale/1000;
 		
 		/** Display the image... */
 		return "<img src=\"" + m_App.getImagePrefix() + m_sFile[idx] + "\" alt=\"" +
-				m_sName[idx] + "\" width=\"" + sscale + "%\" height=\"" + sscale + "%\">";
+				m_sName[idx] + "\" width=\"" + Integer.toString(xsize) + "\" height=\"" + 
+				Integer.toString(ysize) + "\" border=\"0\">";
 	}
 
 	public String getFeedbackA(int scale) {

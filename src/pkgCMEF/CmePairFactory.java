@@ -143,7 +143,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getFeedbackB(int idx, int scale)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor</h1>";
+		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor (" + Integer.toString(idx) + ")</h1>";
 		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackB(scale);
 	}
 	
