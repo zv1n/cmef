@@ -1,6 +1,7 @@
 package pkgCMEF;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 
 //====================================================================
@@ -121,12 +122,28 @@ public class CmeState {
 	public void setProperty(String name, Object prop) {
 		m_sProperties.put(name, prop);
 	}
-	
+
 	/** 
 	 * Set event response 
 	 */
 	public Object getProperty(String name) {
 		return m_sProperties.get(name);
+	}
+	
+	/** 
+	 * Set event response 
+	 */
+	public int getIntProperty(String name) {
+		String str = (String) m_sProperties.get(name);
+		int ret = 0;
+		if (str == null)
+			return 0;
+		try {
+			ret = Integer.parseInt(str);
+		} catch (Exception x) {
+			return 0;
+		}
+		return ret;
 	}
 	
 	/** 
@@ -221,12 +238,51 @@ public class CmeState {
 	}
 	
 	/**
+	 * Validate input set conforms to expectations
+	 * @param iter - CmeResponse iterator to validate inputs
+	 * @return boolean - true if valid set; false else
+	 */
+	public boolean validateInput(Iterator<CmeResponse> responses) throws Exception {
+		int selReq = getIntProperty("Select");
+		int selCount = 0;
+		
+		while(responses.hasNext()) {
+			CmeResponse rsp = responses.next();
+			
+			if (!validateInput(rsp)) {
+				System.out.println("Validate Input: Response Value Invalid!");
+				return false;
+			}
+			
+			if (rsp.getName().contains("Select") && rsp.isSelected())
+				selCount++;
+		}
+		
+		if (selCount != selReq) {
+			System.out.println("Selection Count Invalid!" + Integer.toString(selCount) + " of " + Integer.toString(selReq));
+			return false;
+		}
+		return true;
+	}
+
+
+	/**
 	 * Validate input string conforms to the State input specifications
-	 * @param text - the input string to be validated
+	 * @param response - the response from the user
 	 * @return boolean - true if valid string; false else
 	 */
-	public boolean validateInput(String text) throws Exception
+	public boolean validateInput(CmeResponse response) throws Exception
 	{
+		return validateInput(response.getValue());
+	}
+	
+	/**
+	 * Validate input string conforms to the State input specifications
+	 * @param text - the input string to be validated
+	 * @return boolean - true if valid string or no constraint; false else
+	 */
+	public boolean validateInput(String text) throws Exception
+	{		
 		if (text == null)
 			return true;
 
@@ -235,11 +291,9 @@ public class CmeState {
 
 		String constraintType = (String)m_sProperties.get("ConstraintType");
 		String constraint = (String)m_sProperties.get("Constraint");
-
-		System.out.println(m_sProperties);
 		
 		if (constraintType == null || constraint == null) {
-			throw new Exception("State::ValidateInput: Null constraint type or value!");
+			return true;
 		}
 		
 		constraintType = constraintType.toLowerCase();

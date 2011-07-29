@@ -8,6 +8,7 @@
 			FILE="Instructions/Sim.htm"
 			ITERATOR="random:exclusive"
 			COUNT="36"
+			SELECT="18"
 			SCALE="0.6"
 			END="Click:Next"
 		</STATE>

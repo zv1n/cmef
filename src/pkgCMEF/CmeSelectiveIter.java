@@ -8,7 +8,7 @@ public class CmeSelectiveIter implements CmeIterator {
 	CmeApp m_App;
 
 	/** Number pool for exclusive list */
-	private Vector<Integer> m_iExclusiveList;
+	private Vector<Integer> m_iExclusiveList = null;
 	
 	public CmeSelectiveIter(CmeApp app) {
 		m_App = app;

@@ -50,10 +50,8 @@ public class CmeHtmlView extends JEditorPane {
 	private Vector<String> m_RadioValueList;
 	private Iterator<String> m_RadioValueIter;
 	
-	/** Keep track to ensure at least one radio button is true for each set */
-	private HashMap<String, Boolean> m_hRadResults;
-
-	private int MAX_DEPTH = 30;
+	/** Components used in the HtmlView */
+	private Vector<CmeResponse> m_Components;
 
 	public CmeHtmlView(CmeApp app) {
 		m_App = app;
@@ -62,19 +60,30 @@ public class CmeHtmlView extends JEditorPane {
 			@Override
 			public void hyperlinkUpdate(HyperlinkEvent hl) {
 				if (hl.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-					Object component = null;
+					CmeComponent component = null;
+					Component cmp = null;
 					
 					try {
 						component = getComponentByName(hl.getDescription());
 					} catch (Exception e) {
-						m_App.dmsg(10, "Unknown Link URL: " + hl.getDescription());
+						m_App.dmsg(10, "Unknown Link URL(CBN): " + hl.getDescription());
 						e.printStackTrace();
 					}
 					
 					if (component == null) {
 						m_App.dmsg(10, "Unknown Link URL: " + hl.getDescription());
 						return;
-					}					
+					}
+
+					cmp = component.getComponent(0);
+					
+					if (cmp instanceof JRadioButton) {
+						JRadioButton rb = (JRadioButton) cmp;
+						rb.setSelected(!rb.isSelected());
+					} else if (cmp instanceof JCheckBox) {
+						JCheckBox cb = (JCheckBox) cmp;
+						cb.setSelected(!cb.isSelected());
+					}
 				}
 			}
 		};
@@ -85,40 +94,46 @@ public class CmeHtmlView extends JEditorPane {
 		
 		m_EditList = new Vector<String>();
 		m_RadioList = new Vector<String>();
+		m_Components = new Vector<CmeResponse>();
 		m_RadioValueList = new Vector<String>();
-		m_hRadResults = new HashMap<String, Boolean>();
 	}
 	
 	/**
 	 * Clear the sequence data from m_RadioIter, m_RadioValIter, etc.
 	 */
 	private void clearSequenceInfo() {
-		m_EditList.clear();
+		if (m_EditList != null)
+			m_EditList.clear();
 		m_EditIter = null;
 
-		m_RadioList.clear();
+		if (m_RadioList != null)
+			m_RadioList.clear();
 		m_RadioIter = null;
-		
-		m_RadioValueList.clear();
+
+		if (m_RadioValueList != null)
+			m_RadioValueList.clear();
 		m_RadioValueIter = null;
 	}
 	
-	public boolean setContent(String content) {
+	public boolean setContent(String content) throws Exception {
+		m_Components.clear();
 		this.removeAll();
 		clearSequenceInfo();
 
 		//this.setContentType("text/plain");
 		this.setContentType("text/html");
-		((HTMLDocument)this.getDocument()).setBase(ClassLoader.getSystemResource("."));
+		((HTMLDocument)this.getDocument()).setBase(ClassLoader.getSystemResource("."));		
 		this.setText(content);
 		
 		generateComponentList();
-		m_App.dmsg(10, "Rad Count: " + Integer.toString(m_RadioList.size()));
-		
 		return true;
 	}
 	
-	public void generateComponentList() {
+	/**
+	 * Generate the components from the current instruction file.
+	 * @throws Exception
+	 */
+	private void generateComponentList() throws Exception {
 		clearSequenceInfo();
 		m_App.dmsg(10, "Generate Component List!");
 
@@ -130,18 +145,28 @@ public class CmeHtmlView extends JEditorPane {
 		
 		for (int htm = 0; htm < root.length; htm++) {
 			if (root[htm].getName().equals("html")) {
-				recurseComponentList(root[htm], 0);
+				recurseAttributeList(root[htm], 0);
 			}
 		}
 		
-		m_App.dmsg(11, "Edit List:\n" + m_EditList.toString());
-		m_App.dmsg(11, "Radio List:\n" + m_RadioList.toString());
-		m_App.dmsg(10, "Componet List Generation Complete!");
+		m_EditIter = m_EditList.iterator();
+		m_RadioIter = m_RadioList.iterator();
+		m_RadioValueIter = m_RadioValueList.iterator();
+		
+		recurseComponentList(this, 0);
+		System.out.println(m_Components.size());
+		
+		clearSequenceInfo();
 	}
 
-	private void recurseComponentList(Element node, int depth) {
+	/**
+	 * Recursive function to trace thru the attributes from the HTML file.
+	 * 
+	 * @param node - element associated with the recursive elements.
+	 * @param depth - current depth in the element tree
+	 */
+	private void recurseAttributeList(Element node, int depth) {
 
-		m_App.dmsg(11, "|" + node.getName().toLowerCase() + "|");
 		if (node.getName() == "input") {
 			AttributeSet attr = node.getAttributes();
 			
@@ -154,7 +179,6 @@ public class CmeHtmlView extends JEditorPane {
 				System.exit(1);
 			}
 
-			m_App.dmsg(11, "|" + type.toLowerCase() + "|");
 			if (type.toLowerCase().equals("radio")) {
 				if (value == null) {
 					System.out.println("Radio buttons must have an input Value!");
@@ -168,15 +192,9 @@ public class CmeHtmlView extends JEditorPane {
 			}
 		}
 
-		m_App.dmsg(11, "Node Depth: " + Integer.toString(node.getElementCount()));
 		for (int x = 0; x < node.getElementCount(); x++) {
-			if (depth < MAX_DEPTH) {
-				recurseComponentList(node.getElement(x), depth + 1);
-			} else {
-				System.out.println("Max depth reached!");
-			}
+			recurseAttributeList(node.getElement(x), depth + 1);
 		}
-
 	}
 
 	/**	
@@ -187,63 +205,32 @@ public class CmeHtmlView extends JEditorPane {
 	 * @return true if the feedback given is valid, false else.
 	 * @throws Exception
 	 */
-	public boolean generateFeedback(CmeState state) throws Exception {
-		return recurseFeedback(state, this, 0);
-	}
-	
-	private boolean recurseFeedback(CmeState state, Container container, int depth) throws Exception {
-		boolean ret = true;
+	private void recurseComponentList(Container container, int depth) throws Exception {
 		Component[] components = null;
-		
-		if (depth == 0)
-			m_hRadResults.clear();
-		
-		if (m_EditIter == null) {
-			m_EditIter = m_EditList.iterator();
-			m_App.dmsg(10, "Edit: " + String.valueOf(m_EditList.size()));
-		}
-
-		if (m_RadioIter == null) {
-			m_RadioIter = m_RadioList.iterator();
-			m_App.dmsg(10, "Radio: " + String.valueOf(m_RadioList.size()));
-		}
-		
-		if (m_RadioValueIter == null) {
-			m_RadioValueIter = m_RadioValueList.iterator();
-			m_App.dmsg(10, "RadioId: " + String.valueOf(m_RadioValueList.size()));
-		}
 
 		components = container.getComponents();
 		for (int x = 0; x < components.length; x++) {
-			if (components[x] instanceof JTextField) {
-				
-				JTextField tf = (JTextField) components[x];
 
+			if (components[x] instanceof JTextField) {
 				if (m_EditIter.hasNext()) {
-					if (!state.validateInput(tf.getText())) {
-						ret = false;
-						m_App.dmsg(10, "Failed to validate input: " + tf.getText());
-					} else {
-						m_App.addFeedback(m_EditIter.next(), tf.getText());
-					}
-				} else {
+					CmeComponent comp = new CmeComponent(m_EditIter.next());
+					comp.addComponent(components[x]);
+					m_Components.add(comp);
+				} else 
 					throw new Exception("Invalid number of components! (tf)");
-				}
+				
 			} else if (components[x] instanceof JCheckBox) {
 				
 				JCheckBox cb = (JCheckBox) components[x];
 
 				if (m_EditIter.hasNext()) {
-					m_App.addFeedback(m_EditIter.next(), Boolean.toString(cb.isSelected()));
-					return false;
-				} else {
+					CmeComponent comp = new CmeComponent(m_EditIter.next());
+					comp.addComponent(components[x], cb.getText());
+					m_Components.add(comp);
+				} else 
 					throw new Exception("Invalid number of components! (cb)");
-				}
 			
 			} else if (components[x] instanceof JRadioButton) {
-				
-				JRadioButton rb = (JRadioButton) components[x];
-
 				if (m_RadioIter == null)
 					throw new Exception("Ack, Radio Object, but no radio Iterator!");
 
@@ -251,64 +238,53 @@ public class CmeHtmlView extends JEditorPane {
 					throw new Exception("Ack, Radio Object, but no radio Value Iterator!");
 				
 				if (m_RadioIter.hasNext() && m_RadioValueIter.hasNext()) {
-					String radioName = new String();
-					String radioId = new String();
-					
-					radioName = m_RadioIter.next();
-					radioId = m_RadioValueIter.next();
-					
-					if (rb.isSelected()) {
-						m_hRadResults.put(radioName, true);
-						m_App.addFeedback(radioName, radioId);
-					} else if (!m_hRadResults.containsKey(radioName)) 
-						m_hRadResults.put(radioName, false);
-
-					m_App.dmsg(12, "Radio Button Names: " + radioName);
-				} else {
+					CmeComponent comp = new CmeComponent(m_RadioIter.next());
+					comp.addComponent(components[x], m_RadioValueIter.next());
+					m_Components.add(comp);
+				} else 
 					throw new Exception("Invalid number of components! (rb)");
-				}
 
 			} else if (components[x] instanceof Container) {
-				ret &= recurseFeedback(state, (Container) components[x], depth+1);
+				recurseComponentList((Container) components[x], depth+1);
 			}
 		}
-	
-		if (m_EditIter != null && !m_EditIter.hasNext()) {
-			m_EditIter = null;
-		}
-
-		if (m_RadioIter != null && !m_RadioIter.hasNext()) {
-			m_RadioIter = null;	
-		}
-		
-		if (m_RadioValueIter != null && !m_RadioValueIter.hasNext()) {
-			m_RadioValueIter = null;
-		}
-
-		/* Iterator through the current results for radial sets without a selection */
-		if (depth == 0) {
-			Collection<Boolean> col = m_hRadResults.values();
-			Iterator<Boolean> iter = col.iterator();
-			
-			m_App.dmsg(10, "Rad Results:\n" + m_hRadResults.toString());
-			
-			while(iter.hasNext()) {
-				if (iter.next() == false)
-					return false;
-			}
-			
-			m_App.dmsg(10, "Final return: " + String.valueOf(ret));
-		}
-		
-		return ret;
 	}
 
 	/**	
 	 * Return the component named 'name'.
-	 * 
 	 * @param name - name of the component to retrieve
 	 */
-	public Object getComponentByName(String name) {
+	public CmeComponent getComponentByName(String name) {
+		if (m_Components == null)
+			return null;
+		for (int x = 0; x < m_Components.size(); x++) {
+			if(m_Components.get(x).getName().equals(name))
+				return (CmeComponent) m_Components.get(x);
+		}
 		return null;
+	}
+
+	/**	
+	 * Return the component group 'group'.
+	 * @param group - group of the component to retrieve
+	 */
+	public CmeComponent getComponentByGroup(String group) {
+		if (m_Components == null)
+			return null;
+		for (int x = 0; x < m_Components.size(); x++) {
+			if(m_Components.get(x).getGroup().equals(group))
+				return (CmeComponent) m_Components.get(x);
+		}
+		return null;
+	}
+
+	/**	
+	 * Return the component named 'name'.
+	 * @param name - name of the component to retrieve
+	 */
+	public Iterator<CmeResponse> getResponseIterator() {
+		if (m_Components == null)
+			return null;
+		return m_Components.iterator();
 	}
 }

@@ -538,6 +538,9 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.contains("NAME")) {
 					String name = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
 					thisState.setProperty("FeedbackName", name);
+				} else if (line.contains("SELECT")) {
+					String selectCount = line.substring(line.indexOf("\"")+1,line.lastIndexOf("\""));
+					thisState.setProperty("Select", selectCount);
 				} else if(line.contains("COUNT")) {
 					String count = line.substring(line.indexOf("\"")+1, line.lastIndexOf("\""));
 					thisState.setProperty("Count", count);
@@ -810,16 +813,20 @@ public class CmeApp extends JFrame implements AncestorListener
 		CmeApp theApp = new CmeApp(debug);
 	}
 	
-	public void addFeedback(String name, String value) throws Exception {
-		if (name == null || value == null)
+	public void addFeedback(CmeResponse response) throws Exception {
+		if (response == null || response.getName() == null || response.getValue() == null)
 			throw new Exception("Invalid name or value!");
 			
-		if (name.length() == 0)
+		if (response.getName().length() == 0)
 			throw new Exception("Invalid feedback name!");
 		
+		m_fbHashmap.put(response.getName(), response.getValue());
+		dmsg(0xFF, "Current Feedback(r): " + m_fbHashmap.toString());
+	}
+	
+	public void addFeedback(String name, String value) throws Exception {
 		m_fbHashmap.put(name, value);
-
-		dmsg(0xFF, "Current Feedback: " + m_fbHashmap.toString());
+		dmsg(0xFF, "Current Feedback(nv): " + m_fbHashmap.toString());
 	}
 
 }

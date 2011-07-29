@@ -110,7 +110,13 @@ public class CmeInstructions extends JPanel {
 						m_CurState.getState() == CmeState.STATE_SIMULTANEOUS) 
 					{
 						try {
-							valid = m_HtmlView.generateFeedback(m_CurState);
+
+							Iterator<CmeResponse> iter = m_HtmlView.getResponseIterator();
+							valid = m_CurState.validateInput(iter);
+							if (!valid)
+								return;
+							
+							valid = generateFeedback(m_CurState);
 						} catch (Exception ex) {
 							System.out.println(
 									"Failed to generate output for feedback:\n" + ex.getMessage());
@@ -132,8 +138,6 @@ public class CmeInstructions extends JPanel {
 	{
 		m_PairFactory = iFact;
 	}
-
-
 	
 	/**
 	 * Adjust all component present for the current window size.
@@ -307,7 +311,6 @@ public class CmeInstructions extends JPanel {
 		}
 	}
 
-	
 	/**
 	 * @param filePath
 	 *            the name of the file to open.
@@ -339,6 +342,7 @@ public class CmeInstructions extends JPanel {
 		fileContents = m_CurState.translateString(fileContents);
 		fileContents = m_App.translateString(fileContents);
 		
+		m_App.dmsg(10, "Setting Contents");
 		m_HtmlView.setContent(fileContents);
 	}
 
@@ -442,5 +446,18 @@ public class CmeInstructions extends JPanel {
 		this.setVisible(true);
 
 		m_App.dmsg(10, "Setup of Instructions Handler complete.");
+	}
+	
+	/**
+	 * Generate all feedback from the current component set.
+	 * @param state - current state of the experiment
+	 * @return true if feedback was generate; false else
+	 * @throws Exception
+	 */
+	private boolean generateFeedback(CmeState state) throws Exception {
+		Iterator<CmeResponse> iter = m_HtmlView.getResponseIterator();
+		while(iter != null && iter.hasNext())
+			m_App.addFeedback(iter.next());
+		return true;
 	}
 }
