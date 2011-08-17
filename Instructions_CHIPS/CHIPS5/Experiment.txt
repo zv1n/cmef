@@ -43,7 +43,7 @@
 			MODE="Sequential"
 			FILE="Instructions/CHIPS5/3f_EOL_Rating_T1.htm"
 			ITERATOR="random:exclusive"
-			Continue="Click:Done"
+			NEXT="Click:Done"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
@@ -78,7 +78,7 @@
 			FILE="Instructions/CHIPS5/7f_Sequential_Study_1.htm"
 			ITERATOR="random:exclusive"
 			BLANK="Time:3s"
-			Continue="Time:4s"
+			NEXT="Time:4s"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
@@ -108,7 +108,7 @@
 			FILE="Instructions/CHIPS5/10f_JOL_Collection_1.htm"
 			CONSTRAINTS="range:0-100"
 			ITERATOR="random:exclusive"
-			Continue="Click:Continue"
+			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
@@ -121,7 +121,7 @@
 			FILE="Instructions/CHIPS5/11f_Recall_1.htm"
 			ITERATOR="random:exclusive"
 			CONSTRAINTS="match:$CurrentPairA"
-			Continue="Click:Continue"
+			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
@@ -222,7 +222,7 @@
 			FILE="Instructions/CHIPS5/19f_JOL_Collection_2.htm"
 			CONSTRAINTS="range:0-100"
 			ITERATOR="random:exclusive"
-			Continue="Click:Continue"
+			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
@@ -235,7 +235,7 @@
 			FILE="Instructions/CHIPS5/20f_Recall_2.htm"
 			ITERATOR="selective:exclusive"
 			CONSTRAINTS="match:$CurrentPairA"
-			Continue="Click:Continue"
+			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
 			MODE="Instruction"
