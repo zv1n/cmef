@@ -2,7 +2,7 @@ package pkgCMEF;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
+import java.util.Vector;
 
 //====================================================================
 /**
@@ -15,322 +15,416 @@ import java.util.Iterator;
  * @version 2.0, June 2011
  */
 // ===================================================================
-
 public class CmeState {
+
+    /** Effectively the parent application instance */
+    private CmeApp m_App;
+    /** State for this state */
+    private int m_iState;
+    /** Current rating step (if this is a STATE_RATING state). */
+    private int m_iSequentialStep;
+    /** Maximum rating step (if this is a STATE_RATING state). */
+    private int m_iSequentialStepMax;
 	
-	/** Effectively the parent application instance */
-	private CmeApp m_App;
-
-	/** State for this state */
-	private int m_iState;
+    private CmeState m_sPrevState;
 	
-	/** Current rating step (if this is a STATE_RATING state). */
-	private int m_iSequentialStep;
-
-	/** Maximum rating step (if this is a STATE_RATING state). */
-	private int m_iSequentialStepMax;
+    private CmeEventResponse[] m_erEvent = new CmeEventResponse[EVENT_MAX];
+    /** HashSet used to store the properties for each state */
+    private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
 	
-	private CmeState m_sPrevState;
+    // -------- Defined Modes ----------
+    /** Display instructions mode */
+    public static final int STATE_INSTRUCTION = 1;
+    /** Display feedback mode */
+    public static final int STATE_FEEDBACK = 2;
+    /** Display prompt mode */
+    public static final int STATE_PROMPT = 3;
+    /** Display rating mode */
+    public static final int STATE_SEQUENTIAL = 4;
+    /** Learning mode */
+    public static final int STATE_SIMULTANEOUS = 5;
+    // ---------- Events -------
+    /** Event for Clicking a Continue Button */
+    public static final int EVENT_CLICK_PRIMARY = 0;
+    /** Event for Time Elapsed */
+    public static final int EVENT_TIME = 1;
+    /** Number of events */
+    public static final int EVENT_MAX = 2;
 	
-	private CmeEventResponse[] m_erEvent = new CmeEventResponse[EVENT_MAX];
+    /** Iterators */
+    private CmeIterator m_Iterator;
+	/** Timer */
+	private Vector<CmeTimer> m_Timer = new Vector<CmeTimer>();
+	
+	private boolean m_bStudy;
+	
 
-	/** HashSet used to store the properties for each state */
-	private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
-
-	// -------- Defined Modes ----------
-	/** Display instructions mode */
-	public static final int STATE_INSTRUCTION = 1;
-	/** Display feedback mode */
-	public static final int STATE_FEEDBACK = 2;
-	/** Display prompt mode */
-	public static final int STATE_PROMPT = 3;
-	/** Display rating mode */
-	public static final int STATE_SEQUENTIAL = 4;
-	/** Learning mode */
-	public static final int STATE_SIMULTANEOUS = 5;
-
-	// ---------- Events -------
-	/** Event for Clicking a Continue Button */
-	public static final int EVENT_CLICK_PRIMARY = 0;
-	/** Number of events */
-	public static final int EVENT_MAX = 1;
-
-	/** Iterators */
-	private CmeIterator m_Iterator;
-
+    /** 
+     * Default constructor 
+     */
+    public CmeState(CmeApp thisApp) {
+        m_App = thisApp;
+    }
+	
 	/** 
-	 * Default constructor 
+	 * Kick-off the timer.
 	 */
-	public CmeState(CmeApp thisApp) {
-		m_App = thisApp;
+	public void init() {
+		for(int x=0; x<m_Timer.size(); x++)
+			m_Timer.get(x).start();
 	}
-
+	
 	/**
-	 * Sets the interface for the given iterator.
-	 * @return -1 is invalid; 0 else
+	 * Clean up all stored variables so GC can pick them up
 	 */
-	public int setIterator(CmeIterator iterator) {
-		if (iterator == null)
-			return -1;
+	public void clean() {
+		for(int x=0; x<m_Timer.size(); x++)
+			m_Timer.set(x, null);
+		m_Timer.clear();
 		
-		m_Iterator = iterator;
+		m_Iterator = null;
+		for (int x=0; x<m_erEvent.length; x++)
+			if (m_erEvent[x] != null)
+				m_erEvent[x] = null;
+		m_erEvent = null;
 		
-		return 0;
+		m_sProperties.clear();
+		m_sProperties = null;
 	}
+
+    /**
+     * Sets the interface for the given iterator.
+     * @return -1 is invalid; 0 else
+     */
+    public int setIterator(CmeIterator iterator) {
+        if (iterator == null) {
+            return -1;
+        }
+        m_Iterator = iterator;
+        return 0;
+    }
+	
+    /**
+     * Set event response 
+     */
+    public void setEventResponse(int eventId, CmeEventResponse event) {
+        m_erEvent[eventId] = event;
+    }
+	
+    /**
+     * get event response 
+     */
+    public CmeEventResponse getEventResponse(int eventId) {
+        return m_erEvent[eventId];
+    }
 	
 	/**
-	 * Returns the interface for the given iterator.
-	 * @return CmeIterator interface
+	 * Sets the timer object associated with this state.
+	 * @param timer - CmeTimer object
+	 * @return true if valid timer; false else
 	 */
-	public CmeIterator getIterator() {
-		return m_Iterator;
-	}
-	
-	/** 
-	 * Set the current state. 
-	 */
-	public void setState(int m) {
-		m_iState = m;
-	}
-
-	/** 
-	 * Get the current state. 
-	 */
-	public int getState() {
-		return m_iState;
-	}
-
-	/**
-	 * Set the change by action 
-	 */
-	public void TriggerEvent(int event) {
-		if(event < 0 || event >= EVENT_MAX || m_erEvent[event] == null)
-			return;
-		m_erEvent[event].Respond();
-	}
-	
-	/**
-	 * Set event response 
-	 */
-	public void setEventResponse(int eventId, CmeEventResponse event) {
-			m_erEvent[eventId] = event;
-	}
-	
-	/** 
-	 * Set a PropertyValue
-	 */
-	public void setProperty(String name, Object prop) {
-		m_sProperties.put(name, prop);
-	}
-
-	/** 
-	 * Set event response 
-	 */
-	public Object getProperty(String name) {
-		return m_sProperties.get(name);
-	}
-	
-	/** 
-	 * Set event response 
-	 */
-	public int getIntProperty(String name) {
-		String str = (String) m_sProperties.get(name);
-		int ret = 0;
-		if (str == null)
-			return 0;
-		try {
-			ret = Integer.parseInt(str);
-		} catch (Exception x) {
-			return 0;
-		}
-		return ret;
-	}
-	
-	/** 
-	 * Set a PropertyValue
-	 */
-	public void setPreviousState(CmeState state) {
-		m_sPrevState = state;
-	}
-	
-	/** 
-	 * Set event response 
-	 */
-	public Object getPreviousState() {
-		return m_sPrevState;
-	}
-
-	/** Set the current rating step */
-	public void setSequentialStep(int step) {
-		m_iSequentialStep = step;
-	}
-
-	/** Set the current max rating step */
-	public void setSequentialStepMax(int step) {
-		m_iSequentialStepMax = step;
-	}
-
-	/** Get the current rating step */
-	public int getSequentialStep() {
-		return m_iSequentialStep;
-	}
-
-	/** Get the current max rating step */
-	public int getSequentialStepMax() {
-		return m_iSequentialStepMax;
-	}
-	
-	/**
-	 * Validate a regular expression.
-	 * 
-	 * @param regex - regular expression to evaluate
-	 * @param input - the input string to validate
-	 * @return true on regex match; false else
-	 */
-	private boolean validateRegex(String regex, String input) {
-		m_App.dmsg(11, "Regex: " + regex + "\nInput: |" + input + "|");
-		return input.matches(regex);
-	}
-	
-	/**
-	 * Validate the range of an input.
-	 * 
-	 * @param range - the range to be evaluate.
-	 * @param input - the input string to validate.
-	 * @return true on range; false else
-	 */
-	private boolean validateRange(String range, String input) throws Exception {
-		range = range.replace(" ", "").replace("\t", "");
-		String[] rangeData = range.split("-");
-		int value = Integer.parseInt(input);
-		
-		m_App.dmsg(10, Integer.toString(value));
-		
-		if (rangeData.length > 2 || rangeData.length < 1) { 
-			throw new Exception("To many numbers in the expected range!");
-		} else if (rangeData.length == 2) {
-			int lValue = Integer.parseInt(rangeData[0]);
-			int hValue = Integer.parseInt(rangeData[1]);
-			
-			m_App.dmsg(10, Integer.toString(lValue) + "<=" + Integer.toString(value)  + "<=" + Integer.toString(hValue));
-			
-			return (value >= lValue && value <= hValue);
-		} else if (rangeData.length == 1) {
-			int expValue = Integer.parseInt(rangeData[0]);
-			
-			m_App.dmsg(10, Integer.toString(expValue) + "==" + Integer.toString(value));
-			
-			return (value == expValue);
-		}
-		
-		return false;
-	}
-
-	/**
-	 * Validate the value of an input.
-	 * 
-	 * @param value - the value to be evaluate.
-	 * @param input - the input string to validate.
-	 * @return true on valid value; false else
-	 */
-	private boolean validateValue(String value, String input) {
-		return (value == input);
-	}
-	
-	/**
-	 * Validate input set conforms to expectations
-	 * @param iter - CmeResponse iterator to validate inputs
-	 * @return boolean - true if valid set; false else
-	 */
-	public boolean validateInput(Iterator<CmeResponse> responses) throws Exception {
-		int selReq = getIntProperty("Select");
-		int selCount = 0;
-		
-		while(responses.hasNext()) {
-			CmeResponse rsp = responses.next();
-			
-			if (!validateInput(rsp)) {
-				System.out.println("Validate Input: Response Value Invalid!");
-				return false;
-			}
-			
-			if (rsp.getName().contains("Select") && rsp.isSelected())
-				selCount++;
-		}
-		
-		if (selCount != selReq) {
-			System.out.println("Selection Count Invalid!" + Integer.toString(selCount) + " of " + Integer.toString(selReq));
+	public boolean addEventTimer(CmeTimer timer) {
+		if (timer == null && timer.isValid())
 			return false;
+		System.out.print("Delay: ");
+		System.out.println(timer.getDelay());
+		m_Timer.add(timer);
+		return true;
+	}
+	
+	/**
+	 * Resets any per seq components which need to reinit.
+	 */
+	public void resetSeqState() {
+		for(int x=0; x<m_Timer.size(); x++)
+			m_Timer.get(x).restart();
+	}
+
+    /**
+     * Returns the interface for the given iterator.
+     * @return CmeIterator interface
+     */
+    public CmeIterator getIterator() {
+        return m_Iterator;
+    }
+
+    /** 
+     * Set the current state. 
+     */
+    public void setState(int m) {
+        m_iState = m;
+    }
+
+    /** 
+     * Get the current state. 
+     */
+    public int getState() {
+        return m_iState;
+    }
+	
+	/** Set whether this instruction can study */
+	public void setStudyInstruction(boolean b) {
+		m_bStudy = b;
+	}
+	
+	/** Can this instruction state study? */
+	public boolean canStudy() {
+		return m_bStudy;
+	}
+
+    /**
+     * Set the change by action 
+     */
+    public void TriggerEvent(int event) {
+        if (event < 0 || event >= EVENT_MAX || m_erEvent[event] == null) {
+            return;
+        }
+        m_erEvent[event].Respond();
+    }
+
+    /** 
+     * Set a PropertyValue
+     */
+    public void setProperty(String name, Object prop) {
+        m_sProperties.put(name, prop);
+    }
+
+    /** 
+     * Set event response 
+     */
+    public Object getProperty(String name) {
+        return m_sProperties.get(name);
+    }
+
+    /** 
+     * Set event response 
+     */
+    public int getIntProperty(String name) {
+        String str = (String) m_sProperties.get(name);
+        int ret = 0;
+        if (str == null) {
+            return 0;
+        }
+        try {
+            ret = Integer.parseInt(str);
+        } catch (Exception x) {
+            return 0;
+        }
+        return ret;
+    }
+
+    /** 
+     * Set a PropertyValue
+     */
+    public void setPreviousState(CmeState state) {
+        m_sPrevState = state;
+    }
+
+    /** 
+     * Set event response 
+     */
+    public Object getPreviousState() {
+        return m_sPrevState;
+    }
+
+    /** Set the current rating step */
+    public void setSequentialStep(int step) {
+        m_iSequentialStep = step;
+    }
+
+    /** Set the current max rating step */
+    public void setSequentialStepMax(int step) {
+        m_iSequentialStepMax = step;
+    }
+
+    /** Get the current rating step */
+    public int getSequentialStep() {
+        return m_iSequentialStep;
+    }
+
+    /** Get the current max rating step */
+    public int getSequentialStepMax() {
+        return m_iSequentialStepMax;
+    }
+
+    /**
+     * Validate a regular expression.
+     * 
+     * @param regex - regular expression to evaluate
+     * @param input - the input string to validate
+     * @return true on regex match; false else
+     */
+    private boolean validateRegex(String regex, String input) {
+        m_App.dmsg(11, "Regex: " + regex + "\nInput: |" + input + "|");
+        return input.matches(regex);
+    }
+	
+    /**
+     * Validate the first three characters of an input.
+     * 
+     * @param range - the match to be evaluated.
+     * @param input - the input string to validate.
+     * @return true on match; false else
+     */
+	private boolean validateMatch(String matchon, String input) {
+		String in = input.toLowerCase();
+		String match = null;
+		
+		if (matchon.length() > 3)
+			match = matchon.substring(0,3).toLowerCase();
+		else
+			match = matchon.toLowerCase();
+		
+		System.out.println("|" + match + "|" + in + "|");
+		if (in.startsWith(match)) {
+			//incrementCorrect();
+			System.out.println("Correct!");
 		}
 		return true;
 	}
 
+    /**
+     * Validate the range of an input.
+     * 
+     * @param range - the range to be evaluate.
+     * @param input - the input string to validate.
+     * @return true on range; false else
+     */
+    private boolean validateRange(String range, String input) throws Exception {
+        range = range.replace(" ", "").replace("\t", "");
+        String[] rangeData = range.split("-");
+        int value = Integer.parseInt(input);
 
-	/**
-	 * Validate input string conforms to the State input specifications
-	 * @param response - the response from the user
-	 * @return boolean - true if valid string; false else
-	 */
-	public boolean validateInput(CmeResponse response) throws Exception
-	{
-		return validateInput(response.getValue());
-	}
-	
-	/**
-	 * Validate input string conforms to the State input specifications
-	 * @param text - the input string to be validated
-	 * @return boolean - true if valid string or no constraint; false else
-	 */
-	public boolean validateInput(String text) throws Exception
-	{		
-		if (text == null)
-			return true;
+        m_App.dmsg(10, Integer.toString(value));
 
- 		text = translateString(text);
-		text = m_App.translateString(text).trim();
+        if (rangeData.length > 2 || rangeData.length < 1) {
+            throw new Exception("To many numbers in the expected range!");
+        } else if (rangeData.length == 2) {
+            int lValue = Integer.parseInt(rangeData[0]);
+            int hValue = Integer.parseInt(rangeData[1]);
 
-		String constraintType = (String)m_sProperties.get("ConstraintType");
-		String constraint = (String)m_sProperties.get("Constraint");
-		
-		if (constraintType == null || constraint == null) {
-			return true;
-		}
-		
-		constraintType = constraintType.toLowerCase();
-		
-		constraint = translateString(constraint);
-		constraint = m_App.translateString(constraint).trim();
-		
-		m_App.dmsg(10, "Type: |" + constraintType + "|\nConstraint: " + constraint);
-		
-		try {
-			if (constraintType.equals("regex")) {
-				m_App.dmsg(10, "Regex");
-				return validateRegex(constraint, text);
-			} else if (constraintType.equals("range")) {
-				m_App.dmsg(10, "Range");
-				return validateRange(constraint, text);
-			} else if (constraintType.equals("value")) {
-				m_App.dmsg(10, "Value!");
-				return validateValue(constraint, text);
-			} else m_App.dmsg(10, "None!");
-		}
-		catch (Exception ex) {
-			System.out.println(ex.getMessage());
-			return false;
-		}
+            m_App.dmsg(10, Integer.toString(lValue) + "<=" + Integer.toString(value) + "<=" + Integer.toString(hValue));
 
-		return false;
-	}
-	
-	/**
-	 * Translate the string -- any variables that exist as properties are replaced...
-	 * Any variables that don't are replaced with ""
-	 * @param text - text containing the elements to be replaced
-	 * @return String - string with all the variables replaced
-	 */
-	public String translateString(String text)
-	{
-		return CmeApp.translateString(m_sProperties,text);
-	}
+            return (value >= lValue && value <= hValue);
+        } else if (rangeData.length == 1) {
+            int expValue = Integer.parseInt(rangeData[0]);
+
+            m_App.dmsg(10, Integer.toString(expValue) + "==" + Integer.toString(value));
+
+            return (value == expValue);
+        }
+
+        return false;
+    }
+
+    /**
+     * Validate the value of an input.
+     * 
+     * @param value - the value to be evaluate.
+     * @param input - the input string to validate.
+     * @return true on valid value; false else
+     */
+    private boolean validateValue(String value, String input) {
+        return (value == input);
+    }
+
+    /**
+     * Validate input set conforms to expectations
+     * @param iter - CmeResponse iterator to validate inputs
+     * @return boolean - true if valid set; false else
+     */
+    public boolean validateInput(Iterator<CmeResponse> responses) throws Exception {
+        int selReq = getIntProperty("Select");
+        int selCount = 0;
+
+        while (responses.hasNext()) {
+            CmeResponse rsp = responses.next();
+
+            if (!validateInput(rsp)) {
+                System.out.println("Validate Input: Response Value Invalid!");
+                return false;
+            }
+            System.out.println(rsp.getName() + ":" + rsp.getValue());
+            if (rsp.getName().startsWith("Select") && !rsp.getValue().equals("")) {
+                selCount++;
+            }
+        }
+
+        if (selCount != selReq) {
+            System.out.println("Selection Count Invalid!" + Integer.toString(selCount) + " of " + Integer.toString(selReq));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validate input string conforms to the State input specifications
+     * @param response - the response from the user
+     * @return boolean - true if valid string; false else
+     */
+    public boolean validateInput(CmeResponse response) throws Exception {
+        return validateInput(response.getValue());
+    }
+
+    /**
+     * Validate input string conforms to the State input specifications
+     * @param text - the input string to be validated
+     * @return boolean - true if valid string or no constraint; false else
+     */
+    public boolean validateInput(String text) throws Exception {
+        if (text == null) {
+            return false;
+        }
+
+        text = translateString(text);
+        text = m_App.translateString(text).trim();
+
+        String constraintType = (String) m_sProperties.get("ConstraintType");
+        String constraint = (String) m_sProperties.get("Constraint");
+
+			if (constraintType == null || constraint == null) {
+            return true;
+        }
+
+        constraintType = constraintType.toLowerCase();
+
+        constraint = translateString(constraint);
+        constraint = m_App.translateString(constraint).trim();
+
+        m_App.dmsg(10, "Type: |" + constraintType + "|\nConstraint: " + constraint);
+
+        try {
+            if (constraintType.equals("regex")) {
+                m_App.dmsg(10, "Regex");
+                return validateRegex(constraint, text);
+            } else if (constraintType.equals("range")) {
+                m_App.dmsg(10, "Range");
+                return validateRange(constraint, text);
+            } else if (constraintType.equals("value")) {
+                m_App.dmsg(10, "Value!");
+                return validateValue(constraint, text);
+            } else if (constraintType.equals("match")) {
+                m_App.dmsg(10, "Match!");
+                validateMatch(constraint, text);
+				return true;
+			} else {
+                m_App.dmsg(10, "None!");
+            }
+        } catch (Exception ex) {
+            System.out.println("Catch: " + ex.getMessage());
+            return false;
+        }
+
+        return false;
+    }
+
+    /**
+     * Translate the string -- any variables that exist as properties are replaced...
+     * Any variables that don't are replaced with ""
+     * @param text - text containing the elements to be replaced
+     * @return String - string with all the variables replaced
+     */
+    public String translateString(String text) {
+        return CmeApp.translateString(m_sProperties, text);
+    }
 }

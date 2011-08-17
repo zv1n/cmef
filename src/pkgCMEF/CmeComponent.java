@@ -26,6 +26,7 @@ public class CmeComponent implements CmeResponse {
 	public static final int EDIT_FIELD 		= 0;
 	public static final int CHECK_BOX 		= 1;
 	public static final int RADIO_BUTTON 	= 2;
+	public static final int HIDDEN			= 3;
 	
 	public CmeComponent(String name) {
 		m_Components = new Vector<Component>();
@@ -55,15 +56,17 @@ public class CmeComponent implements CmeResponse {
 	}
 
 	public void addComponent(Component comp) {
-		m_Components.add(comp);
-
-		if (comp instanceof JTextField) {
+		if (comp == null) {
+			m_Type = CmeComponent.HIDDEN;
+			return;
+		} else if (comp instanceof JTextField) {
 			m_Type = CmeComponent.EDIT_FIELD;
 		} else if (comp instanceof JCheckBox) {
 			m_Type = CmeComponent.CHECK_BOX;
 		} else if (comp instanceof JRadioButton) {
 			m_Type = CmeComponent.RADIO_BUTTON;
 		}
+		m_Components.add(comp);
 	}
 	
 	public void addComponent(Component comp, String value) {
@@ -73,6 +76,8 @@ public class CmeComponent implements CmeResponse {
 	
 	public String getValue() {
 		switch (m_Type) {
+		case CmeComponent.HIDDEN:
+			return m_Values.get(0);
 		case CmeComponent.EDIT_FIELD:
 			return ((JTextField)m_Components.get(0)).getText();
 			
@@ -94,6 +99,10 @@ public class CmeComponent implements CmeResponse {
 	
 	public Component getComponent(int x) {
 		return m_Components.get(0);
+	}
+	
+	public int getComponentCount() {
+		return m_Components.size();
 	}
 
 }

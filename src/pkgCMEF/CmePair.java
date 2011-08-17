@@ -43,7 +43,7 @@ public class CmePair
 
 	private String getFeedback(int idx, int scale) {
 		if (m_sFile[idx] == null || m_sFile[idx].length() == 0)
-			return "<h1>" + m_sName[idx] + "</h1>";
+			return m_sName[idx];
 		
 		int xsize = m_Image[idx].getWidth(null)*scale/1000;
 		int ysize = m_Image[idx].getHeight(null)*scale/1000;
