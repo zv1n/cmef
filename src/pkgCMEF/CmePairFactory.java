@@ -49,7 +49,7 @@ public class CmePairFactory
 		catch(FileNotFoundException e1) // If we failed to opened it
 		{
 			JOptionPane.showMessageDialog(null, 
-					"Error: Unable to open ImageList.txt file", 
+					"Error: Unable to open DataList.txt file", 
 					"Error Opening File", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
