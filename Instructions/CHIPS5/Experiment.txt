@@ -2,7 +2,24 @@
 	TITLE="CHIPS 5 - Experiment"
 	STUDY_NAME="CHIPS5"
 	CONDITIONS="A,B,C,D,E,F,G"
+	EXCLUDE="^Select[0-9]*$"
 	<TRIAL ID="1">
+# --- Conditions ---
+#A. None
+#B. Item without Difficulty Info (You got this item correct/incorrect)
+#C. Item with Difficulty Info (You got this simple item correct/incorrect)
+#D. Global without Difficulty Info (You got 16 items correct)
+#E. Global with Difficulty Info (You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
+#F. Combo without Difficulty Info (You got this item correct/incorrect; You got 16 items correct)
+#G. Combo with Difficulty Info (You got this simple item correct; You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
+#
+#-Item level: occurs after each item is recalled
+#-Global level: occurs at the end of the recall test
+#
+#The design is a 2 x 3 x 3 x 2
+#Within subjects- 2 (Trial: 1 or 2) x 3 (Item type: simple, moderate, or complex)
+#Between subjects- 3 (Feedback type: item-level, global, or combination) x 2 (difficulty information: present or absent)
+#
 #
 # --- T1 ---
 #Rate Characters (Seq)
@@ -52,7 +69,7 @@
 		</STATE>
 		<STATE>
 			MODE="Instruction"
-			FILE="Instructions/CHIPS5/5_Prestudy_Prediciotn_1.htm"
+			FILE="Instructions/CHIPS5/5_Prestudy_Prediction_1.htm"
 			END="Click:Continue"
 		</STATE>
 #Num Correct (Fb)
@@ -121,6 +138,8 @@
 			FILE="Instructions/CHIPS5/11f_Recall_1.htm"
 			ITERATOR="random:exclusive"
 			CONSTRAINTS="match:$CurrentPairA"
+			POST_PROMPT="C,G:You got the previous answer $Match"
+			POST_PROMPT="B,F:You got the previous answer $Match, which was a $CurDifficulty character."
 			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
@@ -133,6 +152,8 @@
 			MODE="Feedback"
 			FILE="Instructions/CHIPS5/12f_Postdiction_1.htm"
 			CONSTRAINTS="range:0-36"
+			POST_STATE_PROMPT="E,G:You got $Trial1TotalCorrect correct this trial."
+			POST_STATE_PROMPT="D,F:You got $Trial1TotalCorrect correct this trial ($Trial1CorrectByDifficulty)."
 			END="Click:Continue"
 		</STATE>
 	</TRIAL>
@@ -221,7 +242,7 @@
 			MODE="Sequential"
 			FILE="Instructions/CHIPS5/19f_JOL_Collection_2.htm"
 			CONSTRAINTS="range:0-100"
-			ITERATOR="random:exclusive"
+			ITERATOR="selective:exclusive"
 			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
@@ -235,6 +256,8 @@
 			FILE="Instructions/CHIPS5/20f_Recall_2.htm"
 			ITERATOR="selective:exclusive"
 			CONSTRAINTS="match:$CurrentPairA"
+			POST_PROMPT="C,G:You got the previous answer $Match"
+			POST_PROMPT="B,F:You got the previous answer $Match, which was a $CurrentValueString character."
 			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
@@ -252,6 +275,8 @@
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS5/22_Last_Screen.htm"
+			POST_STATE_PROMPT="E,G:You got $Trial2TotalCorrect correct this trial."
+			POST_STATE_PROMPT="D,F:You got $Trial2TotalCorrect correct this trial ($Trial2CorrectByDifficulty)."
 			END="Click:Continue"
 		</STATE>
 	</TRIAL>
