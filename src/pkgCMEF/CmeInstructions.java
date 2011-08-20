@@ -150,6 +150,7 @@ public class CmeInstructions extends JPanel {
 		this.add(m_cClock);
 
 		m_ScrollPane = new JScrollPane(m_HtmlView);
+		m_ScrollPane.setBackground(Color.white);
 		m_ScrollPane.addAncestorListener(aListener);
 		this.add(m_ScrollPane);
 
@@ -301,9 +302,9 @@ public class CmeInstructions extends JPanel {
 			throw new Exception("Tested if a rating was done when NOT in a rating step!");
 		}
 		
-		//CmeIterator iterator = m_CurState.getIterator();
-		//if (iterator != null && iterator.isComplete())
-		//	return true;
+		CmeIterator iterator = m_CurState.getIterator();
+		if (iterator != null && iterator.isComplete())
+			return true;
 
 		int istep = m_CurState.getSequentialStep();
 		int ismax = m_CurState.getSequentialStepMax();
@@ -319,23 +320,30 @@ public class CmeInstructions extends JPanel {
 	public boolean setNextInSequence() throws Exception {
 		String instructionFile = null;
  
-		if (!testAndSaveFeedback()) {
-			return false;
-		}
-		
-		if (isDoneSequential()) {
-			return false;
-		}
-
 		int cstep = m_CurState.getSequentialStep();
-		m_CurState.setSequentialStep(cstep + 1);
+		
+		if (cstep > 0) {
+			if (!testAndSaveFeedback()) {
+				return false;
+			}
+		
+			if (isDoneSequential()) {
+				return false;
+			}
+		
+			m_HtmlView.setVisible(false);
+			m_App.displayPrompt("PostPromptText");
+		}
 
+		m_CurState.setSequentialStep(cstep + 1);
 		CmeIterator iterator = m_CurState.getIterator();
 
 		if (iterator == null) {
 			throw new Exception("Failed to retreive iterator from current state (setNextSequential)!");
 		}
-
+		
+		m_App.displayPrompt("PrePromptText");
+		
 		setSequentialProperties(iterator.getNext());
 
 		instructionFile = (String) m_CurState.getProperty("InstructionFile");
@@ -369,7 +377,8 @@ public class CmeInstructions extends JPanel {
 				ex.printStackTrace();
 			}
 		}
-
+			
+		m_CurState.setProperty("CurrentValueString", m_PairFactory.getPairValueString(step));	
 		m_CurState.setProperty("CurrentPairA", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
 		m_CurState.setProperty("CurrentPairB", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
 		m_CurState.setProperty("CurrentPair", Integer.toString(step));
@@ -496,7 +505,7 @@ public class CmeInstructions extends JPanel {
 		if (m_bInStudyState) {
 			m_bNext.setText("Close");
 			m_bNext.setVisible(true);
-		} else if (m_CurState.getEventResponse(CmeState.EVENT_CLICK_PRIMARY) == null) {
+		} else if (m_CurState.getEventResponseCount(CmeState.EVENT_CLICK_PRIMARY) == 0) {
 			m_bNext.setVisible(false);
 		} else {
 			String bString = (String)m_CurState.getProperty("PrimaryButtonText");

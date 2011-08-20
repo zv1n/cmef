@@ -150,9 +150,23 @@ public class CmeHtmlView extends JEditorPane {
 		/* Make sure we have a clean document to use */
 		HTMLDocument doc = (HTMLDocument) getEditorKit().createDefaultDocument();
 		this.setDocument(doc);
-
-		doc.setBase(ClassLoader.getSystemResource("."));
+		
+		//System.out.println("Base Dir: " + ClassLoader.getSystemClassLoader().getSystemResource("./"));
+		
+		String path = System.getProperty("user.dir");
+		if (path == null) {
+			System.out.println("Failed to open system path!");
+			path = ClassLoader.getSystemClassLoader().getSystemResource(".").getPath();
+			if (path == null) {
+				System.out.println("Failed to open alternate system path!");
+				System.exit(1);
+			}
+		} 
+                
+		URL url = new URL("file:///" + path + "/");
+		doc.setBase(url);
 		doc.setAsynchronousLoadPriority(-1);
+                content = imageSrcFixup(path + "\\", content);
 		this.setText(content);
 
 		generateComponentList(response);
@@ -398,4 +412,22 @@ public class CmeHtmlView extends JEditorPane {
 		}
 		return m_Components.iterator();
 	}
+
+    private String imageSrcFixup(String path, String content) throws Exception {
+        Vector<Integer> insert = new Vector<Integer>();
+        
+        String lc = new String(content);
+        int start = 0;
+        
+        while ((start = lc.indexOf("src=\"", start)) != -1) {
+            start += 5;
+        }
+        
+        for(int x=insert.size()-1; x>=0; x--) {
+            String newContent = content.substring(0, insert.get(x)) + path + content.substring(x+1);
+            content = newContent;
+        }
+ 
+        return content;
+    }
 }

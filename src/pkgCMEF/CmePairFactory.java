@@ -44,13 +44,15 @@ public class CmePairFactory
 		// Open the file
 		try
 		{
-			instFile = new FileReader("Instructions/DataList.txt");
+			instFile = new FileReader("Instructions/CHIPS5/DataList.txt");
 		}
 		catch(FileNotFoundException e1) // If we failed to opened it
 		{
 			JOptionPane.showMessageDialog(null, 
 					"Error: Unable to open DataList.txt file", 
 					"Error Opening File", JOptionPane.ERROR_MESSAGE);
+			System.out.println(ClassLoader.getSystemClassLoader().getSystemResource(".").toString());
+			System.exit(1);
 			return;
 		}
 		// Read the text strings and add them to the text area
@@ -64,21 +66,27 @@ public class CmePairFactory
 			{
 				if (line.trim().charAt(0) == '#')
 					continue;
-				
+				int val = 0;
 				// Parse the name key and image name
 				String[] strs = line.split(",");
+				try {
+					val = Integer.valueOf(strs[0]);
+				} catch(Exception ex) {
+					System.out.println("Failed to parse image value:" + line);					
+				}
 				// Create the image and add to the vector of images
 				img = new CmePair(m_App);
-
-				img.setNameA(strs[0]);
-				img.setImageA(strs[1]);
-				img.setNameB(strs[2]);
+				img.setPairValue(val);
+				img.setPairValueString(strs[1]);
+				img.setNameA(strs[2]);
+				img.setImageA(strs[3]);
+				img.setNameB(strs[4]);
 				
 				/* if there is nothing between the last ',' and the new line, then the last
 				 * array element will get culled.
 				 */
-				if (strs.length > 3)
-					img.setImageB(strs[3]);
+				if (strs.length > 5)
+					img.setImageB(strs[5]);
 				
 				
 				m_vPairs.add(img);
@@ -150,10 +158,19 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	/** Get the string value of the image at index idx */
 	//-------------------------------------------------------------
-	public String getImageValue(int idx)
+	public String getPairValue(int idx)
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
-		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getImageValue());
+		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairValue());
+	}
+	
+	//-------------------------------------------------------------
+	/** Get the string value of the image at index idx */
+	//-------------------------------------------------------------
+	public String getPairValueString(int idx)
+	{
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairValueString());
 	}
 	
 	public int getCount() {

@@ -28,7 +28,7 @@ public class CmeState {
 	
     private CmeState m_sPrevState;
 	
-    private CmeEventResponse[] m_erEvent = new CmeEventResponse[EVENT_MAX];
+    private Vector<Vector<CmeEventResponse>> m_erEvent = new Vector<Vector<CmeEventResponse>>();
     /** HashSet used to store the properties for each state */
     private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
 	
@@ -64,6 +64,8 @@ public class CmeState {
      */
     public CmeState(CmeApp thisApp) {
         m_App = thisApp;
+		for (int x=0; x<EVENT_MAX; x++)
+			m_erEvent.add(new Vector<CmeEventResponse>());
     }
 	
 	/** 
@@ -78,15 +80,19 @@ public class CmeState {
 	 * Clean up all stored variables so GC can pick them up
 	 */
 	public void clean() {
+		System.out.println("Clean");
 		for(int x=0; x<m_Timer.size(); x++)
 			m_Timer.set(x, null);
 		m_Timer.clear();
 		
 		m_Iterator = null;
-		for (int x=0; x<m_erEvent.length; x++)
-			if (m_erEvent[x] != null)
-				m_erEvent[x] = null;
-		m_erEvent = null;
+		/*for (int x=0; x<m_erEvent.size(); x++)
+			if (m_erEvent.get(x) != null) {
+				for (int y=0; y<m_erEvent.get(x).size(); y++)
+					m_erEvent.get(x).set(y,null);
+				m_erEvent.set(x, null);
+			}
+		m_erEvent = null;*/
 		
 		m_sProperties.clear();
 		m_sProperties = null;
@@ -107,16 +113,26 @@ public class CmeState {
     /**
      * Set event response 
      */
-    public void setEventResponse(int eventId, CmeEventResponse event) {
-        m_erEvent[eventId] = event;
+    public void addEventResponse(int eventId, CmeEventResponse event) {
+		if (m_erEvent.get(eventId) == null)
+			m_erEvent.set(eventId, new Vector<CmeEventResponse>());
+        m_erEvent.get(eventId).add(event);
     }
 	
     /**
      * get event response 
      */
-    public CmeEventResponse getEventResponse(int eventId) {
-        return m_erEvent[eventId];
+    public CmeEventResponse getEventResponse(int eventId, int index) {
+		if (m_erEvent == null || m_erEvent.get(eventId) == null || index >= m_erEvent.get(eventId).size())
+			return null;
+        return m_erEvent.get(eventId).get(index);
     }
+	
+	public int getEventResponseCount(int eventId) {
+		if (m_erEvent == null)
+			return 0;
+		return m_erEvent.get(eventId).size();
+	}
 	
 	/**
 	 * Sets the timer object associated with this state.
@@ -176,10 +192,19 @@ public class CmeState {
      * Set the change by action 
      */
     public void TriggerEvent(int event) {
-        if (event < 0 || event >= EVENT_MAX || m_erEvent[event] == null) {
+        if (event < 0 || event >= EVENT_MAX || m_erEvent == null || 
+			m_erEvent.size() <= event || m_erEvent.get(event) == null) {
             return;
         }
-        m_erEvent[event].Respond();
+		System.out.print("Event: ");
+		System.out.println(event);
+		System.out.println(m_erEvent.get(event).size());
+		
+		for (int x=0; x<m_erEvent.get(event).size(); x++) {
+			CmeEventResponse response = m_erEvent.get(event).get(x);
+			if (response != null)
+				response.Respond();
+		}
     }
 
     /** 
@@ -275,11 +300,14 @@ public class CmeState {
 		else
 			match = matchon.toLowerCase();
 		
-		System.out.println("|" + match + "|" + in + "|");
 		if (in.startsWith(match)) {
-			//incrementCorrect();
 			System.out.println("Correct!");
+			setProperty("Match", "correct");
+		} else {	System.out.println("Correct!");
+			System.out.println("Incorrect!");
+			setProperty("Match", "incorrect");
 		}
+		
 		return true;
 	}
 

@@ -60,14 +60,14 @@ public class CmeApp extends JFrame implements AncestorListener
 	private HashMap<String, String> m_fbHashmap = new HashMap<String, String>();
 	/** Variables used to hold the timer feedback values */
 	private HashMap<String, Integer> m_fbHashTimer = new HashMap<String, Integer>();
-	/** Variables used to hold the timer feedback values */
-	private Vector<String> m_fbVectorString = new Vector<String>();
+	/** String list to control order of output file.. */
+	private Vector<String> m_fbVectString = new Vector<String>();
 	/** Debug Level */
 	private int m_iDebugLevel;
 	/** Store time in milliseconds */
 	private long m_lStartTimeMillis;
 	/** Name of the experiment definition file */
-	private String m_sExpFileName = "Instructions/CHIPS5/Experiment.txt";
+	private String m_sExpFileName = "Instructions/Experiment_test.txt";
 	//------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
 	//------------------------------------------------------------------
@@ -85,6 +85,10 @@ public class CmeApp extends JFrame implements AncestorListener
 	private Timer m_tTimer;
 	/** MS Counter for Feedback Timer */
 	private int m_iTickCounter;
+	
+	private CmeEventResponse m_EndResponse;
+	private CmeEventResponse m_NextResponse;
+	private CmeEventResponse m_BlankResponse;
 	//------------------------------------------------------------------
 	// Data storage components
 	//------------------------------------------------------------------
@@ -338,17 +342,19 @@ public class CmeApp extends JFrame implements AncestorListener
 			return false;
 		}
 
-		if (action.equals("END")) {
-			response = new CmeEventResponse() {
+		if (m_EndResponse == null)
+			m_EndResponse = new CmeEventResponse() {
 
 				public void Respond() {
+					System.out.println("End");
 					thisApp.setNextState();
 				}
 			};
-		} else if (action.equals("NEXT")) {
-			response = new CmeEventResponse() {
-
+		
+		if (m_NextResponse == null)
+			m_NextResponse = new CmeEventResponse() {
 				public void Respond() {
+					System.out.println("Next");
 					try {
 						if (!m_InstructionsHandler.setNextInSequence()) {
 							thisApp.setNextState();
@@ -358,10 +364,11 @@ public class CmeApp extends JFrame implements AncestorListener
 					}
 				}
 			};
-		} else if (action.equals("BLANK")) {
-			response = new CmeEventResponse() {
-
+		
+		if (m_BlankResponse == null)
+			m_BlankResponse = new CmeEventResponse() {
 				public void Respond() {
+					System.out.println("Blank");
 					try {
 						m_InstructionsHandler.blankInstructions();
 					} catch (Exception ex) {
@@ -369,6 +376,13 @@ public class CmeApp extends JFrame implements AncestorListener
 					}
 				}
 			};
+		
+		if (action.equals("END")) {
+			response = m_EndResponse;
+		} else if (action.equals("NEXT")) {
+			response = m_NextResponse;
+		} else if (action.equals("BLANK")) {
+			response = m_BlankResponse;
 		} else {
 			System.out.println("|" + action + "|");
 			return false;
@@ -399,8 +413,36 @@ public class CmeApp extends JFrame implements AncestorListener
 			}
 		}
 
-		state.setEventResponse(type, response);
+		state.addEventResponse(type, response);
 		return true;
+	}
+	
+	private void compoundProperty(CmeState state, String name, String value) {
+		if (name == null || value == null)
+			return;
+		
+		Vector<String> newProp = null;
+		Object property = null;
+		if (state == null)
+			property = m_eProperties.get(name);
+		else
+			property = state.getProperty(name);
+		
+		if (property == null) { 
+			newProp = new Vector<String>();
+		} else if (property instanceof String) {
+			newProp = new Vector<String>();
+			newProp.add((String)property);
+		} else {
+			newProp = (Vector<String>)property;
+		}
+		
+		newProp.add(value);
+		
+		if (state == null)
+			m_eProperties.put(name, newProp);
+		else
+			state.setProperty(name, newProp);
 	}
 
 	/** 
@@ -444,11 +486,11 @@ public class CmeApp extends JFrame implements AncestorListener
 				}
 
 				// See if we need to create a new State
-				if ((line.contains("TRIAL")) && (!(line.contains("/TRIAL")))) {
+				if (line.startsWith("<TRIAL")) {
 					trialId = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
-				} else if (line.contains("/TRIAL")) {
+				} else if (line.startsWith("</TRIAL")) {
 					trialId = null;
-				} else if ((line.contains("STATE")) && (!(line.contains("/STATE")))) {
+				} else if (line.startsWith("<STATE")) {
 					thisState = new CmeState(this);
 					if (trialId != null) {
 						thisState.setProperty("CurrentTrial", trialId);
@@ -471,21 +513,38 @@ public class CmeApp extends JFrame implements AncestorListener
 					} else {
 						thisState.setProperty("ValidConditions", ":" + valConditions + ":");
 					}
+				} else if (line.startsWith("EXCLUDE=")) {
+					String exclude = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					compoundProperty(null, "Exclude", exclude);
 				}
 
 				if (thisState == null) {
 					continue;
 				}
 
-				if (line.startsWith("FILE")) {
+				if (line.startsWith("FILE=")) {
 					String insFile = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("InstructionFile", insFile);
-				} else if (line.contains("PROMPT")) {
+				} else if (line.startsWith("PROMPT=")) {
 					String promptText = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("PromptText", promptText);
+					
+				} else if (line.startsWith("POST_PROMPT=")) {
+					String postPrompt = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					compoundProperty(thisState, "PostPromptText", postPrompt);
+					
+				} else if (line.startsWith("POST_STATE_PROMPT=")) {
+					String postPrompt = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					compoundProperty(thisState, "PostStatePromptText", postPrompt);
+					
 				} else if (line.contains("SCALE")) {
 					String scaleText = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("Scale", scaleText);
+					
+				} else if (line.startsWith("EXCLUDE=")) {
+					String exclude = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					compoundProperty(thisState, "Exclude", exclude);
+					
 				} else if (line.contains("END")) {
 					String lhs = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":"));
 					String rhs = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\""));
@@ -502,7 +561,7 @@ public class CmeApp extends JFrame implements AncestorListener
 						dmsg(0xFF, "Invalid State Interaction: " + line);
 						System.exit(0);
 					}
-				} else if (line.contains("NEXT")) {
+				} else if (line.startsWith("NEXT=")) {
 					if (thisState.getState() != CmeState.STATE_SEQUENTIAL) {
 						dmsg(0xFF, "Invalid State Interaction: " + line);
 						System.exit(0);
@@ -547,7 +606,7 @@ public class CmeApp extends JFrame implements AncestorListener
 						System.exit(0);
 					}
 
-				} else if (line.contains("/STATE")) {
+				} else if (line.contains("</STATE>")) {
 					// Add this one to the vector
 					m_vStates.add(thisState);
 				} else if (line.contains("NAME")) {
@@ -594,6 +653,54 @@ public class CmeApp extends JFrame implements AncestorListener
 
 		/* Ensure adjustLayout gets called next time! */
 		m_dOldDims = (Dimension) this.getSize().clone();
+	}
+	
+	public boolean handleCompoundProperty(CmeState state, String property, CmeStringHandler handler) {
+		if (property == null || handler == null)
+			return false;
+		
+		Object obj;
+		if (state != null)
+			obj = state.getProperty(property);
+		else
+			obj = m_eProperties.get(property);
+		
+		if (obj == null) {
+			return false;
+		}
+		
+		if (obj instanceof String)
+			return handler.handleString((String) obj);
+		
+		Vector<String> str = (Vector<String>) obj;
+		boolean ret = true;
+		
+		for(int x=0; x<str.size(); x++) {
+			ret = (ret && handler.handleString(str.get(x)));
+		}
+		
+		return ret;
+	}
+	
+	private boolean isExcluded(String exc) {
+		final String fexc = exc;
+		boolean ret = 
+			handleCompoundProperty(m_CurState, "Exclude", new CmeStringHandler() {
+				public boolean handleString(String regex) {
+					regex = m_CurState.translateString(regex);
+					System.err.println(regex);
+					return fexc.matches(regex);
+				}
+			});
+		ret =  
+			ret || handleCompoundProperty(null, "Exclude", new CmeStringHandler() {
+				public boolean handleString(String regex) {
+					regex = translateString(regex);
+					System.err.println(regex);
+					return fexc.matches(regex);
+				}
+			});
+		return ret;
 	}
 
 	public String translateString(String text) {
@@ -666,6 +773,16 @@ public class CmeApp extends JFrame implements AncestorListener
 		return propertyList;
 	}
 
+	public boolean conditionInSet(String set) {
+		if (set == null)
+			return false;
+		set = ":" + set.replace(" ", "").replace("\t","").replace(",",":").replace("|",":").toLowerCase() + ":";
+		String expCondition = (String) m_eProperties.get("ExpCondition");
+		if (expCondition == null)
+			return false;
+		return set.contains(":" + expCondition.toLowerCase() + ":");
+	}
+	
 	/** 
 	 * Validates that a given condition is valid.
 	 * 
@@ -691,6 +808,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	 */
 	public boolean setCondition(String condition) {
 		if (validateCondition(condition)) {
+			System.out.println("Set Condition!");
 			m_eProperties.put("ExpCondition", condition);
 			return true;
 		}
@@ -721,6 +839,59 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 
 	}
+	
+	public String translatePrompt(String text) {
+		if (text == null)
+			return null;
+		
+		String[] info = text.split(":");
+		int prompt = 0;
+		
+		if (info.length == 2) {
+			if (!conditionInSet(info[0]))
+				return null;
+			prompt++;
+		}
+		
+		text = this.translateString(info[prompt]);
+		text = m_CurState.translateString(text);
+		
+		return text;
+	}
+	
+	/** Prompt the pre prompt */
+	public void displayPrompt(String post) {
+		if (m_CurState == null) {
+			System.out.println("No State!");
+			return;
+		}
+		
+		Object property = m_CurState.getProperty(post);
+		if (property == null) {
+			System.out.println("No Property (" + post + ")!");
+			return;
+		}
+		
+		if (property instanceof String) {
+			String text = translatePrompt((String)property);
+			
+			if (text == null)
+				return;
+			
+			JOptionPane.showMessageDialog(this,
+				text, "Info", JOptionPane.NO_OPTION);
+		} else {
+			Vector<String> texts = (Vector<String>) property;
+			for (int x=0; x < texts.size(); x++) {
+				String text = translatePrompt(texts.get(x));
+				if (text == null)
+					continue;
+			
+				JOptionPane.showMessageDialog(this,
+					text, "Info", JOptionPane.NO_OPTION);	
+			}
+		}
+	}
 
 	//-----------------------------------------------
 	/** Set the next state */
@@ -738,11 +909,14 @@ public class CmeApp extends JFrame implements AncestorListener
 			return;
 		}
 
+		displayPrompt("PostStatePromptText");
 		if (m_cIterator.hasNext()) {
-			if (m_CurState != null) {
+			
+			if (m_CurState != null)
 				m_CurState.clean();
-			}
 			m_CurState = (CmeState) m_cIterator.next();
+			
+			displayPrompt("PreStatePromptText");
 		} else {
 			System.exit(0);
 		}
@@ -801,7 +975,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	/** Everything states in main */
 	public static void main(String[] args) {
 		int len = args.length;
-		int debug = 0x100;
+		int debug = 0;//0x100;
 		for (int x = 0; x < len; x++) {
 			if (args[x] == "-d" || args[x] == "--debug") {
 				try {
@@ -827,33 +1001,29 @@ public class CmeApp extends JFrame implements AncestorListener
 		Runtime.getRuntime().addShutdownHook(new Thread(localRunnable));
 		
 		theApp.run();
-		
 	}
 
 	public void addFeedback(CmeResponse response) throws Exception {
 		if (response == null) {
 			throw new Exception("Invalid response!");
 		}
-
-		if (response.getName() == null) {
-			throw new Exception("Invalid name!");
-		}
-
-		if (response.getValue() == null) {
-			throw new Exception("Invalid value!");
-		}
-
-		if (response.getName().length() == 0) {
-			throw new Exception("Invalid feedback name!");
-		}
-
-		m_fbHashmap.put(response.getName(), response.getValue());
-		dmsg(0xFF, "Current Feedback(r): " + m_fbHashmap.toString());
+		addFeedback(response.getName(), response.getValue());
 	}
 
 	public void addFeedback(String name, String value) throws Exception {
-		m_fbHashmap.put(name, value);
+		m_fbHashmap.put(name, value);		
+		if (isExcluded(name)) {
+			System.out.println("excluded? " + name);
+			return;
+		}
 		m_fbHashTimer.put(name, m_iTickCounter);
+		for (int x=0;x<m_fbVectString.size();x++) {
+			if (m_fbVectString.get(x).equals(name)) {
+				m_fbVectString.remove(x);
+				break;
+			}
+		}
+		m_fbVectString.add(name);
 		dmsg(0xFF, "Current Feedback(nv): " + m_fbHashmap.toString());
 	}
 	
@@ -887,74 +1057,17 @@ public class CmeApp extends JFrame implements AncestorListener
 
 			postStatusMessage("Subject Test Time: "
 					+ expCalendar.getTime().toString() + "\n", false);
-		} catch (IOException ex) {
-			throw new Exception("Unable to write to report file: " + ex.getMessage());
-		}
-
-		dmsg(5, "Output File Generated!");
-
-
-		try {/*
-			String line;
-			// Post headings for first section
-			line =  "\n\nSubject ID,Condition,Run Date,Run Time,Total Exp Time," +
-			"Test 1 Pretrial,Test 1 Posttrial,Test 1 Postdict," +
-			"Test 2 Pretrial,Test 2 Posttrial,Test 2 Postdict";
-			postStatusMessage(line, false);
-			String estStr = "";
-			// Build the estimates string
-			for(int i=0; i<6; i++)
-			{
-			estStr = estStr.concat("," + String.valueOf(m_iUserEstimates[i]));
+		
+			String line = new String();
+			for (int x=0; x<m_fbVectString.size();x++) {
+				String name = m_fbVectString.get(x);
+				String value = m_fbHashmap.get(name);
+				Integer time = m_fbHashTimer.get(name);
+				line = name + "," + value + "," + Integer.toString(time);
+				postStatusMessage(line, false);
 			}
-			
-			// Get the total experiment time
-			line = 	m_sSubjectID + "," + 
-			sCondition + "," +
-			timeToString() + 
-			estStr;
-			postStatusMessage(line, false);
-			// Post headings for second section
-			line = 	"\nSID,Word number,English,EOL Order," +
-			"EOL Rate,Test Order,User Answer,Correct(T/F),Answer Value,Trial,Set,Grid Row," +
-			"Grid Column,Times Studied,Total Study Time";
-			String stStr = "";
-			for(int i=0; i<m_iMaxStudyTimes; i++)
-			{
-			stStr = stStr.concat(",Study Time " + String.valueOf(i+1) +
-			",Study Order " + String.valueOf(i+1));
-			}
-			line = line.concat(stStr);
-			postStatusMessage(line, false);
-			// Write out all the information on this run
-			// postStatusMessage for the column headings
-			Vector vec = this.m_ImageFactory.getImagesVector();
-			for(int i=0; i<36; i++) // Only do the exp images
-			{
-			postStatusMessage(m_sSubjectID + "," +
-			String.valueOf(i) + "," +
-			img.getReferenceName() + "," +
-			String.valueOf(img.getEOLPresentationOrder()) + "," +
-			String.valueOf(img.getEOLRate()) + "," +
-			String.valueOf(img.getTestPresentationOrder()) + "," +
-			img.getUserAnswer() + "," +
-			String.valueOf(img.getUserAnswerCorrect()) + "," +
-			String.valueOf(img.getImageValue()) + "," +
-			String.valueOf(img.getTrial()) + "," +
-			String.valueOf(img.getGrid()) + "," +
-			String.valueOf(img.getRow()) + "," +
-			String.valueOf(img.getColumn()) + "," +
-			String.valueOf(img.getTimesStudied()) + "," +
-			String.valueOf(img.getTotalStudyTime()) +
-			studyStr
-			, false);
-			}
-			postStatusMessage("\n\n", false);
-			postStatusMessage(" - End of experiment.", true);
-			m_bufWriter.close(); // Close the file
-			 */
-
 		} catch (Exception e) {
+			throw new Exception("Unable to write to report file: " + e.getMessage());
 		}
 	}
 }

@@ -27,6 +27,9 @@ public class CmePair
     /** Point Value of the Image */
     private int 		m_iValue;
     
+    /** Name Value of the Image */
+    private String 		m_sValue;
+    
     //-----------------------------------------------------
     // The following variables are for storing information
     // during a test run for later printout.
@@ -134,18 +137,34 @@ public class CmePair
 	}
 	
 	//-------------------------------------------------
-	/** Get the image value*/
+	/** Get the pair value*/
 	//-------------------------------------------------
-	public int getImageValue()
+	public int getPairValue()
 	{
 		return m_iValue;
 	}
 	
+	//-------------------------------------------------
+	/** Get the pair value*/
+	//-------------------------------------------------
+	public String getPairValueString()
+	{
+		return m_sValue;
+	}
+	
 	//--------------------------------------------
-	/** Set the value of this image (2, 4, or 8) */
+	/** Set the value of this pair (2, 4, or 8) */
 	//--------------------------------------------
-	public void setImageValue(int val)
+	public void setPairValue(int val)
 	{
 		m_iValue = val;
+	}
+	
+	//--------------------------------------------
+	/** Set the value of this pair ("Simple", "Medium", "Hard") */
+	//--------------------------------------------
+	public void setPairValueString(String val)
+	{
+		m_sValue = val;
 	}
 }
