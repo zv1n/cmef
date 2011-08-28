@@ -30,7 +30,7 @@ public class CmePairFactory
 	/** Default constructor 
 	 * @throws Exception */
 	//-------------------------------------------------
-	public CmePairFactory(CmeApp app)
+	public CmePairFactory(CmeApp app, String file)
 	{
 		m_App = app;
 		
@@ -44,12 +44,12 @@ public class CmePairFactory
 		// Open the file
 		try
 		{
-			instFile = new FileReader("Instructions/CHIPS5/DataList.txt");
+			instFile = new FileReader(file);
 		}
 		catch(FileNotFoundException e1) // If we failed to opened it
 		{
 			JOptionPane.showMessageDialog(null, 
-					"Error: Unable to open DataList.txt file", 
+					"Error: Unable to open " + file + " file", 
 					"Error Opening File", JOptionPane.ERROR_MESSAGE);
 			System.out.println(ClassLoader.getSystemClassLoader().getSystemResource(".").toString());
 			System.exit(1);
@@ -77,17 +77,26 @@ public class CmePairFactory
 				// Create the image and add to the vector of images
 				img = new CmePair(m_App);
 				img.setPairValue(val);
-				img.setPairValueString(strs[1]);
+				img.setPairGroup(strs[1]);
 				img.setNameA(strs[2]);
 				img.setImageA(strs[3]);
 				img.setNameB(strs[4]);
+				String ib = null;
 				
-				/* if there is nothing between the last ',' and the new line, then the last
-				 * array element will get culled.
-				 */
-				if (strs.length > 5)
-					img.setImageB(strs[5]);
+				if (strs.length > 5) {
+					ib = strs[5];
+				} else {
+					ib = "";
+				}
 				
+				img.setImageB(ib);
+				
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "V", strs[0]);
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "D", strs[1]);
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "A", strs[2]);
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IA", strs[3]);
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "B", strs[4]);
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IB", ib);
 				
 				m_vPairs.add(img);
 			}
@@ -117,6 +126,24 @@ public class CmePairFactory
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getImageB();
+	}
+	
+	//-------------------------------------------------------------
+	/** Get a file from the factory by vector index */
+	//-------------------------------------------------------------
+	public String getFileA(int idx)
+	{
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return ((CmePair)m_vPairs.elementAt(idx)).getFileA();
+	}
+	
+	//-------------------------------------------------------------
+	/** Get a file from the factory by vector index */
+	//-------------------------------------------------------------
+	public String getFileB(int idx)
+	{
+		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		return ((CmePair)m_vPairs.elementAt(idx)).getFileB();
 	}
 
 	//-------------------------------------------------------------
@@ -167,10 +194,10 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	/** Get the string value of the image at index idx */
 	//-------------------------------------------------------------
-	public String getPairValueString(int idx)
+	public String getPairGroup(int idx)
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
-		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairValueString());
+		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairGroup());
 	}
 	
 	public int getCount() {

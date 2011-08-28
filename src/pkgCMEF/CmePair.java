@@ -15,6 +15,9 @@ public class CmePair
 	/** Pointer to app instance */
 	CmeApp m_App;
 	
+	/** Pointer to factory instance */
+	CmePairFactory m_pFactory;
+	
     /** Reference to the image icon */
 	private Image[]		m_Image;
 
@@ -39,6 +42,7 @@ public class CmePair
 	//-------------------------------------------------
 	public CmePair(CmeApp app) {
 		m_App = app;
+		
 		m_Image = new Image[2];
 		m_sName = new String[2];
 		m_sFile = new String[2];
@@ -50,11 +54,16 @@ public class CmePair
 		
 		int xsize = m_Image[idx].getWidth(null)*scale/1000;
 		int ysize = m_Image[idx].getHeight(null)*scale/1000;
+		CmeState state = m_App.getCurrentState();
+		
+		String border = (String) state.getProperty("BorderWidth");
+		if (border == null)
+			border="0";
 		
 		/** Display the image... */
 		return "<img src=\"" + m_App.getImagePrefix() + m_sFile[idx] + "\" alt=\"" +
 				m_sName[idx] + "\" width=\"" + Integer.toString(xsize) + "\" height=\"" + 
-				Integer.toString(ysize) + "\" border=\"0\">";
+				Integer.toString(ysize) + "\" border=\"" + border + "\">";
 	}
 
 	public String getFeedbackA(int scale) {
@@ -71,6 +80,14 @@ public class CmePair
 	
 	public void setNameB(String name) {
 		m_sName[1] = name;
+	}
+
+	public String getFileA() {
+		return m_sFile[0];
+	}
+	
+	public String getFileB() {
+		return m_sFile[1];
 	}
 
 	public boolean setImageA(String file) {
@@ -147,7 +164,7 @@ public class CmePair
 	//-------------------------------------------------
 	/** Get the pair value*/
 	//-------------------------------------------------
-	public String getPairValueString()
+	public String getPairGroup()
 	{
 		return m_sValue;
 	}
@@ -163,7 +180,7 @@ public class CmePair
 	//--------------------------------------------
 	/** Set the value of this pair ("Simple", "Medium", "Hard") */
 	//--------------------------------------------
-	public void setPairValueString(String val)
+	public void setPairGroup(String val)
 	{
 		m_sValue = val;
 	}

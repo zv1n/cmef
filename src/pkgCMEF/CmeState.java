@@ -228,12 +228,12 @@ public class CmeState {
         String str = (String) m_sProperties.get(name);
         int ret = 0;
         if (str == null) {
-            return 0;
+            return -1;
         }
         try {
             ret = Integer.parseInt(str);
         } catch (Exception x) {
-            return 0;
+            return -1;
         }
         return ret;
     }
@@ -291,21 +291,60 @@ public class CmeState {
      * @param input - the input string to validate.
      * @return true on match; false else
      */
-	private boolean validateMatch(String matchon, String input) {
+	private boolean validateMatch(String matchstring, String input) throws Exception {
 		String in = input.toLowerCase();
+		String matchon = matchstring.toLowerCase();
 		String match = null;
 		
-		if (matchon.length() > 3)
-			match = matchon.substring(0,3).toLowerCase();
-		else
-			match = matchon.toLowerCase();
 		
+		/* Nasty Hack to get around Theif */
+		matchon = matchon.replace("ie", "ee");
+		matchon = matchon.replace("ei", "ee");
+		in = in.replace("ie", "ee");
+		in = in.replace("ei", "ee");
+		
+		if (matchon.length() > 3)
+			match = matchon.substring(0,3);
+		else
+			match = matchon;
+		
+		String trial = (String) getProperty("CurrentTrial");
+		String pair = (String) getProperty("CurrentPair");
+		String group = (String) getProperty("CurrentGroup");
+			
 		if (in.startsWith(match)) {
 			System.out.println("Correct!");
 			setProperty("Match", "correct");
-		} else {	System.out.println("Correct!");
+			
+			m_App.addFeedback("RecallCorrect_T" + trial + "_" + pair, "true");
+				
+			int total = m_App.getIntProperty("TotalCorrect_T" + trial);
+			if (total == -1)
+				total = 0;
+			
+			int points = getIntProperty("CurrentValue");
+			if (points == -1)
+				points = 1;
+			
+			m_App.setProperty("TotalCorrect_T" + trial, Integer.toString(total+points));
+			
+			total = m_App.getIntProperty(group + "Total_T" + trial);
+			if (total == -1)
+				total = 0;
+			m_App.setProperty(group + "Total_T" + trial, Integer.toString(total+points));
+		} else {	
 			System.out.println("Incorrect!");
 			setProperty("Match", "incorrect");
+			
+			m_App.addFeedback("RecallCorrect_T" + trial + "_" + pair, "false");
+			
+			if (m_App.getProperty("TotalCorrect_T" + trial) == null)
+				m_App.setProperty("TotalCorrect_T" + trial, "0");
+			if (getProperty("CurrentValue") == null)
+				setProperty("CurrentValue", "1");
+			
+			if (group != null && m_App.getProperty(group + "Total_T" + trial) == null)
+				m_App.setProperty(group + "Total_T" + trial, "0");
 		}
 		
 		return true;
@@ -373,13 +412,13 @@ public class CmeState {
                 return false;
             }
             System.out.println(rsp.getName() + ":" + rsp.getValue());
-            if (rsp.getName().startsWith("Select") && !rsp.getValue().equals("")) {
+            if (rsp.getName().matches("^Select[0-9]*$") && !rsp.getValue().equals("")) {
                 selCount++;
             }
         }
 
-        if (selCount != selReq) {
-            System.out.println("Selection Count Invalid!" + Integer.toString(selCount) + " of " + Integer.toString(selReq));
+        if (selCount != selReq && selReq != -1) {
+            System.out.println("Selection Count Invalid: " + Integer.toString(selCount) + " of " + Integer.toString(selReq));
             return false;
         }
         return true;
@@ -453,6 +492,6 @@ public class CmeState {
      * @return String - string with all the variables replaced
      */
     public String translateString(String text) {
-        return CmeApp.translateString(m_sProperties, text);
+        return CmeApp.translateString(m_sProperties, text, true);
     }
 }

@@ -51,6 +51,8 @@ public class CmeInstructions extends JPanel {
 	private JScrollPane m_ScrollPane;
 	/** JButton for primary button */
 	private JButton m_bNext;
+	/** JButton for primary button */
+	private JButton m_bRefresh;
 	/** Reference to the image factory */
 	private CmePairFactory m_PairFactory;
 	/** Submit Action Response */
@@ -60,17 +62,19 @@ public class CmeInstructions extends JPanel {
 	
 	private CmeEventResponse m_LimitResponse;
 	
+	
 	private String m_bString;
 	private String m_sContent;
 	private String m_sStudyContent;
 	private boolean m_bInStudyState;
+	private int m_iStudyCount;
 	
 	/**
 	 * Default constructor
 	 * 
 	 * @throws IOException
 	 */
-	public CmeInstructions(CmeApp parent) throws Exception {
+	public CmeInstructions(CmeApp parent, int ops) throws Exception {
 		m_App = parent;
 		
 		final CmeInstructions cInst = this;
@@ -129,12 +133,32 @@ public class CmeInstructions extends JPanel {
 			}
 		};
 		
+		ActionListener refreshListener = new ActionListener() {
+			CmeInstructions inst = cInst;
+			public void actionPerformed(ActionEvent e) {
+				try {
+					inst.refreshView();
+				} catch (Exception ex) {
+					System.out.println("Failed to catch refresh exception!");
+				}
+			}
+		};
+		
 		/** Configure Next JButton */
 		m_bNext = new JButton();
 		m_bNext.setText("Next");
 		m_bNext.setVisible(true);
 		m_bNext.addActionListener(m_SubmitListener);
 		this.add(m_bNext);
+		
+		if ((ops & CmeApp.CME_ENABLE_REFRESH) == CmeApp.CME_ENABLE_REFRESH) {
+			/** Configure Next JButton */
+			m_bRefresh = new JButton();
+			m_bRefresh.setText("Refresh");
+			m_bRefresh.setVisible(true);
+			m_bRefresh.addActionListener(refreshListener);
+			this.add(m_bRefresh);
+		}
 		
 		m_LimitResponse = new CmeEventResponse() {
 			CmeInstructions inst = cInst;
@@ -169,16 +193,6 @@ public class CmeInstructions extends JPanel {
 		}
 	}
 	
-	public void clearStudyState() throws Exception {
-		if (m_bInStudyState) {
-			m_HtmlView.setContent(m_sContent, null);
-			m_cClock.stop(0);
-		}
-		m_bInStudyState = false;
-		
-		updateButtonText();
-	}
-	
 	private void clockLimitHit() {
 		try {
 			clearStudyState();
@@ -186,6 +200,45 @@ public class CmeInstructions extends JPanel {
 			System.out.println(ex.getMessage() + ": Failed to propertly clear Study State.");
 			System.exit(1);
 		}
+	}
+	
+	public void clearStudyState() throws Exception {
+		if (m_bInStudyState) {
+			String element = m_cClock.getElement();
+			int elapsed = m_cClock.stop();
+			
+			String postStudyColor = (String)m_CurState.getProperty("PostStudyColor");
+			if (postStudyColor != null) {
+				String pair = (String)m_CurState.getProperty("Pair" + element + "Xref");
+				System.out.println("Pair" + pair + "Color");
+				m_CurState.setProperty("Pair" + pair + "Color", postStudyColor);
+			}
+			
+			String content = m_CurState.translateString(m_sContent);
+			m_HtmlView.setContent(content, null);
+			String trial = (String) m_CurState.getProperty("CurrentTrial");
+			
+			if (trial == null)
+				trial = "";
+			else
+				trial = "_T" + trial;
+			
+			String name = "Study" + trial + "_" + element;
+			String value = Double.toString(((double)elapsed)/1000.0);
+			
+			String fbval = m_App.getFeedback(name);
+			if (fbval == null)
+				fbval = "";
+			else
+				fbval += ",";
+			fbval += Integer.toString(m_iStudyCount) + "," + value;
+			m_App.addFeedback(name, fbval);
+			
+			m_iStudyCount++;
+		}
+		
+		m_bInStudyState = false;
+		updateButtonText();
 	}
 	
 	public void setStudyState(String set) throws Exception {
@@ -196,10 +249,17 @@ public class CmeInstructions extends JPanel {
 		m_CurState.setProperty("CurrentPairB", m_CurState.getProperty("Pair" + set + "B"));
 		m_CurState.setProperty("CurrentPair", m_CurState.getProperty("Pair" + set));
 		
+		m_CurState.setProperty("CurrentPairAFile", m_CurState.getProperty("Pair" + set + "AFile"));
+		m_CurState.setProperty("CurrentPairBFile", m_CurState.getProperty("Pair" + set + "BFile"));
+		
+		m_CurState.setProperty("CurrentGroup", m_CurState.getProperty("Pair" + set + "Group"));	
+		m_CurState.setProperty("CurrentValue", m_CurState.getProperty("Pair" + set + "Value"));	
+		m_CurState.setProperty("CurrentOrder", m_CurState.getProperty("Pair" + set + "Order"));
+		
 		String translation = m_CurState.translateString(m_sStudyContent);
 		translation = m_App.translateString(translation);
 		
-		if (!m_cClock.start(0)) {
+		if (!m_cClock.start((String)m_CurState.getProperty("Pair" + set))) {
 			JOptionPane.showMessageDialog(this, "Please click '" + m_bString + 
 					"', your time has expired.", "Click " + m_bString + 
 					" to Proceed", JOptionPane.INFORMATION_MESSAGE);
@@ -231,7 +291,13 @@ public class CmeInstructions extends JPanel {
 	public void adjustLayout() {
 		adjustHtmlView();
 		adjustNextButton();
+		if (m_bRefresh != null)
+			adjustRefreshButton();
 		adjustClock();
+	}
+	
+	public void refreshView() throws Exception {
+		m_HtmlView.refreshView();
 	}
 
 	/**
@@ -249,6 +315,23 @@ public class CmeInstructions extends JPanel {
 
 		m_bNext.setSize(dimensions);
 		m_bNext.setLocation(location);
+	}
+	
+	/**
+	 * Adjust the Refresh Button for the current window size.
+	 */
+	private void adjustRefreshButton() {
+		Dimension newSz = this.getSize();
+
+		Dimension border = new Dimension(10, 10);
+		Dimension dimensions = new Dimension(128, 24);
+		Point location = new Point(0, newSz.height);
+
+		location.x += border.width;
+		location.y -= border.height + dimensions.height;
+
+		m_bRefresh.setSize(dimensions);
+		m_bRefresh.setLocation(location);
 	}
 
 	/**
@@ -327,12 +410,13 @@ public class CmeInstructions extends JPanel {
 				return false;
 			}
 		
-			if (isDoneSequential()) {
-				return false;
-			}
-		
 			m_HtmlView.setVisible(false);
 			m_App.displayPrompt("PostPromptText");
+			
+			if (isDoneSequential()) {
+				m_HtmlView.clearContent();
+				return false;
+			}
 		}
 
 		m_CurState.setSequentialStep(cstep + 1);
@@ -344,7 +428,7 @@ public class CmeInstructions extends JPanel {
 		
 		m_App.displayPrompt("PrePromptText");
 		
-		setSequentialProperties(iterator.getNext());
+		setSequentialProperties(cstep, iterator.getNext());
 
 		instructionFile = (String) m_CurState.getProperty("InstructionFile");
 		if (instructionFile != null) {
@@ -354,11 +438,13 @@ public class CmeInstructions extends JPanel {
 		}
 
 		m_CurState.resetSeqState();
+		
+		m_HtmlView.requestFirstFocus();
 
 		return true;
 	}
 
-	private void setSequentialProperties(int step) throws Exception {
+	private void setSequentialProperties(int step, int nextStep) throws Exception {
 		if (m_CurState == null) {
 			return;
 		}
@@ -378,10 +464,15 @@ public class CmeInstructions extends JPanel {
 			}
 		}
 			
-		m_CurState.setProperty("CurrentValueString", m_PairFactory.getPairValueString(step));	
-		m_CurState.setProperty("CurrentPairA", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
-		m_CurState.setProperty("CurrentPairB", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
-		m_CurState.setProperty("CurrentPair", Integer.toString(step));
+		m_CurState.setProperty("CurrentPairA", m_PairFactory.getFeedbackA(nextStep, (int) (scale * 1000)));
+		m_CurState.setProperty("CurrentPairB", m_PairFactory.getFeedbackB(nextStep, (int) (scale * 1000)));
+		m_CurState.setProperty("CurrentPairAFile", m_PairFactory.getFileA(nextStep));
+		m_CurState.setProperty("CurrentPairBFile", m_PairFactory.getFileB(nextStep));
+		m_CurState.setProperty("CurrentPair", Integer.toString(nextStep));
+		
+		m_CurState.setProperty("CurrentGroup", m_PairFactory.getPairGroup(nextStep));	
+		m_CurState.setProperty("CurrentValue", m_PairFactory.getPairValue(nextStep));	
+		m_CurState.setProperty("CurrentOrder", Integer.toString(step));
 	}
 
 	/**
@@ -424,6 +515,8 @@ public class CmeInstructions extends JPanel {
 			scale = 1.0;
 			ex.printStackTrace();
 		}
+		
+		String preStudyColor = (String) m_CurState.getProperty("PreStudyColor");
 
 		for (int x = 0; x < count; x++) {
 			int step = iter.getNext();
@@ -431,25 +524,19 @@ public class CmeInstructions extends JPanel {
 
 			m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
 			m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
+			m_CurState.setProperty("Pair" + vx + "AFile", m_PairFactory.getFileA(step));
+			m_CurState.setProperty("Pair" + vx + "BFile", m_PairFactory.getFileB(step));
 			m_CurState.setProperty("Pair" + vx, Integer.toString(step));
+			
+			m_CurState.setProperty("Pair" + vx + "Group", m_PairFactory.getPairGroup(step));	
+			m_CurState.setProperty("Pair" + vx + "Order", Integer.toString(x));	
+			m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
+			m_CurState.setProperty("Pair" + step + "Xref", vx);
+			
+			if (m_CurState.canStudy() && preStudyColor != null) {
+				m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);
+			}
 		}
-	}
-
-	/**
-	 * @param filePath
-	 *            the name of the file to open.
-	 */
-	private static String readFile(String filePath) throws java.io.IOException {
-		StringBuilder fileData = new StringBuilder();
-		BufferedReader reader = new BufferedReader(new FileReader(filePath));
-		String line = new String();
-
-		while ((line = reader.readLine()) != null) {
-			fileData.append(line);
-		}
-
-		reader.close();
-		return fileData.toString();
 	}
 
 	/**
@@ -460,15 +547,18 @@ public class CmeInstructions extends JPanel {
 	 * @throws IOException
 	 */
 	private void showProcessedInstructions(String fileName) throws Exception {
-		m_sContent = readFile(fileName);
+		m_sContent = CmeApp.readFile(fileName);
 
 		this.adjustLayout();
-
-		m_sContent = m_CurState.translateString(m_sContent);
+		
+		String content;
+		
+		/*Application properties are global and shouldn't change...*/
 		m_sContent = m_App.translateString(m_sContent);
+		content = m_CurState.translateString(m_sContent);
 		
 		m_App.dmsg(10, "Setting Contents");
-		m_HtmlView.setContent(m_sContent, m_SubmitListener);
+		m_HtmlView.setContent(content, m_SubmitListener);
 	}
 	
 	private void updateClock() {
@@ -489,12 +579,16 @@ public class CmeInstructions extends JPanel {
 		}
 		
 		int timeLimit = m_CurState.getIntProperty("Limit");
+		int timeRes = m_CurState.getIntProperty("Resolution");
 		if (timeLimit <= 0) {
 			System.out.println("Failed to properly retrieve limit.");
 			System.exit(1);
 		}
+		if (timeRes < 0)
+			timeRes = 1;
 		
 		m_cClock.setTimeLimit(timeLimit);
+		m_cClock.setResolution(timeRes);
 		m_cClock.reset();
 	}
 
@@ -502,11 +596,16 @@ public class CmeInstructions extends JPanel {
 		if (m_bNext == null || m_CurState == null)
 			return;
 		
+		if (m_bRefresh != null)
+			m_bRefresh.setVisible(true);
+		
 		if (m_bInStudyState) {
 			m_bNext.setText("Close");
 			m_bNext.setVisible(true);
-		} else if (m_CurState.getEventResponseCount(CmeState.EVENT_CLICK_PRIMARY) == 0) {
+			} else if (m_CurState.getEventResponseCount(CmeState.EVENT_CLICK_PRIMARY) == 0) {
 			m_bNext.setVisible(false);
+			if (m_bRefresh != null)
+				m_bRefresh.setVisible(false);
 		} else {
 			String bString = (String)m_CurState.getProperty("PrimaryButtonText");
 			if (bString != null) {
@@ -520,9 +619,11 @@ public class CmeInstructions extends JPanel {
 	}
 	
 	private void updateStudyContent() throws IOException {
+		m_iStudyCount = 0;
 		Object pbStudyFile = m_CurState.getProperty("StudyFile");
+		
 		if (pbStudyFile != null) {
-			m_sStudyContent = readFile(pbStudyFile.toString());
+			m_sStudyContent = CmeApp.readFile(pbStudyFile.toString());
 			System.out.println("Study File: " + pbStudyFile.toString());
 		} else {
 			System.out.println("No Study File Set!");
@@ -532,7 +633,7 @@ public class CmeInstructions extends JPanel {
 	 * Blank the instruction screen.
 	 */
 	public void blankInstructions() {
-		m_HtmlView.clearContent();
+		m_HtmlView.setVisible(false);
 	}
 
 	/**
@@ -636,6 +737,8 @@ public class CmeInstructions extends JPanel {
 		}
 		
 		this.setVisible(true);
+		
+		m_HtmlView.requestFirstFocus();
 	}
 
 	public boolean testAndSaveFeedback() {

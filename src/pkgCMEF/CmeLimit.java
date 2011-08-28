@@ -10,11 +10,12 @@ package pkgCMEF;
  */
 public interface CmeLimit {
 	
-	public boolean start(int item);
+	public boolean start(String item);
 	public boolean reset();
-	public boolean stop(int item);
+	public int stop();
 	public boolean isComplete();
 	public boolean willComplete(int item);
+	public String  getElement();
 	public boolean setEventResponse(CmeEventResponse response);
 	
 }

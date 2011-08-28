@@ -53,6 +53,8 @@ public class CmeHtmlView extends JEditorPane {
 	/** Event response for enter in text field or default submit button click */
 	private ActionListener m_SubmitListener = null;
 	
+	private ActionListener m_CurrentLinkListener = null;
+	
 	/** Marker for the first component for a set of components */
 	private Component m_FirstComponent = null;
 	
@@ -169,9 +171,16 @@ public class CmeHtmlView extends JEditorPane {
                 content = imageSrcFixup(path + "\\", content);
 		this.setText(content);
 
+		m_CurrentLinkListener = response;
 		generateComponentList(response);
 		this.setVisible(true);
 		return true;
+	}
+	
+	public void refreshView() throws Exception {
+		this.setText(this.getText());
+		generateComponentList(m_CurrentLinkListener);
+		this.setVisible(true);
 	}
 	
 	public void clearContent() {
@@ -241,9 +250,17 @@ public class CmeHtmlView extends JEditorPane {
 		System.out.print("Count: ");
 		System.out.println(m_Components.size());
 		
-		m_FirstComponent.requestFocus();
+		requestFirstFocus();
 		
 		clearSequenceInfo();
+	}
+	
+	/** 
+	 * Request to bring the first element into focus.
+	 */
+	public void requestFirstFocus() {
+		if (m_FirstComponent != null)
+			m_FirstComponent.requestFocus();
 	}
 
 	/**

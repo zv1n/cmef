@@ -183,7 +183,7 @@ public class CmeStudy extends JPanel implements MouseListener
 	
 	public void setContent(String content) throws Exception {
 		m_Content = content;
-		CmeApp.translateString(m_hProperties, content);
+		CmeApp.translateString(m_hProperties, content, false);
 		m_HtmlView.setContent(content, null);
 	}
 	

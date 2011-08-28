@@ -57,17 +57,20 @@ public class CmeApp extends JFrame implements AncestorListener
 	/** HashMap of all experiment properties */
 	private HashMap<String, Object> m_eProperties;
 	/** Variables used to hold the feedback values */
-	private HashMap<String, String> m_fbHashmap = new HashMap<String, String>();
+	private HashMap<String, Object> m_fbHashmap = new HashMap<String, Object>();
 	/** Variables used to hold the timer feedback values */
-	private HashMap<String, Integer> m_fbHashTimer = new HashMap<String, Integer>();
-	/** String list to control order of output file.. */
 	private Vector<String> m_fbVectString = new Vector<String>();
 	/** Debug Level */
 	private int m_iDebugLevel;
+	
+	private int m_iOptions;
 	/** Store time in milliseconds */
 	private long m_lStartTimeMillis;
 	/** Name of the experiment definition file */
-	private String m_sExpFileName = "Instructions/Experiment_test.txt";
+	private String m_sExpFileName;
+	
+	
+	public static final int CME_ENABLE_REFRESH = 0x1;
 	//------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
 	//------------------------------------------------------------------
@@ -146,7 +149,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	 * The CmeApp class constructor.
 	 * @param debugLevel - initial application debug level
 	 */
-	public CmeApp(int debugLevel) {
+	public CmeApp(int debugLevel, int opts, String experimentFile) {
 		m_iDebugLevel = debugLevel;
 
 		// Set up the property HashMap
@@ -158,13 +161,15 @@ public class CmeApp extends JFrame implements AncestorListener
 		// INit the iterator Factory for the app
 		m_IteratorFactory = new CmeIteratorFactory(this);
 		
+		m_sExpFileName = experimentFile;
+		m_iOptions = opts;
 
 		try {
 
 			initTickCounter();
 			initMainWindow();
-			initStateHandlers();
 			initExperiment();
+			initStateHandlers();
 			initParticipantData();
 
 			this.setTitle(m_eProperties.get("Title").toString());
@@ -187,6 +192,41 @@ public class CmeApp extends JFrame implements AncestorListener
 		this.setNextState();
 	}
 	
+	public CmeState getCurrentState() {
+		return m_CurState;
+	}
+	
+    /** 
+     * Set a PropertyValue
+     */
+    public void setProperty(String name, Object prop) {
+        m_eProperties.put(name, prop);
+    }
+
+    /** 
+     * Set event response 
+     */
+    public Object getProperty(String name) {
+        return m_eProperties.get(name);
+    }
+	
+    /** 
+     * Set event response 
+     */
+    public int getIntProperty(String name) {
+        String str = (String) m_eProperties.get(name);
+        int ret = 0;
+        if (str == null) {
+            return -1;
+        }
+        try {
+            ret = Integer.parseInt(str);
+        } catch (Exception x) {
+            return -1;
+        }
+        return ret;
+    }
+	
 	private void initTickCounter() {
 		final CmeApp cInst = this;
 		m_iTickCounter = 0;
@@ -200,7 +240,11 @@ public class CmeApp extends JFrame implements AncestorListener
 		m_tTimer.start();
 	}
 	
-
+	private void initDataSet(String datafile) {
+		// Create the image factory
+		m_PairFactory = new CmePairFactory(this, datafile);
+	}
+	
 	private void initMainWindow() {
 		this.setSize(1024, 768);
 		this.setLocation(50, 50);
@@ -223,27 +267,25 @@ public class CmeApp extends JFrame implements AncestorListener
 	 * (CmeExperiment,CmeInstructions,CmeStudy)
 	 */
 	private void initStateHandlers() throws Exception {
-		// Create the image factory
-		m_PairFactory = new CmePairFactory(this);
 
-		m_InstructionsHandler = new CmeInstructions(this);
+		m_InstructionsHandler = new CmeInstructions(this, m_iOptions);
 		m_InstructionsHandler.setPairFactory(m_PairFactory);
 		m_InstructionsHandler.addAncestorListener(this);
 		m_InstructionsHandler.setVisible(false);
 		m_MainPanel.add(m_InstructionsHandler);
-
+		
 		m_ExperimentHandler = new CmeExperiment(this);
 		m_ExperimentHandler.setPairFactory(m_PairFactory);
 		m_ExperimentHandler.addAncestorListener(this);
 		m_ExperimentHandler.setVisible(false);
 		m_MainPanel.add(m_ExperimentHandler);
-
+/*
 		m_StudyHandler = new CmeStudy(this);
 		m_StudyHandler.setPairFactory(m_PairFactory);
 		m_StudyHandler.addAncestorListener(this);
 		m_StudyHandler.setVisible(false);
 		m_MainPanel.add(m_StudyHandler);
-
+*/
 		dmsg(5, "State Handler Init Successful!");
 	}
 
@@ -388,7 +430,6 @@ public class CmeApp extends JFrame implements AncestorListener
 			return false;
 		}
 
-
 		if (lhs.equals("Click")) {
 			type = CmeState.EVENT_CLICK_PRIMARY;
 
@@ -453,11 +494,12 @@ public class CmeApp extends JFrame implements AncestorListener
 	 * */
 	public void initExperiment() throws Exception {
 		final CmeApp thisApp = this;
-
+		
 		// Open the experiment file
 		String line;
 		String event = null;
 		FileReader instFile;
+		int lc = 0;
 
 		String trialId = null;
 		BufferedReader bufReader = null;
@@ -476,6 +518,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		try {
 			bufReader = new BufferedReader(instFile);
 			while ((line = bufReader.readLine()) != null) {
+				lc++;
 				line = line.trim();
 				if (line.trim().charAt(0) == '#') {
 					continue;
@@ -487,6 +530,8 @@ public class CmeApp extends JFrame implements AncestorListener
 
 				// See if we need to create a new State
 				if (line.startsWith("<TRIAL")) {
+					if (m_PairFactory == null)
+						throw new Exception ("The data file for the experiment has not been specified!");
 					trialId = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 				} else if (line.startsWith("</TRIAL")) {
 					trialId = null;
@@ -505,6 +550,18 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.contains("STUDY_NAME")) {
 					String study = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					m_eProperties.put("StudyName", study);
+				} else if (line.startsWith("FORMAT_FILE=")) {
+					String formatfile = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					m_eProperties.put("FormatFile", formatfile);
+				} else if (line.startsWith("DATA_FILE=")) {
+					String formatfile = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					initDataSet(formatfile);
+				} else if (line.startsWith("ESET=")) {
+					String value = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					String[] props = value.split(":");
+					if (props.length != 2)
+						throw new Exception("ESET tag must contain the form 'property:value'");
+					m_eProperties.put(props[0], props[1]);
 				} else if (line.contains("CONDITIONS")) {
 					String valConditions = line.substring(line.indexOf("\"") + 1,
 							line.lastIndexOf("\"")).toUpperCase().replace(',', ':');
@@ -582,6 +639,13 @@ public class CmeApp extends JFrame implements AncestorListener
 						dmsg(0xFF, "Invalid State Interaction: " + line);
 						System.exit(0);
 					}
+				} else if (line.startsWith("SET=")) {
+					String value = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					String[] props = value.split(":");
+					if (props.length != 2)
+						throw new Exception("SET tag must contain the form 'property:value'");
+					thisState.setProperty(props[0], props[1]);
+
 				} else if (line.contains("STUDY_FILE")) {
 					String value = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("StudyFile", value);
@@ -639,7 +703,8 @@ public class CmeApp extends JFrame implements AncestorListener
 		} catch (IOException e) {
 			throw new Exception(e.getMessage() + ": " + m_sExpFileName);
 		} catch (Exception e) {
-			throw new Exception("Configuration File Parsing Failure: " + e.toString());
+			throw new Exception("Configuration File Parsing Failure (line:" + 
+					Integer.toString(lc) + "): " + e.toString());
 		}
 
 		dmsg(5, "Experiment Init Successful!");
@@ -704,10 +769,11 @@ public class CmeApp extends JFrame implements AncestorListener
 	}
 
 	public String translateString(String text) {
-		return CmeApp.translateString(m_eProperties, text);
+		String ret = CmeApp.translateString(m_eProperties, text, true);
+		return CmeApp.translateString(m_fbHashmap, ret, true);
 	}
-
-	public static String translateString(HashMap<String, Object> Properties, String text) {
+	
+	public static String translateString(HashMap<String, Object> Properties, String text, boolean ignoreUndefined) {
 		text = text.replace("$$", "$ ");
 
 		Vector<String> propList = getVariableList(text);
@@ -717,13 +783,32 @@ public class CmeApp extends JFrame implements AncestorListener
 		Iterator<String> viter = propList.iterator();
 		while (viter.hasNext()) {
 			String variable = (String) viter.next();
-			String value = (String) Properties.get(variable);
-
+			
+			Object value = Properties.get(variable);
 			if (value == null) {
+				if (!ignoreUndefined) {
+					text = text.replace("$" + variable, "");
+					text = text.replace("${" + variable + "}", "");
+				}
 				continue;
 			}
-
-			text = text.replace("$" + variable, value);
+			
+			if (value instanceof String) {
+				text = text.replace("$" + variable, (String)value);
+				text = text.replace("${" + variable + "}", (String)value);
+			} else {
+				Vector<String> strArray = (Vector<String>)value;
+				for (int x=0; x<strArray.size(); x++) {
+					String str = strArray.get(x);
+					text = text.replace("$" + variable + "[" + Integer.toString(x) + "]", strArray.get(x));
+					text = text.replace("${" + variable + "}[" + Integer.toString(x) + "]", strArray.get(x));
+				}
+				
+				text = text.replaceAll("\\$" + variable + "\\[[0-9]+\\]", "index out of bounds");
+				text = text.replaceAll("\\${" + variable + "}\\[[0-9]+\\]", "index out of bounds");
+				text = text.replace("$" + variable, strArray.toString());
+				text = text.replace("${" + variable + "}", strArray.toString());
+			}
 		}
 
 		text = text.replace("$ ", "$");
@@ -733,7 +818,7 @@ public class CmeApp extends JFrame implements AncestorListener
 
 	private static Vector<String> getVariableList(String text) {
 		Vector<String> propertyList = new Vector<String>();
-
+		text = text.replace("${", "$");
 		int lastOccurance = text.indexOf('$', 0);
 		int endCharacter = 0;
 
@@ -839,23 +924,43 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 
 	}
+			
+	/**
+	 * @param filePath
+	 *            the name of the file to open.
+	 */
+	public static String readFile(String filePath) throws java.io.IOException {
+		StringBuilder fileData = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+		String line = new String();
+
+		while ((line = reader.readLine()) != null) {
+			fileData.append(line);
+		}
+
+		reader.close();
+		return fileData.toString();
+	}
 	
 	public String translatePrompt(String text) {
 		if (text == null)
 			return null;
 		
-		String[] info = text.split(":");
 		int prompt = 0;
 		
-		if (info.length == 2) {
-			if (!conditionInSet(info[0]))
+		int col = text.indexOf(":");
+		if (col >= 0) {
+			if(!conditionInSet(text.substring(0, col))) {
+				System.out.println("Condition invalid!" + text.substring(0, col));
 				return null;
-			prompt++;
+			}
+			prompt = col+1;
 		}
-		
-		text = this.translateString(info[prompt]);
+	
+		text = text.substring(prompt, text.length());
 		text = m_CurState.translateString(text);
-		
+		text = this.translateString(text);
+
 		return text;
 	}
 	
@@ -925,8 +1030,8 @@ public class CmeApp extends JFrame implements AncestorListener
 
 		try {
 			m_InstructionsHandler.setState(m_CurState);
-			m_StudyHandler.setState(m_CurState);
-			m_ExperimentHandler.setState(m_CurState);
+			//m_StudyHandler.setState(m_CurState);
+			//m_ExperimentHandler.setState(m_CurState);
 			m_CurState.init();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "FATAL Error:\n" + ex.toString()
@@ -975,19 +1080,29 @@ public class CmeApp extends JFrame implements AncestorListener
 	/** Everything states in main */
 	public static void main(String[] args) {
 		int len = args.length;
-		int debug = 0;//0x100;
+		int options = 0;
+		int debug = 0x100;
+		String expFile = "Instructions/Experiment.txt";
 		for (int x = 0; x < len; x++) {
-			if (args[x] == "-d" || args[x] == "--debug") {
+			if (args[x].equals("-d") || args[x].equals("--debug")) {
 				try {
 					debug = Integer.parseInt(args[x + 1]);
 				} catch (Exception ex) {
 					debug = 0;
 				}
 			}
+			if (args[x].equals("-x") || args[x].equals("--experiment")) {
+				if (++x >= len)
+					break;
+				expFile = args[x];
+			}
+			if (args[x].equals("-r") || args[x].equals("--refresh")) {
+				options |= CmeApp.CME_ENABLE_REFRESH;
+			}
 		}
 
 		@SuppressWarnings("unused")
-		final CmeApp theApp = new CmeApp(debug);
+		final CmeApp theApp = new CmeApp(debug, options, expFile);
 		
 		Runnable localRunnable = new Runnable() {
 			public void run() {
@@ -1016,7 +1131,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			System.out.println("excluded? " + name);
 			return;
 		}
-		m_fbHashTimer.put(name, m_iTickCounter);
+		m_fbHashmap.put(name + "Time", Double.toString(((double)m_iTickCounter)/1000.0));
 		for (int x=0;x<m_fbVectString.size();x++) {
 			if (m_fbVectString.get(x).equals(name)) {
 				m_fbVectString.remove(x);
@@ -1024,12 +1139,47 @@ public class CmeApp extends JFrame implements AncestorListener
 			}
 		}
 		m_fbVectString.add(name);
-		dmsg(0xFF, "Current Feedback(nv): " + m_fbHashmap.toString());
+		/*dmsg(0xFF, "Current Feedback(nv): " + m_fbHashmap.toString());*/
 	}
 	
 	public String getFeedback(String name) {
 		dmsg(0xFF, "getting feedback: " + name);
-		return m_fbHashmap.get(name);
+		return (String)m_fbHashmap.get(name);
+	}
+	
+	private void printFormattedOutput() {
+		String formatFile = (String) m_eProperties.get("FormatFile");
+		if (formatFile == null)
+			return;
+		
+				// Open the experiment file
+		String line;
+		FileReader instFile;
+		BufferedReader bufReader = null;
+		
+		// Open the file
+		try {
+			instFile = new FileReader(formatFile);
+		} catch (FileNotFoundException e1) {
+			System.out.println("File Not Found!");
+			return;
+		}
+
+			
+		postStatusMessage("----------------Start Formatted Output-----------------\n\n", false);
+		// Read the text strings and add them to the text area
+		try {
+			bufReader = new BufferedReader(instFile);
+			while ((line = bufReader.readLine()) != null) {
+				line = CmeApp.translateString(m_fbHashmap, line, true);
+				line = CmeApp.translateString(m_eProperties, line, false);
+				postStatusMessage(line, false);
+			}
+		} catch (Exception ex) {
+			System.out.println("Failed to parse the OutputFormat file!");
+			return;
+		}	
+		postStatusMessage("-----------------End Formatted Output------------------\n\n", false);
 	}
 	
 	public void printResults() throws Exception {
@@ -1048,6 +1198,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				+ year + ".txt");
 
 		try {
+			
 			// Open the report file
 			m_fileReport = new File(fileName);
 			// Place it in the FileWriter
@@ -1058,12 +1209,14 @@ public class CmeApp extends JFrame implements AncestorListener
 			postStatusMessage("Subject Test Time: "
 					+ expCalendar.getTime().toString() + "\n", false);
 		
+			printFormattedOutput();
+			
 			String line = new String();
 			for (int x=0; x<m_fbVectString.size();x++) {
 				String name = m_fbVectString.get(x);
-				String value = m_fbHashmap.get(name);
-				Integer time = m_fbHashTimer.get(name);
-				line = name + "," + value + "," + Integer.toString(time);
+				String value = (String) m_fbHashmap.get(name);
+				String time = (String) m_fbHashmap.get(name + "Time");
+				line = time + "," + name + "," + value;
 				postStatusMessage(line, false);
 			}
 		} catch (Exception e) {

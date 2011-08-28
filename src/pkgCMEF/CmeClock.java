@@ -30,9 +30,18 @@ public class CmeClock extends JPanel implements CmeLimit
 	/** Current time to display in milliseconds */
 	private int m_iCurTime;
 	
+	private int m_iResolution;
+	
+	/** Millisecond point that the clock started */
+	private int m_iLast;
+	
+	/** Current item being viewed */
+	private String m_sItem;
+	
 	private Timer m_tTimer;
 	
 	private CmeEventResponse m_cResponse;
+	private ActionListener m_tPerformer;
 	
 	private boolean m_bCountDown;
 	private boolean m_bEnable;
@@ -54,7 +63,7 @@ public class CmeClock extends JPanel implements CmeLimit
 		m_bCountDown = false;
 		m_bEnable = false;
 		
-		ActionListener tPerformer = new ActionListener() {
+		m_tPerformer = new ActionListener() {
 			CmeClock clock = sclock;
 			public void actionPerformed(ActionEvent evt) {
 				if (clock != null && clock.isEnabled())
@@ -62,9 +71,11 @@ public class CmeClock extends JPanel implements CmeLimit
 			}
 		};
         
-		m_tTimer = new Timer(0x1, tPerformer);//, taskPerformer);
+		m_tTimer = new Timer(0x1, m_tPerformer);//, taskPerformer);
 		m_tTimer.setRepeats(true); // Run till done
 		m_tTimer.start();
+		
+		m_iLast = 0;
 	}
 
 	//---------------------------------------------------
@@ -85,6 +96,13 @@ public class CmeClock extends JPanel implements CmeLimit
 		setEnable(false);
 	}
 	
+	public void setResolution(int ms) {
+		m_iResolution = ms;
+		m_tTimer.stop();
+		m_tTimer.setDelay(m_iResolution);
+		m_tTimer.start();
+	}
+	
 	/* Enable Counter */
 	public void setEnable(boolean enable) {
 		m_bEnable = enable;
@@ -96,10 +114,10 @@ public class CmeClock extends JPanel implements CmeLimit
 	}
 	
 	public void tick() {
-		m_iCurTime++;
+		m_iCurTime += m_iResolution;
 		if (isComplete() && m_cResponse != null)
 			m_cResponse.Respond();
-		if (m_iCurTime%1000 == 0)
+		if (m_iCurTime%(1000/m_iResolution) == 0)
 			paint(this.getGraphics());
 	}
 	
@@ -141,18 +159,24 @@ public class CmeClock extends JPanel implements CmeLimit
 		g.drawString(String.valueOf(display % 10), (int)(0.55*this.getWidth()), 26);
 	}
 
-	public boolean start(int item) {
+	public String getElement() {
+		return m_sItem;
+	}
+	
+	public boolean start(String item) {
 		if (isComplete())
 			return false;
+		m_sItem = item;
+		m_iLast = m_iCurTime;
 		setEnable(true);
 		System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
 		return true;
 	}
 
-	public boolean stop(int item) {
+	public int stop() {
 		setEnable(false);
 		System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
-		return true;
+		return (m_iCurTime - m_iLast);
 	}
 	
 	public boolean setEventResponse(CmeEventResponse response) {
