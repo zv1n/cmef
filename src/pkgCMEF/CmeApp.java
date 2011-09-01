@@ -964,27 +964,60 @@ public class CmeApp extends JFrame implements AncestorListener
 		return text;
 	}
 	
-	/** Prompt the pre prompt */
 	public void displayPrompt(String post) {
+		displayPrompt(post, null);
+	}
+	
+	public int getJOptionFromString(String buttons) {
+		int opt = JOptionPane.NO_OPTION;
+		
+		if (buttons != null) {
+			Object buttonProp = m_CurState.getProperty(buttons);
+			if (buttons instanceof String) {
+				String buttonString = (String) buttonProp;
+				if (buttonString == null)
+					return JOptionPane.NO_OPTION;
+				
+				buttonString.toLowerCase();
+				
+				if (buttonString.equals("yesno"))
+					opt = JOptionPane.YES_NO_OPTION;
+				else if (buttonString.equals("okcancel"))
+					opt = JOptionPane.OK_CANCEL_OPTION;
+			}
+		}
+		
+		return opt;
+	}
+	
+	/** Prompt the pre prompt */
+	public boolean displayPrompt(String post, String buttons) {
 		if (m_CurState == null) {
 			System.out.println("No State!");
-			return;
+			return true;
 		}
+		
+		int opt = getJOptionFromString(buttons);
+		int ret = 0;
 		
 		Object property = m_CurState.getProperty(post);
 		if (property == null) {
 			System.out.println("No Property (" + post + ")!");
-			return;
+			return true;
 		}
 		
 		if (property instanceof String) {
 			String text = translatePrompt((String)property);
 			
 			if (text == null)
-				return;
+				return true;
 			
-			JOptionPane.showMessageDialog(this,
-				text, "Info", JOptionPane.NO_OPTION);
+			if (opt == JOptionPane.NO_OPTION) {
+				JOptionPane.showMessageDialog(this,
+				text, "Info", opt);
+			} else
+				ret = JOptionPane.showConfirmDialog(this,
+					text, "Info", opt);
 		} else {
 			Vector<String> texts = (Vector<String>) property;
 			for (int x=0; x < texts.size(); x++) {
@@ -992,10 +1025,23 @@ public class CmeApp extends JFrame implements AncestorListener
 				if (text == null)
 					continue;
 			
-				JOptionPane.showMessageDialog(this,
-					text, "Info", JOptionPane.NO_OPTION);	
+				if (opt == JOptionPane.NO_OPTION) {
+					JOptionPane.showMessageDialog(this,
+						text, "Info", opt);
+				} else
+					ret = JOptionPane.showConfirmDialog(this,
+						text, "Info", opt);
 			}
 		}
+		
+		switch(opt) {
+			case JOptionPane.OK_CANCEL_OPTION:
+				return (ret == JOptionPane.OK_OPTION);
+			case JOptionPane.YES_NO_OPTION:
+				return (ret == JOptionPane.YES_OPTION);
+		}
+		
+		return true;
 	}
 
 	//-----------------------------------------------
@@ -1012,7 +1058,8 @@ public class CmeApp extends JFrame implements AncestorListener
 			
 			JOptionPane.showMessageDialog(this, obj, "Input Error!", JOptionPane.ERROR_MESSAGE);
 			return;
-		}
+		} else if (!m_InstructionsHandler.allowNextState())
+			return;
 
 		displayPrompt("PostStatePromptText");
 		if (m_cIterator.hasNext()) {

@@ -83,7 +83,7 @@ public class CmeClock extends JPanel implements CmeLimit
 	//---------------------------------------------------
 	public int getTimeRemaining()
 	{
-		return m_iCurTime;
+		return m_iTimeLimit - m_iCurTime;
 	}
 	
 	public void setCountDown(boolean b) {

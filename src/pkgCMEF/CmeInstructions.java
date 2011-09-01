@@ -394,6 +394,17 @@ public class CmeInstructions extends JPanel {
 
 		return (istep >= ismax);
 	}
+	
+	public boolean allowNextState() {
+		System.out.println("Clock check...");
+		
+		if (m_cClock != null && !m_cClock.isComplete()) {
+			System.out.println("Display Limit Prompt");
+			return (m_App.displayPrompt("LimitPromptText", "LimitPromptButtons"));
+		}
+		
+		return true;
+	}
 
 	/**
 	 * Used to set the next rating environment.
@@ -557,8 +568,13 @@ public class CmeInstructions extends JPanel {
 		m_sContent = m_App.translateString(m_sContent);
 		content = m_CurState.translateString(m_sContent);
 		
+		ActionListener listener = m_SubmitListener;
+		
 		m_App.dmsg(10, "Setting Contents");
-		m_HtmlView.setContent(content, m_SubmitListener);
+		if (m_CurState.getProperty("DisableSubmitHook") != null)
+			listener = null;
+		
+		m_HtmlView.setContent(content, listener);
 	}
 	
 	private void updateClock() {
