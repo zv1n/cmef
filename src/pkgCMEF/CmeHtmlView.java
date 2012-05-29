@@ -50,6 +50,8 @@ public class CmeHtmlView extends JEditorPane {
 	 */
 	private CmeApp m_App;
 	
+	private boolean m_textOnly = false;
+	
 	/** Event response for enter in text field or default submit button click */
 	private ActionListener m_SubmitListener = null;
 	
@@ -70,8 +72,9 @@ public class CmeHtmlView extends JEditorPane {
 	/** Components used in the HtmlView */
 	private Vector<CmeResponse> m_Components;
 
-	public CmeHtmlView(CmeApp app, HyperlinkListener lResponse) {
+	public CmeHtmlView(CmeApp app, HyperlinkListener lResponse, boolean textOnly) {
 		m_App = app;
+		m_textOnly = textOnly;
 		final HyperlinkListener linkResponse = lResponse;
 
 		HyperlinkListener hListener = new HyperlinkListener() {
@@ -146,33 +149,45 @@ public class CmeHtmlView extends JEditorPane {
 	}
 
 	public boolean setContent(String content, ActionListener response) throws Exception {
-		//this.setContentType("text/plain");
-		this.setContentType("text/html");
+		if (m_textOnly)
+			this.setContentType("text/plain");
+		else
+			this.setContentType("text/html");
 
-		/* Make sure we have a clean document to use */
-		HTMLDocument doc = (HTMLDocument) getEditorKit().createDefaultDocument();
-		this.setDocument(doc);
+		Document basedoc = getEditorKit().createDefaultDocument();
 		
-		//System.out.println("Base Dir: " + ClassLoader.getSystemClassLoader().getSystemResource("./"));
+		if (basedoc instanceof HTMLDocument) {
+			HTMLDocument doc = (HTMLDocument) basedoc;
 		
-		String path = System.getProperty("user.dir");
-		if (path == null) {
-			System.out.println("Failed to open system path!");
-			path = ClassLoader.getSystemClassLoader().getSystemResource(".").getPath();
+				/* Make sure we have a clean document to use */
+			this.setDocument(doc);
+			
+			//System.out.println("Base Dir: " + ClassLoader.getSystemClassLoader().getSystemResource("./"));
+			
+			String path = System.getProperty("user.dir");
 			if (path == null) {
-				System.out.println("Failed to open alternate system path!");
-				System.exit(1);
-			}
-		} 
+				System.out.println("Failed to open system path!");
+				path = ClassLoader.getSystemClassLoader().getSystemResource(".").getPath();
+				if (path == null) {
+					System.out.println("Failed to open alternate system path!");
+					System.exit(1);
+				}
+			} 
                 
-		URL url = new URL("file:///" + path + "/");
-		doc.setBase(url);
-		doc.setAsynchronousLoadPriority(-1);
-                content = imageSrcFixup(path + "\\", content);
+			URL url = new URL("file:///" + path + "/");
+			doc.setBase(url);
+			doc.setAsynchronousLoadPriority(-1);
+			content = imageSrcFixup(path + "\\", content);
+			
+		}
+		
 		this.setText(content);
 
-		m_CurrentLinkListener = response;
-		generateComponentList(response);
+		if (basedoc instanceof HTMLDocument) {
+			m_CurrentLinkListener = response;
+			generateComponentList(response);
+		}
+		
 		this.setVisible(true);
 		return true;
 	}

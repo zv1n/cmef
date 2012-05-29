@@ -119,8 +119,10 @@ public class CmeInstructions extends JPanel {
 			}
 		};
 
+		boolean textOnly = ((ops & CmeApp.CME_TEXT_ONLY) == CmeApp.CME_TEXT_ONLY);
+		
 		/** Configure HTML View Pane */
-		m_HtmlView = new CmeHtmlView(m_App, hListener);
+		m_HtmlView = new CmeHtmlView(m_App, hListener, textOnly);
 		/*
 		 * m_HtmlView.setBorder(BorderFactory
 		 * .createBevelBorder(BevelBorder.LOWERED));
@@ -202,20 +204,26 @@ public class CmeInstructions extends JPanel {
 		}
 	}
 	
+	public void updateLinkColor(String element) {
+		
+		String postStudyColor = (String)m_CurState.getProperty("PostStudyColor");
+		
+		if (postStudyColor != null) {
+			System.out.println("Pair" + element + "Color");
+			m_CurState.setProperty("Pair" + element + "Color", postStudyColor);
+		}
+	}
+	
 	public void clearStudyState() throws Exception {
 		if (m_bInStudyState) {
 			String element = m_cClock.getElement();
 			int elapsed = m_cClock.stop();
 			
-			String postStudyColor = (String)m_CurState.getProperty("PostStudyColor");
-			if (postStudyColor != null) {
-				String pair = (String)m_CurState.getProperty("Pair" + element + "Xref");
-				System.out.println("Pair" + pair + "Color");
-				m_CurState.setProperty("Pair" + pair + "Color", postStudyColor);
-			}
+			updateLinkColor(element);
 			
 			String content = m_CurState.translateString(m_sContent);
 			m_HtmlView.setContent(content, null);
+			
 			String trial = (String) m_CurState.getProperty("CurrentTrial");
 			
 			if (trial == null)
@@ -223,16 +231,57 @@ public class CmeInstructions extends JPanel {
 			else
 				trial = "_T" + trial;
 			
-			String name = "Study" + trial + "_" + element;
-			String value = Double.toString(((double)elapsed)/1000.0);
+			String pair = (String) m_CurState.getProperty("Pair" + element);
 			
+			if (pair == null) throw new Exception("Failed to get the current pair!");
+			
+			double elapsedTime = ((double)elapsed)/1000.0;
+			String name = "Study" + trial + "_" + pair;
+			String value = Double.toString(elapsedTime);
 			String fbval = m_App.getFeedback(name);
+			
 			if (fbval == null)
 				fbval = "";
 			else
 				fbval += ",";
 			fbval += Integer.toString(m_iStudyCount) + "," + value;
 			m_App.addFeedback(name, fbval);
+			
+			/* Calculate culmulative totals for this element */
+			name = "StudyTotalCount" + trial + "_" + pair;
+			value = m_App.getFeedback(name);
+			
+			if (value == null) {
+				value ="1";
+			} else try {
+				int ival = Integer.valueOf(value);
+				ival++;
+				value = String.valueOf(ival);
+			} catch (Exception ex) {
+				System.err.println("Failed to properly set value!");
+				throw new Exception("Failed to properly set total count value!");
+			}
+			
+			System.out.println("Count: " + name + ":" + value);	
+			m_App.addFeedback(name, value);
+			
+			
+			name = "StudyTotalTime" + trial + "_" + pair;
+			value = m_App.getFeedback(name);
+			
+			if (value == null) {
+				value = Double.toString(elapsedTime);;
+			} else try {
+				double dval = Double.valueOf(value);
+				dval += elapsedTime;
+				value = String.valueOf(dval);
+			} catch (Exception ex) {
+				System.err.println("Failed to properly set value!");
+				throw new Exception("Failed to properly set total time value!");
+			}
+			
+			System.out.println("Timer: " + name + ":" + value);
+			m_App.addFeedback(name, value);
 			
 			m_iStudyCount++;
 		}
@@ -259,7 +308,7 @@ public class CmeInstructions extends JPanel {
 		String translation = m_CurState.translateString(m_sStudyContent);
 		translation = m_App.translateString(translation);
 		
-		if (!m_cClock.start((String)m_CurState.getProperty("Pair" + set))) {
+		if (!m_cClock.start(set)) {
 			JOptionPane.showMessageDialog(this, "Please click '" + m_bString + 
 					"', your time has expired.", "Click " + m_bString + 
 					" to Proceed", JOptionPane.INFORMATION_MESSAGE);
@@ -380,8 +429,8 @@ public class CmeInstructions extends JPanel {
 	 * 
 	 * @return true if the number of iterations has been met; false else.
 	 */
-	public boolean isDoneSequential() throws Exception {
-		if (m_CurState.getState() != CmeState.STATE_SEQUENTIAL) {
+	public boolean isDone() throws Exception {
+		if (m_CurState.getState() != CmeState.STATE_STUDY) {
 			throw new Exception("Tested if a rating was done when NOT in a rating step!");
 		}
 		
@@ -389,8 +438,8 @@ public class CmeInstructions extends JPanel {
 		if (iterator != null && iterator.isComplete())
 			return true;
 
-		int istep = m_CurState.getSequentialStep();
-		int ismax = m_CurState.getSequentialStepMax();
+		int istep = m_CurState.getStep();
+		int ismax = m_CurState.getStepMax();
 
 		return (istep >= ismax);
 	}
@@ -406,6 +455,18 @@ public class CmeInstructions extends JPanel {
 		return true;
 	}
 
+	private boolean isPerStepTimer() {
+		String pst = m_CurState.getStringProperty("ResetOnNext");
+		
+		if (pst == null)
+			return false;
+		
+		if (pst.equals("yes") || pst.equals("true"))
+			return true;
+		
+		return false;
+	}
+	
 	/**
 	 * Used to set the next rating environment.
 	 * 
@@ -414,8 +475,7 @@ public class CmeInstructions extends JPanel {
 	public boolean setNextInSequence() throws Exception {
 		String instructionFile = null;
  
-		int cstep = m_CurState.getSequentialStep();
-		
+		int cstep = m_CurState.getStep();
 		if (cstep > 0) {
 			if (!testAndSaveFeedback()) {
 				return false;
@@ -424,13 +484,15 @@ public class CmeInstructions extends JPanel {
 			m_HtmlView.setVisible(false);
 			m_App.displayPrompt("PostPromptText");
 			
-			if (isDoneSequential()) {
+			if (isDone()) {
 				m_HtmlView.clearContent();
 				return false;
 			}
 		}
+		
+		m_iStudyCount = 1;
 
-		m_CurState.setSequentialStep(cstep + 1);
+		m_CurState.setStep(cstep + 1);
 		CmeIterator iterator = m_CurState.getIterator();
 
 		if (iterator == null) {
@@ -439,7 +501,12 @@ public class CmeInstructions extends JPanel {
 		
 		m_App.displayPrompt("PrePromptText");
 		
-		setSequentialProperties(cstep, iterator.getNext());
+		setProperties();
+		
+		if (isPerStepTimer()) {
+			m_cClock.reset();
+			this.updateUI();
+		}
 
 		instructionFile = (String) m_CurState.getProperty("InstructionFile");
 		if (instructionFile != null) {
@@ -455,83 +522,71 @@ public class CmeInstructions extends JPanel {
 		return true;
 	}
 
-	private void setSequentialProperties(int step, int nextStep) throws Exception {
-		if (m_CurState == null) {
-			return;
-		}
-
-		double scale = 0;
-		String sscale = (String) m_CurState.getProperty("Scale");
-
-		if (sscale == null || sscale.equals("")) {
-			scale = 1.0;
-		} else {
-			try {
-				scale = Double.parseDouble(sscale);
-			} catch (Exception ex) {
-				System.out.println("Ooops, no scale defined! Using 100.0.");
-				scale = 1.0;
-				ex.printStackTrace();
-			}
-		}
-			
-		m_CurState.setProperty("CurrentPairA", m_PairFactory.getFeedbackA(nextStep, (int) (scale * 1000)));
-		m_CurState.setProperty("CurrentPairB", m_PairFactory.getFeedbackB(nextStep, (int) (scale * 1000)));
-		m_CurState.setProperty("CurrentPairAFile", m_PairFactory.getFileA(nextStep));
-		m_CurState.setProperty("CurrentPairBFile", m_PairFactory.getFileB(nextStep));
-		m_CurState.setProperty("CurrentPair", Integer.toString(nextStep));
-		
-		m_CurState.setProperty("CurrentGroup", m_PairFactory.getPairGroup(nextStep));	
-		m_CurState.setProperty("CurrentValue", m_PairFactory.getPairValue(nextStep));	
-		m_CurState.setProperty("CurrentOrder", Integer.toString(step));
-	}
 
 	/**
 	 * Configure the view for Simultaneous presentation.
 	 * @throws Exception 
 	 */
-	private void setSimultaneous() throws Exception {
+	private void configureStudyState() throws Exception {
 		Object instructionFile = m_CurState.getProperty("InstructionFile");
 		assert (instructionFile != null);
 
 		int icount = m_CurState.getIntProperty("Count");
+		int isets = m_CurState.getIntProperty("Sets");
 		System.out.print("Count: ");
 		System.out.println(icount);
-
-		setSimultaneousProperties(icount);
+		System.out.print("Sets: ");
+		System.out.println(isets);
+		
+		if (isets < 1)
+			isets = 1;
+		if (icount < 1)
+			icount = 1;
+		
+		m_CurState.setStep(1);
+		m_CurState.setStepMax(isets);
+		m_CurState.setPerStepCount(icount);
+		
+		setProperties();
 		showProcessedInstructions((String) instructionFile);
 	}
-
-	/**
-	 * Set the simultaneous display properties for this state.
-	 * 
-	 * @param count - number of items to be displayed at once.
-	 * @throws Exception 
-	 */
-	private void setSimultaneousProperties(int count) throws Exception {
-		if (m_CurState == null) {
-			return;
-		}
-
-		double scale = 0;
-		CmeIterator iter = m_CurState.getIterator();
+	
+	
+	private double getScale() {
+		double scale = 0.0;
 		String sscale = (String) m_CurState.getProperty("Scale");
-
-		assert (sscale != null);
-
+		
 		try {
 			scale = Double.parseDouble(sscale);
 		} catch (Exception ex) {
-			System.out.println("Ooops, no scale defined! Using 100.0.");
+			System.out.println("Ooops, no scale defined! Using 1.0.");
 			scale = 1.0;
 			ex.printStackTrace();
 		}
 		
-		String preStudyColor = (String) m_CurState.getProperty("PreStudyColor");
+		return scale;
+	}
+
+	/**
+	 * Set the display properties for a study state.
+	 * 
+	 * @throws Exception 
+	 */
+	private void setProperties() throws Exception {
+		if (m_CurState == null)
+			return;
+		
+		double scale = getScale();
+		CmeIterator iter = m_CurState.getIterator();		
+		final int count = m_CurState.getPerStepCount();
+		String preStudyColor = m_CurState.getStringProperty("PreStudyColor");
+		
+		int step;
+		String vx;
 
 		for (int x = 0; x < count; x++) {
-			int step = iter.getNext();
-			String vx = Integer.toString(x + 1);
+			step = iter.getNext();
+			vx = Integer.toString(x + 1);
 
 			m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
 			m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
@@ -539,15 +594,40 @@ public class CmeInstructions extends JPanel {
 			m_CurState.setProperty("Pair" + vx + "BFile", m_PairFactory.getFileB(step));
 			m_CurState.setProperty("Pair" + vx, Integer.toString(step));
 			
+			m_CurState.setProperty("Pair" + vx + "Sequence", Integer.toString(m_CurState.getStep()));
 			m_CurState.setProperty("Pair" + vx + "Group", m_PairFactory.getPairGroup(step));	
 			m_CurState.setProperty("Pair" + vx + "Order", Integer.toString(x));	
 			m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
-			m_CurState.setProperty("Pair" + step + "Xref", vx);
 			
 			if (m_CurState.canStudy() && preStudyColor != null) {
 				m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);
 			}
 		}
+				
+		System.out.println("Creating random pools");
+		boolean ret = 
+			m_App.handleCompoundProperty(m_CurState, "Pool", new CmeStringHandler() {
+				public boolean handleString(String handle) {	
+					CmeSelectiveIter sel = m_App.getPool(handle);
+					
+					if (sel == null)
+						return false;
+					
+					sel.reset();
+		
+					for (int x=0; x<count; x++) {
+						int next = sel.getNext();
+						handle = handle.trim();
+						String str = handle + String.valueOf(x+1);
+						System.out.println("Adding Property: " + str + " as '" + String.valueOf(next) + "'");
+						m_CurState.setProperty(str, String.valueOf(next));
+					}
+			
+					return true;
+				}
+			});
+		
+		System.out.println("Done creating random pools.");
 	}
 
 	/**
@@ -587,17 +667,22 @@ public class CmeInstructions extends JPanel {
 		if (displayClock == null) {
 			m_cClock.setVisible(false);
 		} else {
-			if (displayClock.equals("down")) 
-				m_cClock.setCountDown(true);
-			else
-				m_cClock.setCountDown(false);
-			m_cClock.setVisible(true);
+			if (displayClock.equals("no"))
+				m_cClock.setVisible(false);
+			else {
+				if (displayClock.equals("down")) 
+					m_cClock.setCountDown(true);
+				else
+					m_cClock.setCountDown(false);
+				m_cClock.setVisible(true);
+			}
 		}
 		
 		int timeLimit = m_CurState.getIntProperty("Limit");
 		int timeRes = m_CurState.getIntProperty("Resolution");
+		
 		if (timeLimit <= 0) {
-			System.out.println("Failed to properly retrieve limit.");
+			System.out.println("Failed to properly retrieve limit:" + String.valueOf(timeLimit));
 			System.exit(1);
 		}
 		if (timeRes < 0)
@@ -635,7 +720,7 @@ public class CmeInstructions extends JPanel {
 	}
 	
 	private void updateStudyContent() throws IOException {
-		m_iStudyCount = 0;
+		m_iStudyCount = 1;
 		Object pbStudyFile = m_CurState.getProperty("StudyFile");
 		
 		if (pbStudyFile != null) {
@@ -723,15 +808,8 @@ public class CmeInstructions extends JPanel {
 					showProcessedInstructions((String) instructionFile);
 					break;
 
-				case CmeState.STATE_SEQUENTIAL:
-					m_CurState.setSequentialStep(0);
-					m_CurState.setSequentialStepMax(m_PairFactory.getCount());
-					/** This calls showProcessedInstructions... */
-					setNextInSequence();
-					break;
-
-				case CmeState.STATE_SIMULTANEOUS:
-					setSimultaneous();
+				case CmeState.STATE_STUDY:
+					configureStudyState();
 					break;
 
 				case CmeState.STATE_PROMPT:

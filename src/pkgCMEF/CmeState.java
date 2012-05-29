@@ -22,9 +22,11 @@ public class CmeState {
     /** State for this state */
     private int m_iState;
     /** Current rating step (if this is a STATE_RATING state). */
-    private int m_iSequentialStep;
+    private int m_iStep;
     /** Maximum rating step (if this is a STATE_RATING state). */
-    private int m_iSequentialStepMax;
+    private int m_iStepMax;
+    /** Number of items to show simultaneously. */
+    private int m_iCount;
 	
     private CmeState m_sPrevState;
 	
@@ -40,9 +42,7 @@ public class CmeState {
     /** Display prompt mode */
     public static final int STATE_PROMPT = 3;
     /** Display rating mode */
-    public static final int STATE_SEQUENTIAL = 4;
-    /** Learning mode */
-    public static final int STATE_SIMULTANEOUS = 5;
+    public static final int STATE_STUDY = 4;
     // ---------- Events -------
     /** Event for Clicking a Continue Button */
     public static final int EVENT_CLICK_PRIMARY = 0;
@@ -220,6 +220,13 @@ public class CmeState {
     public Object getProperty(String name) {
         return m_sProperties.get(name);
     }
+	
+    /** 
+     * Set event response 
+     */
+    public String getStringProperty(String name) {
+        return (String) m_sProperties.get(name);
+    }
 
     /** 
      * Set event response 
@@ -253,24 +260,32 @@ public class CmeState {
     }
 
     /** Set the current rating step */
-    public void setSequentialStep(int step) {
-        m_iSequentialStep = step;
+    public void setStep(int step) {
+        m_iStep = step;
     }
 
     /** Set the current max rating step */
-    public void setSequentialStepMax(int step) {
-        m_iSequentialStepMax = step;
+    public void setStepMax(int step) {
+        m_iStepMax = step;
     }
 
     /** Get the current rating step */
-    public int getSequentialStep() {
-        return m_iSequentialStep;
+    public int getStep() {
+        return m_iStep;
     }
 
     /** Get the current max rating step */
-    public int getSequentialStepMax() {
-        return m_iSequentialStepMax;
+    public int getStepMax() {
+        return m_iStepMax;
     }
+	
+	public int getPerStepCount() {
+		return m_iCount;
+	}
+	
+	public void setPerStepCount(int count) {
+		m_iCount = count;
+	}
 
     /**
      * Validate a regular expression.
@@ -309,20 +324,23 @@ public class CmeState {
 			match = matchon;
 		
 		String trial = (String) getProperty("CurrentTrial");
-		String pair = (String) getProperty("CurrentPair");
-		String group = (String) getProperty("CurrentGroup");
+		String pair = (String) getProperty("Pair1");
+		String group = (String) getProperty("Pair1Group");
+		String name = (String) getProperty("RecallName");
+		if (name == null)
+			name = "Recall";
 			
 		if (in.startsWith(match)) {
 			System.out.println("Correct!");
 			setProperty("Match", "correct");
 			
-			m_App.addFeedback("RecallCorrect_T" + trial + "_" + pair, "true");
+			m_App.addFeedback(name + "Correct_T" + trial + "_" + pair, "true");
 				
 			int total = m_App.getIntProperty("TotalCorrect_T" + trial);
 			if (total == -1)
 				total = 0;
 			
-			int points = getIntProperty("CurrentValue");
+			int points = getIntProperty("Pair1Value");
 			if (points == -1)
 				points = 1;
 			
@@ -336,12 +354,12 @@ public class CmeState {
 			System.out.println("Incorrect!");
 			setProperty("Match", "incorrect");
 			
-			m_App.addFeedback("RecallCorrect_T" + trial + "_" + pair, "false");
+			m_App.addFeedback(name + "Correct_T" + trial + "_" + pair, "false");
 			
 			if (m_App.getProperty("TotalCorrect_T" + trial) == null)
 				m_App.setProperty("TotalCorrect_T" + trial, "0");
-			if (getProperty("CurrentValue") == null)
-				setProperty("CurrentValue", "1");
+			if (getProperty("Pair1Value") == null)
+				setProperty("Pair1Value", "1");
 			
 			if (group != null && m_App.getProperty(group + "Total_T" + trial) == null)
 				m_App.setProperty(group + "Total_T" + trial, "0");
