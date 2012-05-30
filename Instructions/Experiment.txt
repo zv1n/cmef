@@ -1,127 +1,164 @@
 <EXPERIMENT>
-	<STUDY_TIMES>
-		10
-	</STUDY_TIMES>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen1.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen2.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen3.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Rate Ease of Learning"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen4.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Pretrial"
-		FILE="../../Instructions/Screen5.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen6.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen7.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen8.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen9.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen10.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Learning Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Posttrial"
-		FILE="../../Instructions/Screen11.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen12.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Testing Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number Correct"
-		FILE="../../Instructions/Screen13.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Point Notification"
-		CONDITIONS="AF,BF,CF,DF"
-		FILE="../../Instructions/Points.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Pretrial"
-		FILE="../../Instructions/Screen14.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen15.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Learning Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number to Remember Posttrial"
-		FILE="../../Instructions/Screen16.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen17.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Testing Phase"
-	</STATE>
-	<STATE>
-		MODE="Estimate Number Correct"
-		FILE="../../Instructions/Screen18.txt"
-		END="On Click Continue And Record"
-	</STATE>
-	<STATE>
-		MODE="Show Point Notification"
-		CONDITIONS="AF,BF,CF,DF"
-		FILE="../../Instructions/Points.txt"
-		END="On Click Continue"
-	</STATE>
-	<STATE>
-		MODE="Show Instructions"
-		FILE="../../Instructions/Screen19.txt"
-		END="On Click Continue"
-	</STATE>
+	TITLE="LE Test Experiment"
+	STUDYNAME="PCLE"
+	CONDITIONS="A,B,C,D,AF,BF,CF,DF"
+	<TRIAL ID="1">
+		<STATE>
+			MODE="Simultaneous"
+			FILE="Instructions/Sim.htm"
+			ITERATOR="random:exclusive"
+			COUNT="36"
+			SELECT="18"
+			SCALE="0.6"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/feedback_test.htm"
+			CONSTRAINTS="range:0-18"
+			END="Click:Next"
+		</STATE>
+#		<STATE>
+#			MODE="Sequential"
+#			FILE="Instructions/Rating.htm"
+#			ITERATOR="random:exclusive"
+#			NEXT="Click:Next"
+#		</STATE>
+#		<STATE>
+#			MODE="Sequential"
+#			FILE="Instructions/Recall.htm"
+#			ITERATOR="random:exclusive"
+#			NEXT="Click:Next"
+#		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen3.htm"
+			END="Click:Begin"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			NAME="EOLRatingTrial1"
+			FILE="Instructions/feedback_test.htm"
+			TITLE="Rate Ease of Learning"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen4.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number to Remember Pretrial"
+			FILE="Instructions/Screen5.htm"
+#			INPUT="numeric"
+#			CONSTRAINTS="range:0-18"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen6.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen7.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen8.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen9.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen10.htm"
+			END="Click:Begin"
+		</STATE>
+		<STATE>
+			MODE="Sequential"
+			TITLE="Image Study - Trial 1"
+			ITERATOR="random:exclusive"
+			TIME="10"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number to Remember Posttrial"
+			FILE="Instructions/Screen11.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen12.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number Correct"
+			FILE="Instructions/Screen13.txt"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			CONDITIONS="AF,BF,CF,DF"
+			FILE="Instructions/Points.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Prompt"
+			CONDITIONS="AF,BF,CF,DF"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2">
+		<STATE>
+			MODe="Feedback"
+			TITLE="Estimate Number to Remember Pretrial"
+			FILE="Instructions/Screen14.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen15.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Simultaneous"
+			TITLE="Image Study - Trial 2"
+			TIME="10"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number to Remember Posttrial"
+			FILE="Instructions/Screen16.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen17.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Estimate Number Correct"
+			FILE="Instructions/Screen18.htm"
+			END="Click:Next And Record"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			TITLE="Show Point Notification"
+			CONDITIONS="AF,BF,CF,DF"
+			FILE="Instructions/Points.htm"
+			END="Click:Next"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/Screen19.htm"
+			END="Click:Next"
+		</STATE>
+	</TRIAL>
 </EXPERIMENT>

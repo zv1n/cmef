@@ -1,7 +1,0 @@
-
-Each Chinese word will appear, one at a time, for 3 seconds.  Then a screen will
-appear that asks you to provide an ease of learning judgment for that item using
-the 1-9 scale that appeared on the previous screen.  This process will continue
-until you have  provided an ease of learning judgment for each item.  If you have
-questions about this procedure, please notify the experimenter now.  Otherwise,
-please click "Continue" to begin providing your judgments.

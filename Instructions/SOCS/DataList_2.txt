@@ -1,0 +1,48 @@
+1,Moderate,Divison,,,Images/Spanish1.jpg
+1,Moderate,Ancient,,,Images/Spanish2.jpg
+1,Moderate,Beer,,,Images/Spanish3.jpg
+1,Moderate,Blood,,,Images/Spanish4.jpg
+1,Moderate,Blush,,,Images/Spanish5.jpg
+1,Moderate,Boast,,,Images/Spanish6.jpg
+1,Moderate,Brightness,,,Images/Spanish7.jpg
+1,Moderate,Burial,,,Images/Spanish9.jpg
+1,Moderate,Carpeting,,,Images/Spanish9.jpg
+1,Moderate,Caveman,,,Images/Spanish10.jpg
+1,Moderate,Cigarette,,,Images/Spanish11.jpg
+1,Moderate,Dishwater,,,Images/Spanish12.jpg
+1,Moderate,Doorlatch,,,Images/Spanish13.jpg
+1,Moderate,Dove,,,Images/Spanish14.jpg
+1,Moderate,Early,,,Images/Spanish15.jpg 
+1,Moderate,Earthquake,,,Images/Spanish16.jpg
+1,Moderate,Enrage,,,Images/Spanish17.jpg
+1,Moderate,Exploit,,,Images/Spanish18.jpg
+1,Moderate,Farmer,,,Images/Spanish19.jpg
+1,Moderate,Food,,,Images/Spanish20.jpg
+1,Moderate,Foundation,,,Images/Spanish21.jpg
+1,Moderate,Free Trade,,,Images/Spanish22.jpg
+1,Moderate,Furnish,,,Images/Spanish23.jpg
+1,Moderate,Husband,,,Images/Spanish24.jpg
+1,Moderate,Lately,,,Images/Spanish25.jpg
+1,Moderate,Motorboat,,,Images/Spanish26.jpg
+1,Moderate,Music Hall,,,Images/Spanish27.jpg
+1,Moderate,Pen,,,Images/Spanish28.jpg
+1,Moderate,Penholder,,,Images/Spanish29.jpg
+1,Moderate,Pregnancy,,,Images/Spanish30.jpg
+1,Moderate,Prophecy,,,Images/Spanish31.jpg
+1,Moderate,Radio Station,,,Images/Spanish32.jpg
+1,Moderate,Rage,,,Images/Spanish33.jpg
+1,Moderate,Rubber Tree,,,Images/Spanish34.jpg
+1,Moderate,Shipment,,,Images/Spanish35.jpg
+1,Moderate,Sleepwalking,,,Images/Spanish36.jpg
+1,Moderate,Spark,,,Images/Spanish37.jpg
+1,Moderate,Subhuman,,,Images/Spanish38.jpg
+1,Moderate,Temptation,,,Images/Spanish39.jpg
+1,Moderate,To Join,,,Images/Spanish40.jpg
+1,Moderate,To Lack,,,Images/Spanish41.jpg
+1,Moderate,To Tie,,,Images/Spanish42.jpg
+1,Moderate,To Wander,,,Images/Spanish43.jpg
+1,Moderate,Tragedy,,,Images/Spanish44.jpg
+1,Moderate,Turn,,,Images/Spanish45.jpg
+1,Moderate,Unsuccessful,,,Images/Spanish46.jpg
+1,Moderate,Weightlessness,,,Images/Spanish47.jpg
+1,Moderate,Wind,,,Images/Spanish48.jpg

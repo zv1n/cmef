@@ -1,8 +1,0 @@
-
-Now you will be asked to try to recall the vocabulary pairs.  In each screen we will
-present the Chinese word from each vocabulary pair and you will be asked to type the
-English equivalent.  After you have typed your response please press "Enter" to move
-on to the next word.  If you cannot recall the English equivalent you can simply hit
-any letter on the keyboard before clicking "Continue".  Please click "Continue" to
-begin the recall test.
-
