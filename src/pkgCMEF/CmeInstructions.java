@@ -800,7 +800,7 @@ public class CmeInstructions extends JPanel {
 		// Begin!
 		try {
 			switch (m_CurState.getState()) {
-				case CmeState.STATE_FEEDBACK:
+				case CmeState.STATE_INPUT:
 				case CmeState.STATE_INSTRUCTION:
 					instructionFile = m_CurState.getProperty("InstructionFile");
 					assert (instructionFile != null);

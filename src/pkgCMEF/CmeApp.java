@@ -325,17 +325,13 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 	}
 
-	private int setIterator(String iterator, String type, CmeState state) {
-		String validIterators = "RANDOM:SELECTIVE";
-		String validTypes = "NONEXCLUSIVE";
+	private int setIterator(String iterator, String[] type, CmeState state) {
+		String validIterators = "RANDOM:SELECTIVE:DIFFICULTY";
+		String validTypes = "NONEXCLUSIVE:REVERSE:DESCENDING:ASCENDING";
 		int itype = 0;
 		int iiter = 0;
 
 		if (!validIterators.contains(iterator)) {
-			return -1;
-		}
-
-		if (!validTypes.contains(type)) {
 			return -1;
 		}
 
@@ -346,13 +342,31 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (iterator.equals("SELECTIVE")) {
 			iiter = CmeIterator.SELECTIVE;
 		}
-		
-		if (type.equals("EXCLUSIVE")) {
-			itype = CmeIterator.EXCLUSIVE;
+
+		if (iterator.equals("DIFFICULTY")) {
+			iiter = CmeIterator.DIFFICULTY;
 		}
 
-		if (type.equals("NONEXCLUSIVE")) {
-			itype = CmeIterator.NONEXCLUSIVE;
+		for (int x=0; x<type.length; x++) {
+			if (!validTypes.contains(type[x])) {
+				return -1;
+			}
+
+			if	(type[x].equals("EXCLUSIVE")) {
+				itype |= CmeIterator.EXCLUSIVE;
+			}
+
+			if (type[x].equals("NONEXCLUSIVE")) {
+				itype |= CmeIterator.NONEXCLUSIVE;
+			}
+
+			if (type[x].equals("REVERSE") || type.equals("ASCENDING")) {
+				itype |= CmeIterator.REVERSE;
+			}
+		
+			if (type[x].equals("DESCENDING")) {
+				itype &= ~CmeIterator.REVERSE;
+			}
 		}
 
 		dmsg(0xFF, "Set Iterator: " + Integer.toString(this.m_PairFactory.getCount()));
@@ -673,7 +687,9 @@ public class CmeApp extends JFrame implements AncestorListener
 					if (line.toUpperCase().contains("INSTRUCTION")) {
 						thisState.setState(CmeState.STATE_INSTRUCTION);
 					} else if (line.toUpperCase().contains("FEEDBACK")) {
-						thisState.setState(CmeState.STATE_FEEDBACK);
+						thisState.setState(CmeState.STATE_INPUT);
+					} else if (line.toUpperCase().contains("INPUT")) {
+						thisState.setState(CmeState.STATE_INPUT);
 					} else if (line.toUpperCase().contains("PROMPT")) {
 						thisState.setState(CmeState.STATE_PROMPT);
 					} else if (line.toUpperCase().contains("STUDY")) {
@@ -686,25 +702,26 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.contains("</STATE>")) {
 					// Add this one to the vector
 					m_vStates.add(thisState);
-				} else if (line.contains("NAME")) {
+				} else if (line.contains("NAME=")) {
 					String name = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("FeedbackName", name);
-				} else if (line.contains("SELECT")) {
+				} else if (line.contains("SELECT=")) {
 					String selectCount = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("Select", selectCount);
 				} else if (line.contains("ITEMS=") || line.contains("COUNT=")) {
 					String count = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("Count", count);
-				} else if (line.contains("SETS=")) {
+				} else if (line.contains("SETS=") || line.contains("GRIDS=")) {
 					String set = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("Sets", set);
-				} else if (line.contains("ITERATOR")) {
+				} else if (line.contains("ITERATOR=")) {
 					String iterator = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":")).toUpperCase();
 					String type = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\"")).toUpperCase();
-					if (setIterator(iterator, type, thisState) != 0) {
+					String[] types = type.split("|");
+					if (setIterator(iterator, types, thisState) != 0) {
 						dmsg(0xFF, "Invalid iterator: " + iterator + "|" + type);
 					}
-				} else if (line.contains("CONSTRAINTS")) {
+				} else if (line.contains("CONSTRAINTS=")) {
 					String ctype = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":"));
 					String constraint = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\""));
 					if (validConstraints.contains(ctype.toUpperCase())) {

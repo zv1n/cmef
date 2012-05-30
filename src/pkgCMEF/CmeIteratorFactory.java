@@ -14,6 +14,8 @@ public class CmeIteratorFactory {
 			return new CmeRandomIter();
 		} else if ((flags&CmeIterator.SELECTIVE) == CmeIterator.SELECTIVE) {
 			return new CmeSelectiveIter(m_App);
+		} else if ((flags&CmeIterator.DIFFICULTY) == CmeIterator.DIFFICULTY) {
+			return new CmeDifficultyIter(m_App);
 		}
 		return null;
 	}

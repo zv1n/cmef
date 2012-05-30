@@ -38,7 +38,7 @@ public class CmeState {
     /** Display instructions mode */
     public static final int STATE_INSTRUCTION = 1;
     /** Display feedback mode */
-    public static final int STATE_FEEDBACK = 2;
+    public static final int STATE_INPUT = 2;
     /** Display prompt mode */
     public static final int STATE_PROMPT = 3;
     /** Display rating mode */

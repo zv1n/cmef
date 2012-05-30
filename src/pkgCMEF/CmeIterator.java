@@ -10,9 +10,15 @@ public interface CmeIterator {
 	
 	/** Non exclusive (possible repetition) */
 	public static final int NONEXCLUSIVE = 0x4;
-	
+
 	/** Selective */
 	public static final int SELECTIVE = 0x8;
+
+	/** Selective */
+	public static final int DIFFICULTY = 0x10;
+	
+	/** Selective */
+	public static final int REVERSE = 0x10;
 	
 	/**
 	 * Initialize the iterator with upper and lower bounds.
