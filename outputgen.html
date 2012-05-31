@@ -1,0 +1,247 @@
+<html>
+<style type="text/css">
+
+div { padding: 10px; }
+
+div div, div div div { border-radius: 10px; }
+#header, #footer { height: 50px; width: 100%; }
+.output { height: 200px; width: 100%; }
+
+body
+{
+	background-color: #FFFFFF;
+	width: 80%;
+	margin: auto;
+}
+.instructions
+{
+	background-color: #CCCCCC;
+}
+.top
+{
+	background-color: #CCCCCC;
+}
+.example
+{
+	background-color: #EEEEEE;
+}
+.buttons
+{
+	background-color: #CCCCCC;
+}
+.header
+{
+	background-color: #BBBBBB;
+}
+.all
+{
+	background-color: #BBBBBB;
+}
+.group
+{
+	background-color: #AAAAAA;
+}
+.footer
+{
+	background-color: #BBBBBB;
+}
+</style>
+<script type="text/javascript">
+var entries = 1;
+
+function error() 
+{
+	alert("Oops! There was a bit of an error... Please email zv1n dot fire at gmail dot com.");
+}
+
+function generateOutput()
+{
+	var elem = document.getElementById("output_div");
+	elem.style.display = "block";
+	
+	var output = document.getElementById("output");
+	if (output == null) {
+		error(); 
+		return 1;
+	}
+	
+	elem = document.getElementById("header");
+	if (elem != null)
+		output.value = elem.value + "\n";
+	
+	for (var x=1; x<=entries; x++) {
+		elem = document.getElementById("count" + x);
+		if (elem == null)
+			continue;
+		var count = elem.value;
+		
+		elem = document.getElementById("comment" + x);
+		if (elem == null) {
+			error();
+			return 1;
+		}
+		var comment = elem.value;
+		
+		elem = document.getElementById("entry" + x);
+		if (elem == null) {
+			error();
+			return 1;
+		}
+		var entry = elem.value;
+		
+		output.value += "\n";
+		output.value += comment;
+		output.value += "\n";
+		
+		for (var y=1; y<=count; y++) {
+			output.value += entry.replace(/#/g, y.toString()) + "\n";
+		}
+	}
+	
+	elem = document.getElementById("footer");
+	if (elem != null)
+		output.value += "\n" + elem.value + "\n";
+}
+
+function closeOutput() 
+{
+	var elem = document.getElementById("output_div");
+	elem.style.display = "none";
+}
+
+function copyOutput() 
+{
+	var area = document.getElementById("output");
+	area.select();
+	if(window.clipboardData) { 
+		var r=clipboardData.setData('Text', area.value); 
+		return 1; 
+	} else return 0
+}
+
+function getStartString(ent)
+{
+	return "<!-- start-entry" + ent + " -->";
+}
+
+function getEndString(ent)
+{
+	return "<!-- end-entry" + ent + " -->";
+}
+
+function genOutputLine()
+{
+	var ret =  getStartString(entries);
+		ret += "<b>Entry " + entries + "</b>"
+		ret += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+		ret += "[<input type=\"button\" value=\"Add\" onclick=\"javascript:addOutputLine()\"/> |";
+		ret += "<input type=\"button\" value=\"Remove\" onclick=\"javascript:removeOutputLine(" + entries + ")\"/>]";
+		ret += " <br>";
+		ret += "<div class=\"group\">";
+		ret += "Count: <br>";
+		ret += "<input type=\"text\" size=\"4\" name=\"count";
+		ret += entries;
+		ret += "\" id=\"count";
+		ret += entries;
+		ret += "\" value=\"1\" /> <br> Comment: <br> ";
+		ret += "<input type=\"text\" size=\"128\" name=\"comment";
+		ret += entries;
+		ret += "\" id=\"comment" + entries + "\" value=\"Comment\" /> ";
+		ret += "<br> Lines: <br> ";
+		ret += "<input type=\"text\" size=\"128\" name=\"entry";
+		ret += entries;
+		ret += "\" id=\"entry" + entries + "\" value=\"\" /> ";
+		ret += "</div>";
+		ret += getEndString(entries);
+	return ret;
+}
+
+function addOutputLine()
+{
+	var alldiv = document.getElementById("all");
+	entries++;
+	alldiv.innerHTML += genOutputLine();
+}
+
+function removeOutputLine(line)
+{
+	var alldiv = document.getElementById("all");
+	var rex = new RegExp(getStartString(line) + ".*" + getEndString(line));
+	var divhtml = alldiv.innerHTML.toString();
+	alldiv.innerHTML = divhtml.replace(rex, "");
+}
+
+</script>
+<body>
+<div class="instructions">
+This script can be used to generate the text output format files for the CMEF experiment application.<br>
+
+Instructions:<br>
+<ul>
+<li>Click add to add as many repeatable sections needed.<br>
+<font color="red">Adding new fields will delete their contents!
+<br>I hope to have this fixed in the near future, but until then,
+<br>ADD first, Fill out After!</font></li>
+<li>Type comments you wish to go above each section.</li>
+<li>Type the line of variables which are to be repeated per line.<br>
+example count: 
+<div class="example"><small>5</small></div><br>
+example line: <br>
+<div class="example"><small>$PairOutput#, $PairSelection#, $PairGroup#</small></div><br>
+example output: <br>
+<div class="example"><small>$PairOutput1, $PairSelection1, $PairGroup1<br>
+$PairOutput2, $PairSelection2, $PairGroup2<br>
+$PairOutput3, $PairSelection3, $PairGroup3<br>
+$PairOutput4, $PairSelection4, $PairGroup4<br>
+$PairOutput5, $PairSelection5, $PairGroup5</small></div></li>
+<li>Enter the number of repeats per set of lines.</li>
+<li>Select Generate</li>
+</ul>
+</div>
+
+<div class="top">
+<div class="all" style="display: none;" id="output_div">
+<textarea class="output" name="output" readonly="yes" id="output"> </textarea> 
+<br>
+<input type="button" onclick="javascript:copyOutput()" value="Copy to Clipboard"/>
+<input type="button" onclick="javascript:closeOutput()" value="Close"/>
+</div>
+
+<div class="buttons">
+<input type="button" name="generate" value="Generate" onclick="javascript:generateOutput();" id="generate"/> 
+<input type="button" name="add" value="Add" onclick="javascript:addOutputLine()"id="add"/> 
+</div>
+<br>
+
+<div class="group">
+Header: <br>
+<textarea name="header" id="header">Header</textarea> 
+</div>
+<br> 
+<div id="all" class="all">
+<b>Entry 1</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[<input type="button" name="add" value="Add" onclick="javascript:addOutputLine();" id="add"/>] 
+<br>
+<div class="group">
+Count: <br>
+<input type="text" size="4" name="count1" id="count1" value="1" /> <br>
+Comments: <br>
+<input type="text" size="128" name="comment1" id="comment1" value="Comment" /> <br>
+Lines: <br>
+<input type="text" size="128" name="entry1" id="entry1" value="" /> <br>
+</div>
+
+</div>
+
+<br> 
+
+<div class="group">
+Footer: <br>
+<textarea name="footer" id="footer"/>Footer</textarea>
+</div>
+
+</div>
+<br>
+
+</body>
+</html>
