@@ -181,7 +181,7 @@ public class CmePairFactory
 		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor (" + Integer.toString(idx) + ")</h1>";
 		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackB(scale);
 	}
-	
+
 	//-------------------------------------------------------------
 	/** Get the string value of the image at index idx */
 	//-------------------------------------------------------------
@@ -189,6 +189,15 @@ public class CmePairFactory
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
 		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairValue());
+	}
+	
+	//-------------------------------------------------------------
+	/** Get the integer value of idx */
+	//-------------------------------------------------------------
+	public int getIntValue(int idx)
+	{
+		if((idx < 0) || (idx >= m_vPairs.size())) return -1;
+		return ((CmePair)m_vPairs.elementAt(idx)).getPairValue();
 	}
 	
 	//-------------------------------------------------------------

@@ -2,7 +2,7 @@
 	TITLE="SOCS - Experiment"
 	STUDY_NAME="SOCS"
 	CONDITIONS="A,B,C,D,E,F"
-	DATA_FILE="Instructions/SOCS/DataList_2.txt"
+	DATA_FILE="Instructions/SOCS/DataList.txt"
 	FORMAT_FILE="Instructions/SOCS/OutputFormat.txt"
 	RANDOM_POOL="ImageValues:1:3:5"
 	<TRIAL ID="1">

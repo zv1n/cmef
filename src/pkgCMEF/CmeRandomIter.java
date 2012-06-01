@@ -18,7 +18,7 @@ public class CmeRandomIter implements CmeIterator {
 	private Vector<Integer> m_iExclusiveList;
 	
 	/** Random number gen */
-	private Random m_RandomGen;
+	private static Random m_RandomGen;
 	
 	public boolean initIterator(int type, int lowerBound, int upperBound) {
 		
@@ -41,7 +41,7 @@ public class CmeRandomIter implements CmeIterator {
 		m_iType = -1;
 	}
 	
-	private int getRange(int low, int high) {
+	public static int getRange(int low, int high) {
 		int range = high-low+1;
 
 		if (m_RandomGen == null)

@@ -127,6 +127,10 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 	}
 
+	public CmePairFactory getPairFactory() {
+		return m_PairFactory;
+	}
+	
 	public String getImagePrefix() {
 		return "";
 	}
@@ -180,11 +184,23 @@ public class CmeApp extends JFrame implements AncestorListener
 			dmsg(5, "Title Set");
 
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "FATAL Error:\n" + ex.toString()
-					+ "\n" + ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
+		
 
+		CmeDifficultyIter iter = new CmeDifficultyIter(this);
+		if (!iter.initIterator(0, 0, 0))
+			System.out.println("Failed to init!");
+		else 
+		for (int x=0; x<this.getPairFactory().getCount(); x++) {
+			int idx = iter.getNext();
+			System.out.println(String.valueOf(idx));
+			System.out.println(this.getPairFactory().getPairValue(idx));
+			if (iter.isComplete())
+				System.out.println("Complete!");
+		}
+		System.exit(0);
 		// Show the window
 		this.setVisible(true);
 		this.adjustAllLayouts();
@@ -548,7 +564,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				// See if we need to create a new State
 				if (line.startsWith("<TRIAL")) {
 					if (m_PairFactory == null)
-						throw new Exception ("The data file for the experiment has not been specified!");
+						throw new Exception ("The data file has not been specified!\n" + m_sExpFileName);
 					trialId = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 				} else if (line.startsWith("</TRIAL")) {
 					trialId = null;
@@ -741,7 +757,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			throw new Exception(e.getMessage() + ": " + m_sExpFileName);
 		} catch (Exception e) {
 			throw new Exception("Configuration File Parsing Failure (line:" + 
-					Integer.toString(lc) + "): " + e.toString());
+					Integer.toString(lc) + "): \n" + e.getMessage());
 		}
 
 		dmsg(5, "Experiment Init Successful!");
