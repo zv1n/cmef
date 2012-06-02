@@ -1,4 +1,4 @@
-<EXPERIMENT>
+<EXPERIMENT CMEF_VERSION="2.0">
 	TITLE="CHIPS 6 - Experiment"
 	STUDY_NAME="CHIPS6"
 	CONDITIONS="A,B,C,D,E,F,G,H"
@@ -125,7 +125,8 @@
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
 				SET="PostStudyColor:#FF0000"
-			ITERATOR="difficulty:ascending"
+#			ITERATOR="difficulty:ascending"
+			ITERATOR="random:exclusive"
 			STUDY_LIMIT="time:30s"
 				SET="Resolution:100"
 			STUDY_FILE="Instructions/CHIPS6/17f_Study_2.htm"

@@ -68,6 +68,8 @@ public class CmeApp extends JFrame implements AncestorListener
 	/** Name of the experiment definition file */
 	private String m_sExpFileName;
 	
+	/** The minimum version this API is compatible with. */
+	final static private double m_MinVer = 2.0;
 	
 	public static final int CME_ENABLE_REFRESH = 0x1;
 	public static final int CME_TEXT_ONLY = 0x2;
@@ -541,7 +543,19 @@ public class CmeApp extends JFrame implements AncestorListener
 				}
 
 				// See if we need to create a new State
-				if (line.startsWith("<TRIAL")) {
+				// See if we need to create a new State
+				if (line.startsWith("<EXPERIMENT")) {
+					if (line.contains("CMEF_VERSION")) {
+						String version = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+						double vdub = Double.valueOf(version);
+						if (vdub < m_MinVer)
+							throw new Exception ("The selected Experiment file cannot be used with this version of CMEF.\n" + 
+												 "Please selected an experiment file which is written for CMEF v" + m_MinVer + 
+												 " or greater.");
+					} else
+						throw new Exception ("The Selected Experiment file does not contain version \n information " +
+											"and cannot be used with this version of CMEF.");
+				} else if (line.startsWith("<TRIAL")) {
 					if (m_PairFactory == null)
 						throw new Exception ("The data file has not been specified!\n" + m_sExpFileName);
 					trialId = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
