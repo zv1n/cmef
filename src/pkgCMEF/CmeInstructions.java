@@ -430,7 +430,7 @@ public class CmeInstructions extends JPanel {
 	 * @return true if the number of iterations has been met; false else.
 	 */
 	public boolean isDone() throws Exception {
-		if (m_CurState.getState() != CmeState.STATE_STUDY) {
+		if (m_CurState.getState() != CmeState.STATE_MULTIPLE) {
 			throw new Exception("Tested if a rating was done when NOT in a rating step!");
 		}
 		
@@ -587,6 +587,7 @@ public class CmeInstructions extends JPanel {
 		for (int x = 0; x < count; x++) {
 			step = iter.getNext();
 			vx = Integer.toString(x + 1);
+			System.out.println("Generating Pairs for " + vx);
 
 			m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
 			m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
@@ -652,6 +653,8 @@ public class CmeInstructions extends JPanel {
 		
 		m_App.dmsg(10, "Setting Contents");
 		if (m_CurState.getProperty("DisableSubmitHook") != null)
+			listener = null;
+		if (m_CurState.getProperty("DisableSubmitOnEnter") != null)
 			listener = null;
 		
 		m_HtmlView.setContent(content, listener);
@@ -808,7 +811,7 @@ public class CmeInstructions extends JPanel {
 					showProcessedInstructions((String) instructionFile);
 					break;
 
-				case CmeState.STATE_STUDY:
+				case CmeState.STATE_MULTIPLE:
 					configureStudyState();
 					break;
 

@@ -42,7 +42,7 @@ public class CmeState {
     /** Display prompt mode */
     public static final int STATE_PROMPT = 3;
     /** Display rating mode */
-    public static final int STATE_STUDY = 4;
+    public static final int STATE_MULTIPLE = 4;
     // ---------- Events -------
     /** Event for Clicking a Continue Button */
     public static final int EVENT_CLICK_PRIMARY = 0;

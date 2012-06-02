@@ -173,7 +173,6 @@ public class CmeApp extends JFrame implements AncestorListener
 		m_iOptions = opts;
 
 		try {
-
 			initTickCounter();
 			initMainWindow();
 			initExperiment();
@@ -182,25 +181,11 @@ public class CmeApp extends JFrame implements AncestorListener
 
 			this.setTitle(m_eProperties.get("Title").toString());
 			dmsg(5, "Title Set");
-
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 		
-
-		CmeDifficultyIter iter = new CmeDifficultyIter(this);
-		if (!iter.initIterator(0, 0, 0))
-			System.out.println("Failed to init!");
-		else 
-		for (int x=0; x<this.getPairFactory().getCount(); x++) {
-			int idx = iter.getNext();
-			System.out.println(String.valueOf(idx));
-			System.out.println(this.getPairFactory().getPairValue(idx));
-			if (iter.isComplete())
-				System.out.println("Complete!");
-		}
-		System.exit(0);
 		// Show the window
 		this.setVisible(true);
 		this.adjustAllLayouts();
@@ -367,20 +352,15 @@ public class CmeApp extends JFrame implements AncestorListener
 			if (!validTypes.contains(type[x])) {
 				return -1;
 			}
+			System.out.println("Iterator Type: " + type[x]);
 
 			if	(type[x].equals("EXCLUSIVE")) {
 				itype |= CmeIterator.EXCLUSIVE;
-			}
-
-			if (type[x].equals("NONEXCLUSIVE")) {
+			} else if (type[x].equals("NONEXCLUSIVE")) {
 				itype |= CmeIterator.NONEXCLUSIVE;
-			}
-
-			if (type[x].equals("REVERSE") || type.equals("ASCENDING")) {
+			} else if (type[x].equals("REVERSE") || type.equals("ASCENDING")) {
 				itype |= CmeIterator.REVERSE;
-			}
-		
-			if (type[x].equals("DESCENDING")) {
+			} else if (type[x].equals("DESCENDING")) {
 				itype &= ~CmeIterator.REVERSE;
 			}
 		}
@@ -553,9 +533,8 @@ public class CmeApp extends JFrame implements AncestorListener
 			while ((line = bufReader.readLine()) != null) {
 				lc++;
 				line = line.trim();
-				if (line.trim().charAt(0) == '#') {
+				if (line.length() == 0 || line.trim().charAt(0) == '#')
 					continue;
-				}
 
 				if (line.contains("=") && line.charAt(0) != '<') {
 					event = line.substring(0, line.indexOf('='));
@@ -595,6 +574,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.startsWith("FORMAT_FILE=")) {
 					String formatfile = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					m_eProperties.put("FormatFile", formatfile);
+					validateFile(formatfile);
 				} else if (line.startsWith("DATA_FILE=")) {
 					String formatfile = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					initDataSet(formatfile);
@@ -620,6 +600,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.startsWith("FILE=")) {
 					String insFile = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("InstructionFile", insFile);
+					validateFile(insFile);
 				} else if (line.startsWith("PROMPT=")) {
 					String promptText = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("PromptText", promptText);
@@ -645,29 +626,25 @@ public class CmeApp extends JFrame implements AncestorListener
 					String rhs = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\""));
 
 					if (!setEvent(event, lhs, rhs, thisState)) {
-						dmsg(0xFF, "Invalid State Interaction: " + line);
-						System.exit(0);
+						throw new Exception("Invalid State Interaction: " + line);
 					}
 				} else if (line.contains("BLANK")) {
 					String lhs = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":"));
 					String rhs = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\""));
 
 					if (!setEvent(event, lhs, rhs, thisState)) {
-						dmsg(0xFF, "Invalid State Interaction: " + line);
-						System.exit(0);
+						throw new Exception("Invalid State Interaction: " + line);
 					}
 				} else if (line.startsWith("NEXT=")) {
-					if (thisState.getState() != CmeState.STATE_STUDY) {
-						dmsg(0xFF, "Invalid State Interaction: " + line);
-						System.exit(0);
+					if (thisState.getState() != CmeState.STATE_MULTIPLE) {
+						throw new Exception("Invalid State Interaction: " + line);
 					}
 
 					String lhs = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":"));
 					String rhs = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\""));
 
 					if (!setEvent(event, lhs, rhs, thisState)) {
-						dmsg(0xFF, "Invalid State Interaction: " + line);
-						System.exit(0);
+						throw new Exception("Invalid State Interaction: " + line);
 					}
 				} else if (line.contains("STUDY_LIMIT")) {
 					String lhs = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":"));
@@ -679,8 +656,7 @@ public class CmeApp extends JFrame implements AncestorListener
 					System.out.println(rhs);
 					
 					if (!setStudyLimit(event, lhs, rhs, thisState)) {
-						dmsg(0xFF, "Invalid State Interaction: " + line);
-						System.exit(0);
+						throw new Exception("Invalid State Interaction: " + line);
 					}
 				} else if (line.startsWith("POOL=")) {
 					String value = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
@@ -699,7 +675,6 @@ public class CmeApp extends JFrame implements AncestorListener
 					String value = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")).toLowerCase();
 					thisState.setProperty("DisplayTimer", value);
 				} else if (line.contains("MODE")) {
-
 					if (line.toUpperCase().contains("INSTRUCTION")) {
 						thisState.setState(CmeState.STATE_INSTRUCTION);
 					} else if (line.toUpperCase().contains("FEEDBACK")) {
@@ -709,10 +684,14 @@ public class CmeApp extends JFrame implements AncestorListener
 					} else if (line.toUpperCase().contains("PROMPT")) {
 						thisState.setState(CmeState.STATE_PROMPT);
 					} else if (line.toUpperCase().contains("STUDY")) {
-						thisState.setState(CmeState.STATE_STUDY);
+						thisState.setState(CmeState.STATE_MULTIPLE);
+					} else if (line.toUpperCase().contains("RECALL")) {
+						thisState.setState(CmeState.STATE_MULTIPLE);
+					} else if (line.toUpperCase().contains("MULTIPLE")) {
+						thisState.setState(CmeState.STATE_MULTIPLE);
 					} else {
-						dmsg(0xFF, "Invalid State Mode: " + line);
-						System.exit(0);
+						String value = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\"")).toLowerCase();
+						throw new Exception("Invalid State Mode: '" + value + "'");
 					}
 
 				} else if (line.contains("</STATE>")) {
@@ -733,9 +712,15 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.contains("ITERATOR=")) {
 					String iterator = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":")).toUpperCase();
 					String type = line.substring(line.indexOf(":") + 1, line.lastIndexOf("\"")).toUpperCase();
-					String[] types = type.split("|");
+					
+					String[] types = null;
+					if (type.contains("|"))
+						types = type.split("|");
+					else
+						types = new String[] {type};
+					
 					if (setIterator(iterator, types, thisState) != 0) {
-						dmsg(0xFF, "Invalid iterator: " + iterator + "|" + type);
+						throw new Exception("Invalid Iterate: " + iterator + "|" + type);
 					}
 				} else if (line.contains("CONSTRAINTS=")) {
 					String ctype = line.substring(line.indexOf("\"") + 1, line.lastIndexOf(":"));
@@ -744,8 +729,7 @@ public class CmeApp extends JFrame implements AncestorListener
 						thisState.setProperty("ConstraintType", ctype);
 						thisState.setProperty("Constraint", constraint);
 					} else {
-						dmsg(0xFF, "Invalid constraint type: " + ctype);
-						System.exit(0);
+						throw new Exception("Invalid constraint type: " + ctype);
 					}
 				} else if (line.contains("</EXPERIMENT>")) {
 					break;
@@ -761,6 +745,15 @@ public class CmeApp extends JFrame implements AncestorListener
 		}
 
 		dmsg(5, "Experiment Init Successful!");
+	}
+
+	private void validateFile(String insFile) throws Exception {
+		// Open the file
+		try {
+			FileReader file = new FileReader(insFile);
+		} catch (FileNotFoundException e1) {
+			throw new Exception("Unable to open: " + insFile);
+		}
 	}
 
 	private void adjustAllLayouts() {
@@ -1227,7 +1220,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				options |= CmeApp.CME_TEXT_ONLY;
 			}
 		}
-
+		
 		@SuppressWarnings("unused")
 		final CmeApp theApp = new CmeApp(debug, options, expFile);
 		

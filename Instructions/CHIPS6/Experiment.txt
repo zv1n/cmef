@@ -68,9 +68,11 @@
 		</STATE>
 #Rate Characters (Seq)
 		<STATE>
-			MODE="Sequential"
+			MODE="Multiple"
 			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"
 			ITERATOR="random:exclusive"
+			ITEMS="1"
+			SETS="36"
 			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
@@ -85,7 +87,7 @@
 #		</STATE>
 #Num Correct (Fb)
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/CHIPS6/5f_Prestudy_Prediction_1.htm"
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
@@ -118,25 +120,26 @@
 		</STATE>
 #Study (Seq)
 		<STATE>
-			MODE="Simultaneous"
+			MODE="Multiple"
 			FILE="Instructions/CHIPS6/17f_StudyGrid_2.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
 				SET="PostStudyColor:#FF0000"
-			ITERATOR="selective:exclusive"
+			ITERATOR="difficulty:ascending"
 			STUDY_LIMIT="time:30s"
 				SET="Resolution:100"
 			STUDY_FILE="Instructions/CHIPS6/17f_Study_2.htm"
 			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
 			SET="LimitPromptButtons:yesno"
 			DISPLAY_TIMER="down"
-			COUNT="6"
+			ITEMS="9"
+			SETS="4"
 			SCALE="0.7"
 			END="Click:Continue"
 		</STATE>
 #Num Correct (Fb)
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/CHIPS6/8f_Poststudy_Prediction_1.htm"
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
@@ -153,10 +156,12 @@
 		</STATE>
 #JOL (Seq)
 		<STATE>
-			MODE="Sequential"
+			MODE="Multiple"
 			FILE="Instructions/CHIPS6/10f_JOL_Collection_1.htm"
 			CONSTRAINTS="range:0-100"
 			ITERATOR="random:exclusive"
+			ITEMS="1"
+			SETS="36"
 			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
@@ -166,18 +171,20 @@
 		</STATE>
 #recall test (Seq) (match 3)
 		<STATE>
-			MODE="Sequential"
+			MODE="Multiple"
 			FILE="Instructions/CHIPS6/11f_Recall_1.htm"
 			ITERATOR="random:exclusive"
-			CONSTRAINTS="match:$CurrentPairA"
-			SET="DisableSubmitHook:yes"
+			CONSTRAINTS="match:$Pair1A"
+			SET="DisableSubmitOnEnter:yes"
+			ITEMS="1"
+			SETS="36"
 			POST_PROMPT="C,G:You got the previous answer $Match"
-			POST_PROMPT="B,F:You got the previous answer $Match, which was a $CurrentGroup character."
+			POST_PROMPT="B,F:You got the previous answer $Match, which was a $Pair1Group character."
 			NEXT="Click:Continue"
 		</STATE>
 #Num Correct (Fb)
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/CHIPS6/12f_Postdiction_1.htm"
 			CONSTRAINTS="range:0-36"
 			POST_STATE_PROMPT="E,G:You got $TotalCorrect_T1 correct this trial."
@@ -186,14 +193,14 @@
 		</STATE>
 	</TRIAL>
 	<TRIAL ID="2">
-#
+
 #Num Correct (Fb)
 #Selection (Sim)
 #Seq Learn (Seq)
 #Num Correct (Fb)
 #Likelyhood of correct (Seq)
 #recall test (Seq) (match 3)
-#
+
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/13_Instructions_2.htm"
@@ -201,7 +208,7 @@
 		</STATE>
 #Num Correct (Fb)
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/CHIPS6/14f_Prestudy_Prediction_2.htm"
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
@@ -224,7 +231,7 @@
 		</STATE>
 #Study (Seq)
 		<STATE>
-			MODE="Simultaneous"
+			MODE="Multiple"
 			FILE="Instructions/CHIPS6/17f_StudyGrid_2.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
@@ -236,13 +243,14 @@
 			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
 			SET="LimitPromptButtons:yesno"
 			DISPLAY_TIMER="down"
-			COUNT="6"
+			ITEMS="9"
+			SETS="4"
 			SCALE="0.7"
 			END="Click:Continue"
 		</STATE>
 #Num Correct (Fb)
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/CHIPS6/18f_Poststudy_Prediction_2.htm"
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
@@ -254,11 +262,12 @@
 		</STATE>
 #JOL (Seq)
 		<STATE>
-			MODE="Sequential"
+			MODE="Multiple"
 			FILE="Instructions/CHIPS6/19f_JOL_Collection_2.htm"
 			CONSTRAINTS="range:0-100"
 			ITERATOR="random:exclusive"
-			Count="36"
+			ITEMS="1"
+			SETS="36"
 			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
@@ -268,18 +277,20 @@
 		</STATE>
 #recall test (Seq) (match 3)
 		<STATE>
-			MODE="Sequential"
+			MODE="Multiple"
 			FILE="Instructions/CHIPS6/20f_Recall_2.htm"
 			ITERATOR="random:exclusive"
-			CONSTRAINTS="match:$CurrentPairA"
-			SET="DisableSubmitHook:yes"
+			CONSTRAINTS="match:$Pair1A"
+			SET="DisableSubmitOnEnter:yes"
+			ITEMS="1"
+			SETS="36"
 			POST_PROMPT="C,G:You got the previous answer $Match"
-			POST_PROMPT="B,F:You got the previous answer $Match, which was a $CurrentGroup character."
+			POST_PROMPT="B,F:You got the previous answer $Match, which was a $Pair1Group character."
 			NEXT="Click:Continue"
 		</STATE>
 #Num Correct (Fb)
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/CHIPS6/21f_Postdiction_2.htm"
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
