@@ -1,25 +1,25 @@
-<EXPERIMENT CMEF_VERSION="2.0">
-	TITLE="CHIPS 6 - Experiment"
-	STUDY_NAME="CHIPS6"
-	CONDITIONS="A,B,C,D,E,F,G,H"
-	DATA_FILE="Instructions/CHIPS6/DataList.txt"
-	FORMAT_FILE="Instructions/CHIPS6/OutputFormat.txt"
-	ESET="SimpleTotalT1:0"
-	ESET="SimpleTotalT2:0"
-	ESET="ModerateTotalT1:0"
-	ESET="ModerateTotalT2:0"
-	ESET="ComplexTotalT1:0"
-	ESET="ComplexTotalT2:0"
-	ESET="TotalCorrectT1:0"
-	ESET="TotalCorrectT2:0"
-	<TRIAL ID="1">
+<EXPERIMENT CMEF_VERSION="2.0">	
+TITLE="CHIPS 6 - Experiment"	
+STUDY_NAME="CHIPS6"	
+CONDITIONS="A,B,C,D,E,F,G,H"	
+DATA_FILE="Instructions/CHIPS6/DataList.txt"	
+FORMAT_FILE="Instructions/CHIPS6/OutputFormat.txt"	
+ESET="SimpleTotalT1:0"	
+ESET="SimpleTotalT2:0"	
+ESET="ModerateTotalT1:0"	
+ESET="ModerateTotalT2:0"	
+ESET="ComplexTotalT1:0"	
+ESET="ComplexTotalT2:0"	
+ESET="TotalCorrectT1:0"	
+ESET="TotalCorrectT2:0"	
+<TRIAL ID="1">
 # --- Conditions ---
 #A. None - EMH
 #B. None - HME 
 #C. Item - EMH (You got this simple item correct/incorrect)
-#D. Item - HME (You got this simple item correct/incorrect)Global without Difficulty Info (You got 16 items correct)
+#D. Item - HME (You got this simple item correct/incorrect)
 #E. Global- EMH(You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
-#F. Global- HME (You got 16 items correct; 7 simple, 5 moderate, and 4 complex)Combo without Difficulty Info (You got this item correct/incorrect; You got 16 items correct)
+#F. Global- HME (You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
 #G. Combo - EMH (You got this simple item correct; You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
 #H. Combo - HME (You got this simple item correct; You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
 #
@@ -51,32 +51,7 @@
 #
 # ------ Trial 1 ------
 #
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/1_EOLs_1.htm"
-			END="Click:Continue"
-		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/2_EOLs_2.htm"
-			END="Click:Continue"
-		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/3_EOLs_3.htm"
-			END="Click:Begin"
-		</STATE>
-#Rate Characters (Seq)
-		<STATE>
-			MODE="Multiple"
-			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"
-			ITERATOR="random:exclusive"
-			ITEMS="1"
-			SETS="36"
-			NEXT="Click:Continue"
-		</STATE>
-		<STATE>
-			MODE="Instruction"
+		<STATE>			MODE="Instruction"			FILE="Instructions/CHIPS6/1_EOLs_1.htm"			END="Click:Continue"		</STATE>		<STATE>			MODE="Instruction"			FILE="Instructions/CHIPS6/2_EOLs_2.htm"			END="Click:Continue"		</STATE>		<STATE>			MODE="Instruction"			FILE="Instructions/CHIPS6/3_EOLs_3.htm"			END="Click:Begin"		</STATE>#Rate Characters (Seq)#		<STATE>#			MODE="Multiple"#			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"#			ITERATOR="random:exclusive"#			ITEMS="1"#			SETS="36"#			NEXT="Click:Continue"#		</STATE>		<STATE>			MODE="Instruction"
 			FILE="Instructions/CHIPS6/4_Instructions_1.htm"
 			END="Click:Continue"
 		</STATE>
@@ -102,107 +77,122 @@
 			FILE="Instructions/CHIPS6/7_Sequential_Instructions.htm"
 			END="Click:Continue"
 		</STATE>
-#Selection
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/15_Study_18_1.htm"
-			END="Click:Continue"
-		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/16_Study_18_2.htm"
-			END="Click:Continue"9
-		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/17_Study_18_3.htm"
-			END="Click:Continue"
-		</STATE>
-#Study (Seq)
-		<STATE>
-			MODE="Multiple"
-			FILE="Instructions/CHIPS6/17f_StudyGrid_2.htm"
-				SET="BorderWidth:1.5"
-				SET="PreStudyColor:#00FF00"
-				SET="PostStudyColor:#FF0000"
-#			ITERATOR="difficulty:ascending"
-			ITERATOR="random:exclusive"
-			STUDY_LIMIT="time:30s"
-				SET="Resolution:100"
-			STUDY_FILE="Instructions/CHIPS6/17f_Study_2.htm"
-			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
-			SET="LimitPromptButtons:yesno"
-			DISPLAY_TIMER="down"
-			ITEMS="9"
+#Selection		
+#		<STATE>	
+#			MODE="Instruction"	
+#			FILE="Instructions/CHIPS6/7_Study_18_1.htm"	
+#			END="Click:Continue"		
+#		</STATE>		
+#		<STATE>			
+#			MODE="Instruction"
+#			FILE="Instructions/CHIPS6/7_Study_18_2.htm"		
+#			END="Click:Continue"
+#		</STATE>		
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/CHIPS6/7_Study_18_3.htm"	
+#			END="Click:Continue"		
+#		</STATE>
+#Study (Seq)		
+		<STATE>			
+			MODE="Multiple"	
+			FILE="Instructions/CHIPS6/7f_StudyGrid_EMH.htm"		
+			SET="BorderWidth:1.5"				
+			SET="PreStudyColor:#00FF00"	
+			SET="PostStudyColor:#FF0000"			
+			ITERATOR="difficulty:ascending"			
+			STUDY_LIMIT="time:30s"		
+			SET="Resolution:100"			
+			STUDY_FILE="Instructions/CHIPS6/7f_Study_1.htm"	
+			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"			
+			SET="LimitPromptButtons:yesno"			
+			DISPLAY_TIMER="down"			
+			ITEMS="9"			
 			SETS="4"
-			SCALE="0.7"
+			SCALE="0.7"	
 			END="Click:Continue"
+			CONDITIONS="A,C,E,G"		
 		</STATE>
-#Num Correct (Fb)
-		<STATE>
-			MODE="Input"
+		<STATE>			
+			MODE="Multiple"			
+			FILE="Instructions/CHIPS6/7f_StudyGrid_HME.htm"	
+			SET="BorderWidth:1.5"				
+			SET="PreStudyColor:#00FF00"
+			SET="PostStudyColor:#FF0000"
+			ITERATOR="difficulty:descending"
+			STUDY_LIMIT="time:30s"	
+			SET="Resolution:100"	
+			STUDY_FILE="Instructions/CHIPS6/7f_Study_1.htm"
+			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
+			SET="LimitPromptButtons:yesno"	
+			DISPLAY_TIMER="down"	
+			ITEMS="9"			
+			SETS="4"			
+			SCALE="0.7"			
+			END="Click:Continue"
+			CONDITIONS="B,D,F,H"		
+		</STATE>
+#Num Correct (Fb)		
+		<STATE>			
+			MODE="Input"			
 			FILE="Instructions/CHIPS6/8f_Poststudy_Prediction_1.htm"
-			CONSTRAINTS="range:0-36"
-			END="Click:Continue"
+			CONSTRAINTS="range:0-36"			
+			END="Click:Continue"		
+		</STATE>		
+		<STATE>	
+			MODE="Instruction"	
+			FILE="Instructions/CHIPS6/9_Poststudy_Prediction_TX_1.htm"	
+			END="Click:Continue"		
+		</STATE>		
+		<STATE>			
+			MODE="Instruction"	
+			FILE="Instructions/CHIPS6/10_JOLs_1.htm"	
+			END="Click:Continue"		
 		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/9_Poststudy_Prediction_TX_1.htm"
-			END="Click:Continue"
-		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/10_JOLs_1.htm"
-			END="Click:Continue"
-		</STATE>
-#JOL (Seq)
-		<STATE>
-			MODE="Multiple"
+#JOL (Seq)		
+		<STATE>			
+			MODE="Multiple"	
 			FILE="Instructions/CHIPS6/10f_JOL_Collection_1.htm"
-			CONSTRAINTS="range:0-100"
+			CONSTRAINTS="range:0-100"	
 			ITERATOR="random:exclusive"
-			ITEMS="1"
+			ITEMS="1"			
 			SETS="36"
-			NEXT="Click:Continue"
+			NEXT="Click:Continue"		
+		</STATE>		
+		<STATE>			
+			MODE="Instruction"	
+			FILE="Instructions/CHIPS6/11_Recall_Test_1.htm"	
+			END="Click:Continue"		
 		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/11_Recall_Test_1.htm"
-			END="Click:Continue"
-		</STATE>
-#recall test (Seq) (match 3)
-		<STATE>
-			MODE="Multiple"
+#recall test (Seq) (match 3)	
+		<STATE>			
+			MODE="Multiple"	
 			FILE="Instructions/CHIPS6/11f_Recall_1.htm"
-			ITERATOR="random:exclusive"
+			ITERATOR="random:exclusive"			
 			CONSTRAINTS="match:$Pair1A"
-			SET="DisableSubmitOnEnter:yes"
-			ITEMS="1"
-			SETS="36"
-			POST_PROMPT="C,G:You got the previous answer $Match"
-			POST_PROMPT="B,F:You got the previous answer $Match, which was a $Pair1Group character."
-			NEXT="Click:Continue"
+			SET="DisableSubmitOnEnter:yes"	
+			ITEMS="1"		
+			SETS="36"	
+			POST_PROMPT="C,D,G,H:You got the previous answer $Match, which was a $Pair1Group character."
+			NEXT="Click:Continue"	
 		</STATE>
-#Num Correct (Fb)
-		<STATE>
+#Num Correct (Fb)	
+		<STATE>		
 			MODE="Input"
 			FILE="Instructions/CHIPS6/12f_Postdiction_1.htm"
 			CONSTRAINTS="range:0-36"
-			POST_STATE_PROMPT="E,G:You got $TotalCorrect_T1 correct this trial."
-			POST_STATE_PROMPT="D,F:You got $TotalCorrect_T1 correct this trial (Simple: $SimpleTotal_T1; Moderate: $ModerateTotal_T1; Complex: $ComplexTotal_T1)."
+			POST_STATE_PROMPT="E,F,G,H:You got $TotalCorrect_T1 correct this trial (Simple: $SimpleTotal_T1;Moderate: $ModerateTotal_T1; Complex: $ComplexTotal_T1)."
 			END="Click:Continue"
 		</STATE>
-	</TRIAL>
-	<TRIAL ID="2">
-
+	</TRIAL>	
+<TRIAL ID="2">
 #Num Correct (Fb)
 #Selection (Sim)
 #Seq Learn (Seq)
 #Num Correct (Fb)
 #Likelyhood of correct (Seq)
-#recall test (Seq) (match 3)
-
-		<STATE>
+#recall test (Seq) (match 3)		
+		<STATE>			
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/13_Instructions_2.htm"
 			END="Click:Continue"
@@ -214,30 +204,24 @@
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
 		</STATE>
-#Selection
-		<STATE>
+#Selection	<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/15_Study_18_1.htm"
 			END="Click:Continue"
-		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/16_Study_18_2.htm"
-			END="Click:Continue"9
-		</STATE>
-		<STATE>
+		</STATE>		
+		<STATE>			
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/17_Study_18_3.htm"
 			END="Click:Continue"
 		</STATE>
-#Study (Seq)
+#Study (Seq)		
 		<STATE>
 			MODE="Multiple"
-			FILE="Instructions/CHIPS6/17f_StudyGrid_2.htm"
+			FILE="Instructions/CHIPS6/7f_StudyGrid_EMH.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
 				SET="PostStudyColor:#FF0000"
-			ITERATOR="selective:exclusive"
+			ITERATOR="difficulty:ascending"
 			STUDY_LIMIT="time:30s"
 				SET="Resolution:100"
 			STUDY_FILE="Instructions/CHIPS6/17f_Study_2.htm"
@@ -248,6 +232,26 @@
 			SETS="4"
 			SCALE="0.7"
 			END="Click:Continue"
+			CONDITIONS="A,C,E,G"
+		</STATE>
+		<STATE>
+			MODE="Multiple"
+			FILE="Instructions/CHIPS6/7f_StudyGrid_HME.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#00FF00"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="difficulty:descending"
+			STUDY_LIMIT="time:30s"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/CHIPS6/17f_Study_2.htm"
+			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			ITEMS="9"
+			SETS="4"
+			SCALE="0.7"
+			END="Click:Continue"
+			CONDITIONS="B,D,F,H"
 		</STATE>
 #Num Correct (Fb)
 		<STATE>
@@ -255,13 +259,13 @@
 			FILE="Instructions/CHIPS6/18f_Poststudy_Prediction_2.htm"
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
-		</STATE>
+		</STATE>		
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/19_JOLs_2.htm"
 			END="Click:Continue"
 		</STATE>
-#JOL (Seq)
+#JOL (Seq)		
 		<STATE>
 			MODE="Multiple"
 			FILE="Instructions/CHIPS6/19f_JOL_Collection_2.htm"
@@ -285,8 +289,7 @@
 			SET="DisableSubmitOnEnter:yes"
 			ITEMS="1"
 			SETS="36"
-			POST_PROMPT="C,G:You got the previous answer $Match"
-			POST_PROMPT="B,F:You got the previous answer $Match, which was a $Pair1Group character."
+			POST_PROMPT="C,D,G,H:You got the previous answer $Match, which was a $Pair1Group character."
 			NEXT="Click:Continue"
 		</STATE>
 #Num Correct (Fb)
@@ -299,9 +302,8 @@
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/22_Last_Screen.htm"
-			POST_STATE_PROMPT="E,G:You got $TotalCorrect_T2 correct this trial."
-			POST_STATE_PROMPT="D,F:You got $TotalCorrect_T2 correct this trial (Simple: $SimpleTotal_T2; Moderate: $ModerateTotal_T2; Complex: $ComplexTotal_T2)."
+			POST_STATE_PROMPT="E,F,G,H:You got $TotalCorrect_T2 correct this trial (Simple: $SimpleTotal_T2; Moderate: $ModerateTotal_T2; Complex: $ComplexTotal_T2)."
 			END="Click:Continue"
-		</STATE>
-	</TRIAL>
+		</STATE>	
+		</TRIAL>
 </EXPERIMENT>

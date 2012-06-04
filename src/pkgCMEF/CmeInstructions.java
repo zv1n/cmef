@@ -553,15 +553,17 @@ public class CmeInstructions extends JPanel {
 	
 	
 	private double getScale() {
-		double scale = 0.0;
-		String sscale = (String) m_CurState.getProperty("Scale");
+		double scale = 1.0;
 		
-		try {
-			scale = Double.parseDouble(sscale);
-		} catch (Exception ex) {
-			System.out.println("Ooops, no scale defined! Using 1.0.");
-			scale = 1.0;
-			ex.printStackTrace();
+		String sscale = (String) m_CurState.getProperty("Scale");
+		if (sscale != null) {
+			try {	
+				scale = Double.parseDouble(sscale);
+			} catch (Exception ex) {
+				System.out.println("Ooops, no scale defined! Using 1.0.");
+				scale = 1.0;
+				ex.printStackTrace();
+			}
 		}
 		
 		return scale;

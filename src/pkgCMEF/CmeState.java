@@ -448,6 +448,7 @@ public class CmeState {
      * @return boolean - true if valid string; false else
      */
     public boolean validateInput(CmeResponse response) throws Exception {
+    	System.out.println("Name: " + response.getName() + " Value: " + response.getValue());
         return validateInput(response.getValue());
     }
 
@@ -467,7 +468,7 @@ public class CmeState {
         String constraintType = (String) m_sProperties.get("ConstraintType");
         String constraint = (String) m_sProperties.get("Constraint");
 
-			if (constraintType == null || constraint == null) {
+		if (constraintType == null || constraint == null) {
             return true;
         }
 
