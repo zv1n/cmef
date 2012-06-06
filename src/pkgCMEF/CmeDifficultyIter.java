@@ -45,8 +45,10 @@ public class CmeDifficultyIter implements CmeIterator {
 		
 		Collections.sort(plist);
 		
-		if (descending)
+		if (descending) {
+			System.err.println(plist.get(0) + ":" + plist.get(1));
 			Collections.reverse(plist);
+		}
 		
 		int perpoint = 0;
 		for (int x=0; x<plist.size(); x++) {

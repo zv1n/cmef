@@ -327,7 +327,33 @@ public class CmeApp extends JFrame implements AncestorListener
 			m_eProperties.put("ExpCondition", "B");
 		}
 	}
+	
+	private void configureTrialGlobals(String id) {
+		id = id.trim();
+		Vector<String> typeList = m_PairFactory.getTypeList();
+		
+		for (int x=0; x<typeList.size(); x++) {
+			System.err.println(typeList.get(x) + "Count_T" + id);
+			m_eProperties.put(typeList.get(x) + "Count_T" + id, "0");
+			m_eProperties.put(typeList.get(x) + "Points_T" + id, "0");
+		}
 
+		m_eProperties.put("TotalCount_T" + id, "0");
+		m_eProperties.put("TotalPoints_T" + id, "0");
+	}
+	
+	private void configureStateGlobals(CmeState state, String trialId) {
+		if (trialId != null)
+			state.setProperty("CurrentTrial", trialId);
+
+		state.setProperty("MatchCount", "3");
+	}
+
+	private void configureGlobals() {
+		m_eProperties.put("TotalCount", "0");
+		m_eProperties.put("TotalPoints", "0");
+	}
+	
 	private int setIterator(String iterator, String[] type, CmeState state) {
 		String validIterators = "RANDOM:SELECTIVE:DIFFICULTY";
 		String validTypes = "NONEXCLUSIVE:REVERSE:DESCENDING:ASCENDING";
@@ -360,9 +386,9 @@ public class CmeApp extends JFrame implements AncestorListener
 				itype |= CmeIterator.EXCLUSIVE;
 			} else if (type[x].equals("NONEXCLUSIVE")) {
 				itype |= CmeIterator.NONEXCLUSIVE;
-			} else if (type[x].equals("REVERSE") || type.equals("ASCENDING")) {
+			} else if (type[x].equals("REVERSE") || type[x].equals("DESCENDING")) {
 				itype |= CmeIterator.REVERSE;
-			} else if (type[x].equals("DESCENDING")) {
+			} else if (type[x].equals("ASCENDING")) {
 				itype &= ~CmeIterator.REVERSE;
 			}
 		}
@@ -500,7 +526,25 @@ public class CmeApp extends JFrame implements AncestorListener
 		else
 			state.setProperty(name, newProp);
 	}
-
+	
+	/** Used to safely retrieve a string. */
+	public String getQuotedText(String line) {
+		int idx = line.indexOf("\"");
+		
+		if (idx < 0)
+			return "";
+		
+		int idx1 = line.lastIndexOf("\"");
+		
+		if (idx1 < 0)
+			return line.substring(idx);
+		
+		if (idx == idx1)
+			return "";
+		
+		return line.substring(idx+1, idx);
+	}
+	
 	/** 
 	 * Initialization function for preparing all States
 	 *  Reads in experiment configuration file and generates 
@@ -555,17 +599,19 @@ public class CmeApp extends JFrame implements AncestorListener
 					} else
 						throw new Exception ("The Selected Experiment file does not contain version \n information " +
 											"and cannot be used with this version of CMEF.");
+					
+					configureGlobals();
 				} else if (line.startsWith("<TRIAL")) {
 					if (m_PairFactory == null)
 						throw new Exception ("The data file has not been specified!\n" + m_sExpFileName);
 					trialId = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+					
+					configureTrialGlobals(trialId);
 				} else if (line.startsWith("</TRIAL")) {
 					trialId = null;
 				} else if (line.startsWith("<STATE>")) {
 					thisState = new CmeState(this);
-					if (trialId != null) {
-						thisState.setProperty("CurrentTrial", trialId);
-					}
+					configureStateGlobals(thisState, trialId);
 				} else if (line.contains("TITLE")) {
 					String title = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					if (thisState == null) {
@@ -625,8 +671,7 @@ public class CmeApp extends JFrame implements AncestorListener
 					
 				} else if (line.startsWith("POST_STATE_PROMPT=")) {
 					String postPrompt = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
-					compoundProperty(thisState, "PostStatePromptText", postPrompt);
-					
+					compoundProperty(thisState, "PostStatePromptText", postPrompt);	
 				} else if (line.contains("SCALE")) {
 					String scaleText = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
 					thisState.setProperty("Scale", scaleText);
@@ -1111,7 +1156,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		String sCondition = ((String)m_eProperties.get("ExpCondition"));
 		
 		while (m_CurState != null) {
-			String stateConditions = (String)m_CurState.getProperty("ValidConditions");
+			String stateConditions = (String) m_CurState.getProperty("ValidConditions");
 				
 			if (stateConditions == null)
 				break;

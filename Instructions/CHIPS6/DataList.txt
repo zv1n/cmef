@@ -1,5 +1,5 @@
 #Value,Group,NameA,ImageA,NameB,ImageB
-1,Simple,PERSON,,,Images/Chinese1.jpg 
+1,Simple,PERSON,,,Images/Chinese1.jpg
 1,Simple,LADLE,,,Images/Chinese2.jpg 
 1,Simple,KNIFE,,,Images/Chinese3.jpg 
 1,Simple,MOUNTAIN,,,Images/Chinese4.jpg 

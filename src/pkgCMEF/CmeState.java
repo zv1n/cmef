@@ -299,6 +299,23 @@ public class CmeState {
         return input.matches(regex);
     }
 	
+    private boolean incrementValue(String name, Integer inc) {
+    	int total = m_App.getIntProperty(name);
+		if (total == -1)
+			total = 0;
+		
+		m_App.setProperty(name, Integer.toString(total+inc));
+		return true;
+    }
+    
+    @SuppressWarnings("unused")
+	private boolean incrementValue(String name, String value) {
+		int points = getIntProperty("Pair1Value");
+		if (points == -1)
+			points = 1;
+		
+		return incrementValue(name, points);
+    }
     /**
      * Validate the first three characters of an input.
      * 
@@ -318,8 +335,12 @@ public class CmeState {
 		in = in.replace("ie", "ee");
 		in = in.replace("ei", "ee");
 		
+		int matchCount = getIntProperty("MatchCount");
+		if (matchCount == -1)
+			matchCount = 3;
+		
 		if (matchon.length() > 3)
-			match = matchon.substring(0,3);
+			match = matchon.substring(0, matchCount);
 		else
 			match = matchon;
 		
@@ -327,42 +348,37 @@ public class CmeState {
 		String pair = (String) getProperty("Pair1");
 		String group = (String) getProperty("Pair1Group");
 		String name = (String) getProperty("RecallName");
+		
 		if (name == null)
 			name = "Recall";
+		else
+			name = m_App.translateString(name);
+		
+		if (trial == null)
+			trial = "";
+		else
+			trial = "_T" + trial;
 			
 		if (in.startsWith(match)) {
 			System.out.println("Correct!");
 			setProperty("Match", "correct");
 			
-			m_App.addFeedback(name + "Correct_T" + trial + "_" + pair, "true");
-				
-			int total = m_App.getIntProperty("TotalCorrect_T" + trial);
-			if (total == -1)
-				total = 0;
+			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
 			
+			incrementValue(group + "Count" + trial, 1);
+			incrementValue("TotalCount" + trial, 1);
+
 			int points = getIntProperty("Pair1Value");
 			if (points == -1)
 				points = 1;
-			
-			m_App.setProperty("TotalCorrect_T" + trial, Integer.toString(total+points));
-			
-			total = m_App.getIntProperty(group + "Total_T" + trial);
-			if (total == -1)
-				total = 0;
-			m_App.setProperty(group + "Total_T" + trial, Integer.toString(total+points));
+
+			incrementValue(group + "Points" + trial, 1);
+			incrementValue("TotalPoints" + trial, points);
 		} else {	
 			System.out.println("Incorrect!");
 			setProperty("Match", "incorrect");
 			
-			m_App.addFeedback(name + "Correct_T" + trial + "_" + pair, "false");
-			
-			if (m_App.getProperty("TotalCorrect_T" + trial) == null)
-				m_App.setProperty("TotalCorrect_T" + trial, "0");
-			if (getProperty("Pair1Value") == null)
-				setProperty("Pair1Value", "1");
-			
-			if (group != null && m_App.getProperty(group + "Total_T" + trial) == null)
-				m_App.setProperty(group + "Total_T" + trial, "0");
+			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "false");
 		}
 		
 		return true;

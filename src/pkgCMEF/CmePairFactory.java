@@ -9,6 +9,8 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import com.sun.tools.javac.util.List;
+
 //=============================================================================
 /**
  * This class implements the Image Factory which loads all the images
@@ -26,6 +28,8 @@ public class CmePairFactory
 	/** Vector of PCLE_Image objects */
 	private Vector<CmePair> m_vPairs;
 	
+	private Vector<String> m_TypeList;
+	
 	//-------------------------------------------------
 	/** Default constructor 
 	 * @throws Exception */
@@ -33,6 +37,10 @@ public class CmePairFactory
 	public CmePairFactory(CmeApp app, String file)
 	{
 		m_App = app;
+		
+		if (m_TypeList == null)
+			m_TypeList = new Vector<String>();
+		m_TypeList.clear();
 		
 		// Create the vector to hold all images
 		m_vPairs = new Vector<CmePair>();
@@ -64,23 +72,40 @@ public class CmePairFactory
 			// For each line in the file
 			while((line = bufReader.readLine()) != null)
 			{
-				if (line.trim().charAt(0) == '#')
+				line = line.trim();
+				
+				if (line.length() == 0)
 					continue;
+				
+				if (line.charAt(0) == '#')
+					continue;
+				
 				int val = 0;
 				// Parse the name key and image name
 				String[] strs = line.split(",");
 				try {
 					val = Integer.valueOf(strs[0]);
 				} catch(Exception ex) {
-					System.out.println("Failed to parse image value:" + line);					
+					System.out.println("Failed to parse image value:" + line);
 				}
+				
+				String clss = strs[1].trim();
+				for (int x=0; x<m_TypeList.size(); x++) {
+					String cc = m_TypeList.get(x);
+					if (cc != null && !cc.equals(clss) && x == m_TypeList.size()-1)
+						m_TypeList.add(clss);	
+				}
+				
+				if (m_TypeList.size() == 0)
+					m_TypeList.add(clss);
+				
 				// Create the image and add to the vector of images
 				img = new CmePair(m_App);
 				img.setPairValue(val);
-				img.setPairGroup(strs[1]);
-				img.setNameA(strs[2]);
-				img.setImageA(strs[3]);
-				img.setNameB(strs[4]);
+				img.setPairGroup(clss);
+				img.setNameA(strs[2].trim());
+				img.setImageA(strs[3].trim());
+				img.setNameB(strs[4].trim());
 				String ib = null;
 				
 				if (strs.length > 5) {
@@ -91,12 +116,12 @@ public class CmePairFactory
 				
 				img.setImageB(ib);
 				
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "V", strs[0]);
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "D", strs[1]);
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "A", strs[2]);
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IA", strs[3]);
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "B", strs[4]);
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IB", ib);
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "V", strs[0].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "D", clss);
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "A", strs[2].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IA", strs[3].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "B", strs[4].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IB", ib.trim());
 				
 				m_vPairs.add(img);
 			}
@@ -104,12 +129,24 @@ public class CmePairFactory
 		catch(IOException e)
 		{
 			JOptionPane.showMessageDialog(null, 
-					"Error: Unable to read ImageList.txt file", 
+					"Error: Unable to read '" + file + "' file.", 
 					"Error Reading File", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			return;
+		}
+		catch(Exception e) {
+			JOptionPane.showMessageDialog(null, 
+					"Error: Failed to parse '" + file + "'.",
+					"Error Reading File", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 			return;
 		}
 	}
 
+	public Vector<String> getTypeList() {
+		return m_TypeList;
+	}
+	
 	//-------------------------------------------------------------
 	/** Get an image from the factory by vector index */
 	//-------------------------------------------------------------

@@ -2,31 +2,17 @@ package pkgCMEF;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.Element;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 
 //====================================================================
 /**
@@ -474,6 +460,10 @@ public class CmeInstructions extends JPanel {
 	 */
 	public boolean setNextInSequence() throws Exception {
 		String instructionFile = null;
+		
+		if (!allowNextState()) {
+			return true;
+		}
  
 		int cstep = m_CurState.getStep();
 		if (cstep > 0) {
@@ -486,6 +476,8 @@ public class CmeInstructions extends JPanel {
 			
 			if (isDone()) {
 				m_HtmlView.clearContent();
+				if (m_cClock != null)
+					m_cClock.complete();
 				return false;
 			}
 		}
@@ -516,7 +508,6 @@ public class CmeInstructions extends JPanel {
 		}
 
 		m_CurState.resetSeqState();
-		
 		m_HtmlView.requestFirstFocus();
 
 		return true;
@@ -533,10 +524,9 @@ public class CmeInstructions extends JPanel {
 
 		int icount = m_CurState.getIntProperty("Count");
 		int isets = m_CurState.getIntProperty("Sets");
-		System.out.print("Count: ");
-		System.out.println(icount);
-		System.out.print("Sets: ");
-		System.out.println(isets);
+		
+		System.out.println("Count: " + icount);
+		System.out.println("Sets: " + isets);
 		
 		if (isets < 1)
 			isets = 1;
@@ -581,10 +571,13 @@ public class CmeInstructions extends JPanel {
 		double scale = getScale();
 		CmeIterator iter = m_CurState.getIterator();		
 		final int count = m_CurState.getPerStepCount();
+		final int currentStep = m_CurState.getStep();
 		String preStudyColor = m_CurState.getStringProperty("PreStudyColor");
 		
 		int step;
 		String vx;
+
+		m_CurState.setProperty("CurrentSet", Integer.toString(currentStep));
 
 		for (int x = 0; x < count; x++) {
 			step = iter.getNext();
@@ -828,6 +821,7 @@ public class CmeInstructions extends JPanel {
 					throw new Exception("Default state handler hit!");
 			}
 		} catch (IOException ex) {
+			ex.printStackTrace();
 			throw new Exception("IO Error: " + ex.getMessage());
 		} catch (Exception ex) {
 			ex.printStackTrace();

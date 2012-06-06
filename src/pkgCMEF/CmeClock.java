@@ -126,6 +126,10 @@ public class CmeClock extends JPanel implements CmeLimit
 		return false;
 	}
 	
+	public void complete() {
+		m_iCurTime = m_iTimeLimit;
+	}
+	
 	public boolean isComplete() {
 		return (m_iCurTime >= m_iTimeLimit);
 	}
