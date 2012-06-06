@@ -51,15 +51,35 @@ ESET="TotalCorrectT2:0"
 #
 # ------ Trial 1 ------
 #
-		<STATE>			MODE="Instruction"			FILE="Instructions/CHIPS6/1_EOLs_1.htm"			END="Click:Continue"		</STATE>		<STATE>			MODE="Instruction"			FILE="Instructions/CHIPS6/2_EOLs_2.htm"			END="Click:Continue"		</STATE>		<STATE>			MODE="Instruction"			FILE="Instructions/CHIPS6/3_EOLs_3.htm"			END="Click:Begin"		</STATE>#Rate Characters (Seq)#		<STATE>#			MODE="Multiple"#			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"#			ITERATOR="random:exclusive"#			ITEMS="1"#			SETS="36"#			NEXT="Click:Continue"#		</STATE>		<STATE>			MODE="Instruction"
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/1_EOLs_1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>	
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/2_EOLs_2.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/3_EOLs_3.htm"
+			END="Click:Begin"
+		</STATE>
+#Rate Characters (Seq)
+		<STATE>
+			MODE="Multiple"
+			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"
+			ITERATOR="random:exclusive"
+			ITEMS="1"
+			SETS="36"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
 			FILE="Instructions/CHIPS6/4_Instructions_1.htm"
 			END="Click:Continue"
 		</STATE>
-#		<STATE>
-#			MODE="Instruction"
-#			FILE="Instructions/CHIPS6/5_Prestudy_Prediction_1.htm"
-#			END="Click:Continue"
-#		</STATE>
 #Num Correct (Fb)
 		<STATE>
 			MODE="Input"
@@ -72,27 +92,22 @@ ESET="TotalCorrectT2:0"
 			FILE="Instructions/CHIPS6/6_Prestudy_Prediction_TX_1.htm"
 			END="Click:Continue"
 		</STATE>
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/7_Sequential_Instructions.htm"
-			END="Click:Continue"
-		</STATE>
 #Selection		
-#		<STATE>	
-#			MODE="Instruction"	
-#			FILE="Instructions/CHIPS6/7_Study_18_1.htm"	
-#			END="Click:Continue"		
-#		</STATE>		
-#		<STATE>			
-#			MODE="Instruction"
-#			FILE="Instructions/CHIPS6/7_Study_18_2.htm"		
-#			END="Click:Continue"
-#		</STATE>		
-#		<STATE>
-#			MODE="Instruction"
-#			FILE="Instructions/CHIPS6/7_Study_18_3.htm"	
-#			END="Click:Continue"		
-#		</STATE>
+		<STATE>	
+			MODE="Instruction"	
+			FILE="Instructions/CHIPS6/7_Study_18_1.htm"	
+			END="Click:Continue"		
+		</STATE>		
+		<STATE>			
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/7_Study_18_2.htm"		
+			END="Click:Continue"9		
+		</STATE>		
+		<STATE>			
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/7_Study_18_3.htm"	
+			END="Click:Continue"		
+		</STATE>
 #Study (Seq)		
 		<STATE>			
 			MODE="Multiple"	
@@ -107,10 +122,10 @@ ESET="TotalCorrectT2:0"
 			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"			
 			SET="LimitPromptButtons:yesno"			
 			DISPLAY_TIMER="down"			
-			ITEMS="9"			
-			SETS="4"
-			SCALE="0.7"	
-			END="Click:Continue"
+				ITEMS="9"			
+				SETS="4"
+				SCALE="0.7"	
+			NEXT="Click:Continue"
 			CONDITIONS="A,C,E,G"		
 		</STATE>
 		<STATE>			
@@ -126,10 +141,10 @@ ESET="TotalCorrectT2:0"
 			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
 			SET="LimitPromptButtons:yesno"	
 			DISPLAY_TIMER="down"	
-			ITEMS="9"			
-			SETS="4"			
-			SCALE="0.7"			
-			END="Click:Continue"
+				ITEMS="9"			
+				SETS="4"			
+				SCALE="0.7"			
+			NEXT="Click:Continue"
 			CONDITIONS="B,D,F,H"		
 		</STATE>
 #Num Correct (Fb)		
@@ -198,26 +213,28 @@ ESET="TotalCorrectT2:0"
 			END="Click:Continue"
 		</STATE>
 #Num Correct (Fb)
+		
 		<STATE>
 			MODE="Input"
 			FILE="Instructions/CHIPS6/14f_Prestudy_Prediction_2.htm"
 			CONSTRAINTS="range:0-36"
 			END="Click:Continue"
 		</STATE>
-#Selection	<STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/14_Prestudy_Prediction_TX_1.htm"
+			END="Click:Continue"
+		</STATE>
+#Selection	
+		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/15_Study_18_1.htm"
 			END="Click:Continue"
 		</STATE>		
-		<STATE>			
-			MODE="Instruction"
-			FILE="Instructions/CHIPS6/17_Study_18_3.htm"
-			END="Click:Continue"
-		</STATE>
 #Study (Seq)		
 		<STATE>
 			MODE="Multiple"
-			FILE="Instructions/CHIPS6/7f_StudyGrid_EMH.htm"
+			FILE="Instructions/CHIPS6/17f_StudyGrid_EMH.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
 				SET="PostStudyColor:#FF0000"
@@ -231,12 +248,12 @@ ESET="TotalCorrectT2:0"
 			ITEMS="9"
 			SETS="4"
 			SCALE="0.7"
-			END="Click:Continue"
+			NEXT="Click:Continue"
 			CONDITIONS="A,C,E,G"
 		</STATE>
 		<STATE>
 			MODE="Multiple"
-			FILE="Instructions/CHIPS6/7f_StudyGrid_HME.htm"
+			FILE="Instructions/CHIPS6/17f_StudyGrid_HME.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
 				SET="PostStudyColor:#FF0000"
@@ -250,7 +267,7 @@ ESET="TotalCorrectT2:0"
 			ITEMS="9"
 			SETS="4"
 			SCALE="0.7"
-			END="Click:Continue"
+			NEXT="Click:Continue"
 			CONDITIONS="B,D,F,H"
 		</STATE>
 #Num Correct (Fb)
