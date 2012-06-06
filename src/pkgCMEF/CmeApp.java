@@ -350,8 +350,8 @@ public class CmeApp extends JFrame implements AncestorListener
 	}
 
 	private void configureGlobals() {
-		m_eProperties.put("TotalCount", "0");
-		m_eProperties.put("TotalPoints", "0");
+		m_eProperties.put("ExpTotalCount", "0");
+		m_eProperties.put("ExpTotalPoints", "0");
 	}
 	
 	private int setIterator(String iterator, String[] type, CmeState state) {
@@ -1264,7 +1264,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				try {
 					debug = Integer.parseInt(args[x + 1]);
 				} catch (Exception ex) {
-					debug = 0;
+					debug = 1;
 				}
 			}
 			if (args[x].equals("-x") || args[x].equals("--experiment")) {
@@ -1331,7 +1331,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (formatFile == null)
 			return;
 		
-				// Open the experiment file
+		// Open the experiment file
 		String line;
 		FileReader instFile;
 		BufferedReader bufReader = null;
@@ -1344,20 +1344,21 @@ public class CmeApp extends JFrame implements AncestorListener
 			return;
 		}
 
-			
 		postStatusMessage("----------------Start Formatted Output-----------------\n\n", false);
+		
 		// Read the text strings and add them to the text area
 		try {
 			bufReader = new BufferedReader(instFile);
 			while ((line = bufReader.readLine()) != null) {
 				line = CmeApp.translateString(m_fbHashmap, line, true);
-				line = CmeApp.translateString(m_eProperties, line, false);
+				line = CmeApp.translateString(m_eProperties, line, (m_iDebugLevel > 0));
 				postStatusMessage(line, false);
 			}
 		} catch (Exception ex) {
 			System.out.println("Failed to parse the OutputFormat file!");
 			return;
-		}	
+		}
+		
 		postStatusMessage("-----------------End Formatted Output------------------\n\n", false);
 	}
 	

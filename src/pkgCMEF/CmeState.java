@@ -328,18 +328,15 @@ public class CmeState {
 		String matchon = matchstring.toLowerCase();
 		String match = null;
 		
-		
 		/* Nasty Hack to get around Theif */
-		matchon = matchon.replace("ie", "ee");
-		matchon = matchon.replace("ei", "ee");
-		in = in.replace("ie", "ee");
-		in = in.replace("ei", "ee");
+		matchon = matchon.replace("ie", "ee").replace("ei", "ee");
+		in = in.replace("ie", "ee").replace("ei", "ee");
 		
 		int matchCount = getIntProperty("MatchCount");
 		if (matchCount == -1)
 			matchCount = 3;
 		
-		if (matchon.length() > 3)
+		if (matchon.length() > matchCount)
 			match = matchon.substring(0, matchCount);
 		else
 			match = matchon;
@@ -350,7 +347,7 @@ public class CmeState {
 		String name = (String) getProperty("RecallName");
 		
 		if (name == null)
-			name = "Recall";
+			name = "Recall_";
 		else
 			name = m_App.translateString(name);
 		
@@ -358,6 +355,12 @@ public class CmeState {
 			trial = "";
 		else
 			trial = "_T" + trial;
+		
+		if (group == null)
+			group = "";
+		
+		if (pair == null)
+			throw new Exception("Failed to process the current pair!");
 			
 		if (in.startsWith(match)) {
 			System.out.println("Correct!");
@@ -367,13 +370,15 @@ public class CmeState {
 			
 			incrementValue(group + "Count" + trial, 1);
 			incrementValue("TotalCount" + trial, 1);
+			incrementValue("ExpTotalCount", 1);
 
 			int points = getIntProperty("Pair1Value");
 			if (points == -1)
 				points = 1;
 
-			incrementValue(group + "Points" + trial, 1);
+			incrementValue(group + "Points" + trial, points);
 			incrementValue("TotalPoints" + trial, points);
+			incrementValue("ExpTotalPoints", points);
 		} else {	
 			System.out.println("Incorrect!");
 			setProperty("Match", "incorrect");
