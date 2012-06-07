@@ -190,7 +190,7 @@ FORMAT_FILE="Instructions/CHIPS6/OutputFormat.txt"
 			MODE="Input"
 			FILE="Instructions/CHIPS6/12f_Postdiction_1.htm"
 			CONSTRAINTS="range:0-36"
-			POST_STATE_PROMPT="E,F,G,H:You got $TotalCorrect_T1 correct this trial (Simple: $SimpleTotal_T1;Moderate: $ModerateTotal_T1; Complex: $ComplexTotal_T1)."
+			POST_STATE_PROMPT="E,F,G,H:You got $TotalCount_T1 correct this trial (Simple: $SimpleCount_T1;Moderate: $ModerateCount_T1; Complex: $ComplexCount_T1)."
 			END="Click:Continue"
 		</STATE>
 	</TRIAL>	
@@ -315,7 +315,7 @@ FORMAT_FILE="Instructions/CHIPS6/OutputFormat.txt"
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/22_Last_Screen.htm"
-			POST_STATE_PROMPT="E,F,G,H:You got $TotalCorrect_T2 correct this trial (Simple: $SimpleTotal_T2; Moderate: $ModerateTotal_T2; Complex: $ComplexTotal_T2)."
+			POST_STATE_PROMPT="E,F,G,H:You got $TotalCount_T2 correct this trial (Simple: $SimpleCount_T2; Moderate: $ModerateCount_T2; Complex: $ComplexCount_T2)."
 			END="Click:Continue"
 		</STATE>	
 		</TRIAL>
