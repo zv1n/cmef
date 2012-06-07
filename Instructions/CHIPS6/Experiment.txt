@@ -59,14 +59,14 @@ FORMAT_FILE="Instructions/CHIPS6/OutputFormat.txt"
 			END="Click:Begin"
 		</STATE>
 #Rate Characters (Seq)
-#		<STATE>
-#			MODE="Multiple"
-#			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"
-#			ITERATOR="random:exclusive"
-#			ITEMS="1"
-#			SETS="36"
-#			NEXT="Click:Continue"
-#		</STATE>
+		<STATE>
+			MODE="Multiple"
+			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"
+			ITERATOR="random:exclusive"
+			ITEMS="1"
+			SETS="36"
+			NEXT="Click:Continue"
+		</STATE>
 		<STATE>
 			MODE="Instruction"
 			FILE="Instructions/CHIPS6/4_Instructions_1.htm"

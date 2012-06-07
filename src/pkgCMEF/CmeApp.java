@@ -613,10 +613,6 @@ public class CmeApp extends JFrame implements AncestorListener
 					lhs = value;
 					rhs = "";
 				}
-				
-				System.err.println("Values: '" + lhs + "':'" + rhs + "'");
-				
-				int valCount = splitValue.length;
 
 				// See if we need to create a new State
 				if (line.startsWith("<EXPERIMENT")) {
@@ -668,11 +664,9 @@ public class CmeApp extends JFrame implements AncestorListener
 					initDataSet(value);
 					
 				} else if (line.startsWith("ESET=")) {
-					String[] props = value.split(":");
-					if (props.length != 2)
-						throw new Exception("ESET tag must contain the form 'property:value'");
-					m_eProperties.put(props[0], props[1]);
-					
+					requirePair(splitValue, event + " tag must contain the form 'property:value'");
+					m_eProperties.put(lhs, rhs);
+
 				} else if (line.contains("CONDITIONS=")) {
 					String valConditions = value.toUpperCase().replace(',', ':');
 					if (thisState == null)
@@ -699,7 +693,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.startsWith("POST_STATE_PROMPT=")) {
 					compoundProperty(thisState, "PostStatePromptText", value);
 					
-				} else if (line.contains("SCALE")) {
+				} else if (line.contains("SCALE=")) {
 					thisState.setProperty("Scale", value);
 					
 				} else if (line.startsWith("EXCLUDE=")) {
@@ -742,27 +736,29 @@ public class CmeApp extends JFrame implements AncestorListener
 					requirePair(splitValue, event + " must contain a name:value pair!");
 					thisState.setProperty(lhs, rhs);
 
-				} else if (line.contains("STUDY_FILE")) {
+				} else if (line.contains("STUDY_FILE=")) {
 					thisState.setProperty("StudyFile", value);
 					thisState.setStudyInstruction(true);
 					
-				} else if (line.contains("DISPLAY_TIMER")) {
+				} else if (line.contains("DISPLAY_TIMER=")) {
 					thisState.setProperty("DisplayTimer", value);
 					
-				} else if (line.contains("MODE")) {
-					if (line.toUpperCase().contains("INSTRUCTION")) {
+				} else if (line.contains("MODE=")) {
+					String item = lhs.toUpperCase();
+					
+					if (item.contains("INSTRUCTION")) {
 						thisState.setState(CmeState.STATE_INSTRUCTION);
-					} else if (line.toUpperCase().contains("FEEDBACK")) {
+					} else if (item.contains("FEEDBACK")) {
 						thisState.setState(CmeState.STATE_INPUT);
-					} else if (line.toUpperCase().contains("INPUT")) {
+					} else if (item.contains("INPUT")) {
 						thisState.setState(CmeState.STATE_INPUT);
-					} else if (line.toUpperCase().contains("PROMPT")) {
+					} else if (item.contains("PROMPT")) {
 						thisState.setState(CmeState.STATE_PROMPT);
-					} else if (line.toUpperCase().contains("STUDY")) {
+					} else if (item.contains("STUDY")) {
 						thisState.setState(CmeState.STATE_MULTIPLE);
-					} else if (line.toUpperCase().contains("RECALL")) {
+					} else if (item.contains("RECALL")) {
 						thisState.setState(CmeState.STATE_MULTIPLE);
-					} else if (line.toUpperCase().contains("MULTIPLE")) {
+					} else if (item.contains("MULTIPLE")) {
 						thisState.setState(CmeState.STATE_MULTIPLE);
 					} else {
 						throw new Exception("Invalid State Mode: '" + value.toLowerCase() + "'");
