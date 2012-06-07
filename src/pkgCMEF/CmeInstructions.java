@@ -233,7 +233,7 @@ public class CmeInstructions extends JPanel {
 			fbval += Integer.toString(m_iStudyCount) + "," + value;
 			m_App.addFeedback(name, fbval);
 			
-			/* Calculate culmulative totals for this element */
+			/* Calculate cumulative totals for this element */
 			name = "StudyTotalCount" + trial + "_" + pair;
 			value = m_App.getFeedback(name);
 			

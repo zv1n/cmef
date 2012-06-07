@@ -211,6 +211,7 @@ public class CmeApp extends JFrame implements AncestorListener
      * Set a PropertyValue
      */
     public void setProperty(String name, Object prop) {
+    	System.err.println(name + "=" + prop.toString());
         m_eProperties.put(name, prop);
     }
 
@@ -434,7 +435,6 @@ public class CmeApp extends JFrame implements AncestorListener
 			m_EndResponse = new CmeEventResponse() {
 
 				public void Respond() {
-					System.out.println("End");
 					thisApp.setNextState();
 				}
 			};
@@ -442,7 +442,6 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (m_NextResponse == null)
 			m_NextResponse = new CmeEventResponse() {
 				public void Respond() {
-					System.out.println("Next");
 					try {
 						if (!m_InstructionsHandler.setNextInSequence()) {
 							thisApp.setNextState();
@@ -456,7 +455,6 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (m_BlankResponse == null)
 			m_BlankResponse = new CmeEventResponse() {
 				public void Respond() {
-					System.out.println("Blank");
 					try {
 						m_InstructionsHandler.blankInstructions();
 					} catch (Exception ex) {
@@ -471,10 +469,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			response = m_NextResponse;
 		} else if (action.equals("BLANK")) {
 			response = m_BlankResponse;
-		} else {
-			System.out.println("|" + action + "|");
-			return false;
-		}
+		} else throw new Exception("Unknown Action Type (Wanted END, NEXT, or BLANK, got '" + action + "').");
 
 		if (lhs.equals("CLICK")) {
 			type = CmeState.EVENT_CLICK_PRIMARY;
@@ -487,15 +482,12 @@ public class CmeApp extends JFrame implements AncestorListener
 			CmeTimer timer = new CmeTimer();
 
 			if (!timer.setDelayByString(rhs)) {
-				System.out.println("Delay By String");
 				return false;
 			}
 			if (!timer.setResponse(response)) {
-				System.out.println("Response");
 				return false;
 			}
 			if (!state.addEventTimer(timer)) {
-				System.out.println("Event");
 				return false;
 			}
 		} else throw new Exception("Unknown Event Type (Wanted Click or Time, got '" + lhs + "').");
@@ -760,9 +752,8 @@ public class CmeApp extends JFrame implements AncestorListener
 						thisState.setState(CmeState.STATE_MULTIPLE);
 					} else if (item.contains("MULTIPLE")) {
 						thisState.setState(CmeState.STATE_MULTIPLE);
-					} else {
-						throw new Exception("Invalid State Mode: '" + value.toLowerCase() + "'");
-					}
+					} else throw new 
+						Exception("Invalid State Mode: '" + value.toLowerCase() + "'");
 
 				} else if (line.contains("</STATE>")) {
 					// Add this one to the vector
@@ -827,8 +818,6 @@ public class CmeApp extends JFrame implements AncestorListener
 	private void adjustAllLayouts() {
 
 		m_InstructionsHandler.adjustLayout();
-		//m_ExperimentHandler.adjustLayout();
-		//m_StudyHandler.adjustLayout();
 
 		/* Ensure adjustLayout gets called next time! */
 		m_dOldDims = (Dimension) this.getSize().clone();
@@ -1264,7 +1253,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	public static void main(String[] args) {
 		int len = args.length;
 		int options = 0;
-		int debug = 0x100;
+		int debug = 0x0;
 		String expFile = "Instructions/Experiment.txt";
 		for (int x = 0; x < len; x++) {
 			if (args[x].equals("-d") || args[x].equals("--debug")) {
