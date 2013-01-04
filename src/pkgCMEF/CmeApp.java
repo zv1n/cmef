@@ -50,7 +50,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	private JPanel m_MainPanel;
 	private Dimension m_dOldDims;
 	/** Instructions Handler */
-	private CmeInstructions m_InstructionsHandler;
+	private CmeView m_ViewHandler;
 	/** Experiment Handler */
 	private CmeExperiment m_ExperimentHandler;
 	/** HashMap of all experiment properties */
@@ -280,11 +280,11 @@ public class CmeApp extends JFrame implements AncestorListener
 	 */
 	private void initStateHandlers() throws Exception {
 
-		m_InstructionsHandler = new CmeInstructions(this, m_iOptions);
-		m_InstructionsHandler.setPairFactory(m_PairFactory);
-		m_InstructionsHandler.addAncestorListener(this);
-		m_InstructionsHandler.setVisible(false);
-		m_MainPanel.add(m_InstructionsHandler);
+		m_ViewHandler = new CmeView(this, m_iOptions);
+		m_ViewHandler.setPairFactory(m_PairFactory);
+		m_ViewHandler.addAncestorListener(this);
+		m_ViewHandler.setVisible(false);
+		m_MainPanel.add(m_ViewHandler);
 		
 		m_ExperimentHandler = new CmeExperiment(this);
 		m_ExperimentHandler.setPairFactory(m_PairFactory);
@@ -443,7 +443,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			m_NextResponse = new CmeEventResponse() {
 				public void Respond() {
 					try {
-						if (!m_InstructionsHandler.setNextInSequence()) {
+						if (!m_ViewHandler.setNextInSequence()) {
 							thisApp.setNextState();
 						}
 					} catch (Exception ex) {
@@ -456,7 +456,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			m_BlankResponse = new CmeEventResponse() {
 				public void Respond() {
 					try {
-						m_InstructionsHandler.blankInstructions();
+						m_ViewHandler.blankInstructions();
 					} catch (Exception ex) {
 						thisApp.dmsg(0, ex.getMessage());
 					}
@@ -832,7 +832,7 @@ public class CmeApp extends JFrame implements AncestorListener
 
 	private void adjustAllLayouts() {
 
-		m_InstructionsHandler.adjustLayout();
+		m_ViewHandler.adjustLayout();
 
 		/* Ensure adjustLayout gets called next time! */
 		m_dOldDims = (Dimension) this.getSize().clone();
@@ -1186,15 +1186,15 @@ public class CmeApp extends JFrame implements AncestorListener
 	public void setNextState() {
 		if (m_cIterator == null) {
 			m_cIterator = m_vStates.iterator();
-		} else if (!m_InstructionsHandler.testAndSaveFeedback()) {
-			String obj = m_InstructionsHandler.getObjective();
+		} else if (!m_ViewHandler.testAndSaveFeedback()) {
+			String obj = m_ViewHandler.getObjective();
 			
 			if (obj == null)
 				return;
 			
 			JOptionPane.showMessageDialog(this, obj, "Input Error!", JOptionPane.ERROR_MESSAGE);
 			return;
-		} else if (!m_InstructionsHandler.allowNextState())
+		} else if (!m_ViewHandler.allowNextState())
 			return;
 		
 		
@@ -1216,7 +1216,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		dmsg(5, "Next State!");
 
 		try {
-			m_InstructionsHandler.setState(m_CurState);
+			m_ViewHandler.setState(m_CurState);
 			//m_StudyHandler.setState(m_CurState);
 			//m_ExperimentHandler.setState(m_CurState);
 			m_CurState.init();

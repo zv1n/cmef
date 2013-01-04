@@ -25,7 +25,7 @@ import java.util.Iterator;
  */
 // ===================================================================
 @SuppressWarnings("serial")
-public class CmeInstructions extends JPanel {
+public class CmeView extends JPanel {
 
 	/** Parent frame */
 	private CmeApp m_App;
@@ -60,10 +60,10 @@ public class CmeInstructions extends JPanel {
 	 * 
 	 * @throws IOException
 	 */
-	public CmeInstructions(CmeApp parent, int ops) throws Exception {
+	public CmeView(CmeApp parent, int ops) throws Exception {
 		m_App = parent;
 		
-		final CmeInstructions cInst = this;
+		final CmeView cInst = this;
 		
 		clearStudyState();
 
@@ -90,7 +90,7 @@ public class CmeInstructions extends JPanel {
 		};
 		
 		HyperlinkListener hListener = new HyperlinkListener() {		
-			CmeInstructions inst = cInst;
+			CmeView inst = cInst;
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				String[] desc = e.getDescription().toLowerCase().split(":");
 				if (desc.length != 2)
@@ -115,14 +115,14 @@ public class CmeInstructions extends JPanel {
 		 */
 		
 		m_SubmitListener = new ActionListener() {
-			CmeInstructions inst = cInst;
+			CmeView inst = cInst;
 			public void actionPerformed(ActionEvent e) {
 				inst.primaryClickEvent();
 			}
 		};
 		
 		ActionListener refreshListener = new ActionListener() {
-			CmeInstructions inst = cInst;
+			CmeView inst = cInst;
 			public void actionPerformed(ActionEvent e) {
 				try {
 					inst.refreshView();
@@ -149,7 +149,7 @@ public class CmeInstructions extends JPanel {
 		}
 		
 		m_LimitResponse = new CmeEventResponse() {
-			CmeInstructions inst = cInst;
+			CmeView inst = cInst;
 			public void Respond() {
 				inst.clockLimitHit();
 			}
