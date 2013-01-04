@@ -203,20 +203,26 @@ public class CmeInstructions extends JPanel {
 	public void clearStudyState() throws Exception {
 		if (m_bInStudyState) {
 			String element = m_cClock.getElement();
-			int elapsed = m_cClock.stop();
 			
+			int elapsed = 0;
+			
+			if (isContinuousTimer())
+				elapsed = m_cClock.getElapsedTime();
+			else
+				elapsed = m_cClock.stop();
+
 			updateLinkColor(element);
-			
+
 			String content = m_CurState.translateString(m_sContent);
 			m_HtmlView.setContent(content, null);
-			
+
 			String trial = (String) m_CurState.getProperty("CurrentTrial");
-			
+
 			if (trial == null)
 				trial = "";
 			else
 				trial = "_T" + trial;
-			
+
 			String pair = (String) m_CurState.getProperty("Pair" + element);
 			
 			if (pair == null) throw new Exception("Failed to get the current pair!");
@@ -441,6 +447,12 @@ public class CmeInstructions extends JPanel {
 		return true;
 	}
 
+	/** 
+	 * 	Says that the clock timer should be reset after each Step in a 
+	 *  multi-step instruction.
+	 *  
+	 * @return true if the current state has the property.
+	 */
 	private boolean isPerStepTimer() {
 		String pst = m_CurState.getStringProperty("ResetOnNext");
 		
@@ -452,6 +464,45 @@ public class CmeInstructions extends JPanel {
 		
 		return false;
 	}
+
+	/** 
+	 * 	Says that the clock timer should be continuous regardless of
+	 *  study state.
+	 *  
+	 * @return true if the current state has the property.
+	 */
+	private boolean isContinuousTimer() {
+		String pst = m_CurState.getStringProperty("ContinuousTimer");
+		
+		if (pst == null)
+			return false;
+		
+		if (pst.equals("yes") || pst.equals("true"))
+			return true;
+		
+		/* Make sure that we consider the clock continuous
+		 * if ONLY ContinuousAfterFirstSelection is set.
+		 */
+		return isContinuousAfterFirstSelection();
+	}
+
+	/** 
+	 *  Says that the clock is continuous after the first study attempt.
+	 *  
+	 * @return true if the current state has the property.
+	 */
+	private boolean isContinuousAfterFirstSelection() {
+		String pst = m_CurState.getStringProperty("ContinuousAfterFirstSelection");
+		
+		if (pst == null)
+			return false;
+		
+		if (pst.equals("yes") || pst.equals("true"))
+			return true;
+		
+		return false;
+	}
+	
 	
 	/**
 	 * Used to set the next rating environment.
@@ -689,6 +740,11 @@ public class CmeInstructions extends JPanel {
 		m_cClock.setTimeLimit(timeLimit);
 		m_cClock.setResolution(timeRes);
 		m_cClock.reset();
+		
+		/* The clock is continuous and is NOT only after first Study */
+		if (isContinuousTimer() && !isContinuousAfterFirstSelection())
+			m_cClock.start("");
+			
 	}
 
 	private void updateButtonText() {

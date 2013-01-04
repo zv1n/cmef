@@ -170,8 +170,15 @@ public class CmeClock extends JPanel implements CmeLimit
 	public boolean start(String item) {
 		if (isComplete())
 			return false;
+		
 		m_sItem = item;
 		m_iLast = m_iCurTime;
+		
+		if (isEnabled()) {
+			System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit + "\nStarted Running Clock");
+			return true;
+		}
+		
 		setEnable(true);
 		System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
 		return true;
@@ -180,6 +187,10 @@ public class CmeClock extends JPanel implements CmeLimit
 	public int stop() {
 		setEnable(false);
 		System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
+		return (m_iCurTime - m_iLast);
+	}
+	
+	public int getElapsedTime() {
 		return (m_iCurTime - m_iLast);
 	}
 	
