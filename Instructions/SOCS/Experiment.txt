@@ -14,13 +14,11 @@
 #E. U-Random
 #F. R-Random
 #
-#The design is a 2 x 3
-#Between subjects- 2 (Time: unlimted or restricted to 5 s) x 3 (Point Order: 135, 531, or Random)
+# The design is a 2 x 3
+# Between subjects- 2 (Time: unlimted or restricted to 5 s) x 3 (Point Order: 135, 531, or Random)
 #
-#Study Phase
-#Recall Phase
-#
-#
+# Study Phase
+# Recall Phase
 #
 		<STATE>
 			MODE="Instruction"
@@ -38,7 +36,7 @@
 			END="Click:Continue"
 		</STATE>
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/SOCS/4_Prestudy.htm"
 			CONSTRAINTS="range:0-48"
 			END="Click:Continue"
@@ -50,7 +48,7 @@
 		</STATE>
 #Study 
 		<STATE>
-			MODE="Study"
+			MODE="Multiple"
 			FILE="Instructions/SOCS/4f_Study_Phase.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
@@ -68,7 +66,7 @@
 			CONDITIONS="A"
 		</STATE>
 		<STATE>
-			MODE="Study"
+			MODE="Multiple"
 			FILE="Instructions/SOCS/4f_Study_Phase.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
@@ -87,7 +85,7 @@
 			CONDITIONS="C"
 		</STATE>
 		<STATE>
-			MODE="Study"
+			MODE="Multiple"
 			FILE="Instructions/SOCS/4f_Study_Phase.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
@@ -96,6 +94,9 @@
 			STUDY_LIMIT="time:5s"
 				SET="ResetOnNext:yes"
 				SET="Resolution:100"
+#NEW PROPERTIES: v2.1
+				SET="ContinuousTimer:yes"
+				SET="ContinuousAfterFirstSelection:yes"
 			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
 			SET="LimitPromptButtons:yesno"
 			DISPLAY_TIMER="down"
@@ -106,7 +107,7 @@
 			CONDITIONS="B"
 		</STATE>
 		<STATE>
-			MODE="Study"
+			MODE="Multiple"
 			FILE="Instructions/SOCS/4f_Study_Phase.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
@@ -124,7 +125,7 @@
 			CONDITIONS="D"
 		</STATE>
 		<STATE>
-			MODE="Study"
+			MODE="Multiple"
 			FILE="Instructions/SOCS/4f_Study_Phase.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
@@ -142,7 +143,7 @@
 			CONDITIONS="E"
 		</STATE>
 		<STATE>
-			MODE="Study"
+			MODE="Multiple"
 			FILE="Instructions/SOCS/4f_Study_Phase.htm"
 				SET="BorderWidth:1.5"
 				SET="PreStudyColor:#00FF00"
@@ -160,7 +161,7 @@
 			CONDITIONS="F"
 		</STATE>
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/SOCS/6_Poststudy.htm"
 			CONSTRAINTS="range:0-48"
 			END="Click:Continue"
@@ -172,7 +173,7 @@
 		</STATE>
 #recall test (Seq) (match 3)
 		<STATE>
-			MODE="Study"
+			MODE="Multiple"
 			ITERATOR="random:exclusive"
 			FILE="Instructions/SOCS/7f_Recall.htm"
 			SCALE="2.0"
@@ -182,7 +183,7 @@
 			NEXT="Click:Continue"
 		</STATE>
 		<STATE>
-			MODE="Feedback"
+			MODE="Input"
 			FILE="Instructions/SOCS/8_Postdiction.htm"
 			CONSTRAINTS="range:0-48"
 			END="Click:Continue"
