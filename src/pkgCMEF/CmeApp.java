@@ -1275,7 +1275,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				options |= CmeApp.CME_TEXT_ONLY;
 			}
 		}
-		
+	
 		@SuppressWarnings("unused")
 		final CmeApp theApp = new CmeApp(debug, options, expFile);
 		
