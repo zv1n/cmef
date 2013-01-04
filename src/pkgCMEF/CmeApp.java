@@ -665,17 +665,29 @@ public class CmeApp extends JFrame implements AncestorListener
 						m_eProperties.put("ValidConditions", ":" + valConditions + ":");
 					else
 						thisState.setProperty("ValidConditions", ":" + valConditions + ":");
-						
+					
+// EXCLUDE= 
+//			Excludes a property name from the long feedback list. 
+//			* Stores in Experiment when placed globally
+//			* Stores in State when placed local to a <state></state>
 				} else if (line.startsWith("EXCLUDE=")) {
-					compoundProperty(null, "Exclude", value);
+					if (thisState == null)
+						compoundProperty(null, "Exclude", value);
+					else
+						compoundProperty(thisState, "Exclude", value);
 					
 				} else if (thisState == null) {
 					continue;
-					
+
+// FILE=
+//			File to be used for the instruction page.
+//			File MUST exist!
 				} else if (line.startsWith("FILE=")) {
 					thisState.setProperty("InstructionFile", value);
 					validateFile(value);
 					
+// PROMPT/POST_PROMPT/POST_STATE_PROMPT 
+//			Sets various prompt strings that occur at various times during an experiment.
 				} else if (line.startsWith("PROMPT=")) {
 					thisState.setProperty("PromptText", value);
 					
@@ -685,12 +697,15 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.startsWith("POST_STATE_PROMPT=")) {
 					compoundProperty(thisState, "PostStatePromptText", value);
 					
+// SCALE =
+//			Sets the scale factor for a given image.
 				} else if (line.contains("SCALE=")) {
 					thisState.setProperty("Scale", value);
 					
-				} else if (line.startsWith("EXCLUDE=")) {
-					compoundProperty(thisState, "Exclude", value);
-					
+// END =
+//			Sets the action required to end a state.
+//			Standard: "Click:Next" or "Click:Continue"
+//			Value (Next,Continue) is placed on the button.
 				} else if (line.contains("END=")) {
 					requirePair(splitValue, event + " must contain a name:value pair!");
 				
