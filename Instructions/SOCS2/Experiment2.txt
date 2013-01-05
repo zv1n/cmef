@@ -1,0 +1,149 @@
+<EXPERIMENT>
+	TITLE="SOCS - Experiment"
+	STUDY_NAME="SOCS"
+	CONDITIONS="A,B"
+	DATA_FILE="Instructions/SOCS/DataList.txt"
+	FORMAT_FILE="Instructions/SOCS/OutputFormat.txt"
+	RANDOM_POOL="ImageValues:1:3:5"
+	<TRIAL ID="1">
+# --- Conditions ---
+#A. Restricted total time
+#B. restricted study time
+#
+#The design is a 2 (between) x 6 (within subjects)
+#- 2 (Time: restricted total time to 5 s or restricted study time to 5 s where time begins after first selection) x 6 (Point Order: 135, 153, 315, 351, 513, or 531)
+#
+#Prestudy Phase
+#Study Phase
+#Recall Phase
+#
+#
+#
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/1_Prestudy_Phase_1.htm"
+			END="Click:Continue"
+		</STATE>
+#Prestudy (Seq) (match 3)
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/SOCS/1f_Prestudy.htm"
+			ITEMS="1"
+			SETS="48"
+			SCALE="1.0"
+			CONSTRAINTS="match:$Pair1A"
+			SET="DisableSubmitHook:yes"
+			SET="RecallName:Prestudy"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/1_Study_Phase_1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/2_Study_Phase_2.htm"
+			END="Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/2b_Study_Phase_2.htm"
+			END="Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/3_Study_Phase_3.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SOCS/4_Prestudy.htm"
+			CONSTRAINTS="range:0-48"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/5_Study_Phase_4.htm"
+			END="Click:Continue"
+		</STATE>
+#Study 
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_135.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:unlimited"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="no"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_135.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:5s"
+				SET="ResetOnNext:yes"	
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+		
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SOCS/6_Poststudy.htm"
+			CONSTRAINTS="range:0-48"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/7_Recall.htm"
+			END="Click:Continue"
+		</STATE>
+#recall test (Seq) (match 3)
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/SOCS/7f_Recall.htm"
+			ITEMS="1"
+			SETS="48"
+			SCALE="1.0"
+			CONSTRAINTS="match:$Pair1A"
+			SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SOCS/8_Postdiction.htm"
+			CONSTRAINTS="range:0-48"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/9_Thank_You.htm"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+</EXPERIMENT>
