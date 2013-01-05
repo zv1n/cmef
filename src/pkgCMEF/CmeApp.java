@@ -258,7 +258,6 @@ public class CmeApp extends JFrame implements AncestorListener
      * Set a PropertyValue
      */
     public void setProperty(String name, Object prop) {
-    	System.err.println(name + "=" + prop.toString());
         m_eProperties.put(name, prop);
     }
 
@@ -381,7 +380,6 @@ public class CmeApp extends JFrame implements AncestorListener
 		Vector<String> typeList = m_PairFactory.getTypeList();
 		
 		for (int x=0; x<typeList.size(); x++) {
-			System.err.println(typeList.get(x) + "Count_T" + id);
 			m_eProperties.put(typeList.get(x) + "Count_T" + id, "0");
 			m_eProperties.put(typeList.get(x) + "Points_T" + id, "0");
 		}
@@ -924,7 +922,6 @@ public class CmeApp extends JFrame implements AncestorListener
 			handleCompoundProperty(m_CurState, "Exclude", new CmeStringHandler() {
 				public boolean handleString(String regex) {
 					regex = m_CurState.translateString(regex);
-					System.err.println(regex);
 					return fexc.matches(regex);
 				}
 			});
@@ -932,7 +929,6 @@ public class CmeApp extends JFrame implements AncestorListener
 			ret || handleCompoundProperty(null, "Exclude", new CmeStringHandler() {
 				public boolean handleString(String regex) {
 					regex = translateString(regex);
-					System.err.println(regex);
 					return fexc.matches(regex);
 				}
 			});
@@ -965,7 +961,6 @@ public class CmeApp extends JFrame implements AncestorListener
 			}
 			
 			if (value instanceof String) {
-				System.out.println(variable);
 				text = text.replace("$" + variable, (String)value);
 				text = text.replace("${" + variable + "}", (String)value);
 			}
@@ -991,7 +986,6 @@ public class CmeApp extends JFrame implements AncestorListener
 					String idx = Integer.toString(x);
 					text = text.replace("$" + variable + "[" + idx + "]", strArray.get(x));
 					text = text.replace("${" + variable + "}[" + idx + "]", strArray.get(x));
-					System.out.println(variable + "[" + idx + "]");
 				}
 				
 				text = text.replace("$" + variable + "[.*]", "index out of bounds");

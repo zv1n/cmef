@@ -56,8 +56,10 @@
 #testing run
 		<STATE>
 			MODE="Instruction"
-			FILE="Instructions/SOCS2/1_Prestudy_Phase_1.htm"
+			FILE="Instructions/SOCS2/4f_Go_Go_Go.htm"
+			DISPLAY_TIMER="down"
 			END="Time:2s"
+			CONDITIONS="A"
 		</STATE>
 		<STATE>
 			MODE="Study"
@@ -101,7 +103,7 @@
 			SETS="16"
 			SCALE="1.0"
 			NEXT="Click:Continue"
-			CONDITIONS="A"
+			CONDITIONS="B"
 		</STATE>
 #start
 		<STATE>

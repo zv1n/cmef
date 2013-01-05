@@ -161,7 +161,7 @@ public class CmeClock extends JPanel implements CmeLimit
 		}
 		
 		if (display > 0)
-			display += 1000;
+			display += 999;
 		display /= 1000;
 		
 			// Draw the 10s if needed	

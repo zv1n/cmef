@@ -770,6 +770,23 @@ public class CmeView extends JPanel {
 		
 		m_HtmlView.setContent(content, listener);
 	}
+
+	private int displayTimer() {
+		String pst = m_CurState.getStringProperty("DisplayTimer");
+		
+		if (pst == null)
+			return 0;
+		
+		pst = pst.toLowerCase();
+		
+		if (pst.equals("no") || pst.equals("false"))
+			return 0;
+		
+		if (pst.equals("up"))
+			return +1;
+		
+		return -1;
+	}
 	
 	private void updateClock() {
 		if (!m_CurState.canStudy()) {
@@ -777,19 +794,15 @@ public class CmeView extends JPanel {
 			return;
 		}
 		
-		String displayClock = (String)m_CurState.getProperty("DisplayTimer");
-		if (displayClock == null) {
-			m_cClock.setVisible(false);
-		} else {
-			if (displayClock.equals("no"))
+		int clockDirection = displayTimer();
+		if (clockDirection == 0)
 				m_cClock.setVisible(false);
-			else {
-				if (displayClock.equals("down")) 
-					m_cClock.setCountDown(true);
-				else
-					m_cClock.setCountDown(false);
-				m_cClock.setVisible(true);
-			}
+		else {
+			if (clockDirection < 0) 
+				m_cClock.setCountDown(true);
+			else
+				m_cClock.setCountDown(false);
+			m_cClock.setVisible(true);
 		}
 		
 		int timeLimit = m_CurState.getIntProperty("Limit");

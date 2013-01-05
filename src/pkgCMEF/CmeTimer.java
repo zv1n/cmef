@@ -85,7 +85,7 @@ public class CmeTimer {
 			}
 		}
 		
-		return Integer.valueOf(delay) * multiplier;
+		return (Integer.valueOf(delay) * multiplier);
 	}
 	
 	public void start() {
