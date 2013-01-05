@@ -28,7 +28,7 @@ public class CmeSelectiveIter implements CmeIterator {
 		m_iExclusiveBase = new Vector<Integer>();
 		
 		System.out.println("Setting list: '" + str + "'");
-		String[] items = str.split(":");
+		String[] items = str.split(",");
 		for (int x=0; x<items.length; x++) {
 			m_iExclusiveBase.add(Integer.valueOf(items[x]));
 		}

@@ -69,7 +69,7 @@ public class CmeApp extends JFrame implements AncestorListener
 	private String m_sExpFileName;
 	
 	/** The minimum version this API is compatible with. */
-	final static private double m_MinVer = 2.0;
+	final static private double m_MinVer = 2.1;
 	
 	public static final int CME_ENABLE_REFRESH = 0x1;
 	public static final int CME_TEXT_ONLY = 0x2;
@@ -660,7 +660,8 @@ public class CmeApp extends JFrame implements AncestorListener
 						if (vdub < m_MinVer)
 							throw new Exception ("The selected Experiment file cannot be used with this version of CMEF.\n" + 
 												 "Please selected an experiment file which is written for CMEF v" + m_MinVer + 
-												 " or greater.");
+												 " or greater, or view documentation for format changes between this version" +
+												 " and version " + value + ".");
 					} else
 						throw new Exception ("The Selected Experiment file does not contain version \n information " +
 											"and cannot be used with this version of CMEF.");
@@ -705,6 +706,10 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.startsWith("ESET=")) {
 					requirePair(splitValue, event + " tag must contain the form 'property:value'");
 					m_eProperties.put(lhs, rhs);
+					
+				} else if (line.startsWith("LIST_ESET=")) {
+					requirePair(splitValue, event + " tag must contain the form 'property:value'");
+					compoundProperty(null, lhs, rhs);
 
 				} else if (line.contains("CONDITIONS=")) {
 					String valConditions = value.toUpperCase().replace(',', ':');
@@ -783,8 +788,11 @@ public class CmeApp extends JFrame implements AncestorListener
 					if (!setStudyLimit(event, lhs, rhs, thisState))
 						throw new Exception("Invalid State Interaction: " + line);
 
-				} else if (line.startsWith("POOL=")) {
-					compoundProperty(thisState, "Pool", value);
+				} else if (line.startsWith("POOL=") || line.startsWith("SET_POOL=")) {
+					compoundProperty(thisState, "SetPool", value);
+
+				} else if (line.startsWith("STATE_POOL=")) {
+					compoundProperty(thisState, "StatePool", value);
 					
 				} else if (line.startsWith("SET=")) {
 					requirePair(splitValue, event + " must contain a name:value pair!");
@@ -959,18 +967,37 @@ public class CmeApp extends JFrame implements AncestorListener
 			}
 			
 			if (value instanceof String) {
+				System.out.println(variable);
 				text = text.replace("$" + variable, (String)value);
 				text = text.replace("${" + variable + "}", (String)value);
-			} else {
+			}
+		}
+		
+		viter = propList.iterator();
+		while (viter.hasNext()) {
+			String variable = viter.next();
+			
+			Object value = Properties.get(variable);
+			if (value == null) {
+				if (!ignoreUndefined) {
+					text = text.replace("$" + variable + "[.*]", "");
+					text = text.replace("${" + variable + "}[.*]", "");
+				}
+				continue;
+			}
+			
+			if (!(value instanceof String)) {
 				Vector<String> strArray = (Vector<String>)value;
 				for (int x=0; x<strArray.size(); x++) {
 					String str = strArray.get(x);
-					text = text.replace("$" + variable + "[" + Integer.toString(x) + "]", strArray.get(x));
-					text = text.replace("${" + variable + "}[" + Integer.toString(x) + "]", strArray.get(x));
+					String idx = Integer.toString(x);
+					text = text.replace("$" + variable + "[" + idx + "]", strArray.get(x));
+					text = text.replace("${" + variable + "}[" + idx + "]", strArray.get(x));
+					System.out.println(variable + "[" + idx + "]");
 				}
 				
-				text = text.replaceAll("\\$" + variable + "\\[[0-9]+\\]", "index out of bounds");
-				text = text.replaceAll("\\${" + variable + "}\\[[0-9]+\\]", "index out of bounds");
+				text = text.replace("$" + variable + "[.*]", "index out of bounds");
+				text = text.replace("${" + variable + "}[.*]", "index out of bounds");
 				text = text.replace("$" + variable, strArray.toString());
 				text = text.replace("${" + variable + "}", strArray.toString());
 			} 

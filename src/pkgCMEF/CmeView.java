@@ -621,7 +621,7 @@ public class CmeView extends JPanel {
 		
 		double scale = getScale();
 		CmeIterator iter = m_CurState.getIterator();		
-		final int count = m_CurState.getPerStepCount();
+		int count = m_CurState.getPerStepCount();
 		final int currentStep = m_CurState.getStep();
 		String preStudyColor = m_CurState.getStringProperty("PreStudyColor");
 		
@@ -650,11 +650,22 @@ public class CmeView extends JPanel {
 				m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);
 			}
 		}
-				
-		System.out.println("Creating random pools");
-		boolean ret = 
-			m_App.handleCompoundProperty(m_CurState, "Pool", new CmeStringHandler() {
+		
+		setSetPoolProperties();
+		setStatePoolProperties();
+		
+		System.out.println("Done creating random pools.");
+	}
+	
+	private boolean setSetPoolProperties() {
+		final int count = m_CurState.getPerStepCount();
+		return m_App.handleCompoundProperty(m_CurState, "SetPool", new CmeStringHandler() {
 				public boolean handleString(String handle) {	
+					
+					/* Let the current state properties override the local properties. */
+					handle = m_CurState.translateString(handle);
+					handle = m_App.translateString(handle);
+					
 					CmeSelectiveIter sel = m_App.getPool(handle);
 					
 					if (sel == null)
@@ -673,8 +684,34 @@ public class CmeView extends JPanel {
 					return true;
 				}
 			});
-		
-		System.out.println("Done creating random pools.");
+	}
+	
+	private boolean setStatePoolProperties() {
+		return m_App.handleCompoundProperty(m_CurState, "StatePool", new CmeStringHandler() {
+					public boolean handleString(String handle) {
+						
+						/* Let the current state properties override the local properties. */
+						handle = m_CurState.translateString(handle);
+						handle = m_App.translateString(handle);
+						
+						CmeSelectiveIter sel = m_App.getPool(handle);
+						
+						if (sel == null)
+							return false;
+						
+						if (m_CurState.getStep() == 0)
+							sel.reset();
+						
+						int next = sel.getNext();
+						String snext = String.valueOf(next);
+						
+						handle = handle.trim();
+						System.err.println("Adding Property: " + handle + " as '" + snext + "'");
+						m_CurState.setProperty(handle, snext);
+						
+						return true;
+					}
+			});
 	}
 
 	/**
@@ -691,9 +728,9 @@ public class CmeView extends JPanel {
 		
 		String content;
 		
-		/*Application properties are global and shouldn't change...*/
-		m_sContent = m_App.translateString(m_sContent);
+		/* App props may be constant, but the state namespace may chose to override them! */
 		content = m_CurState.translateString(m_sContent);
+		content = m_App.translateString(content);
 		
 		ActionListener listener = m_SubmitListener;
 		
