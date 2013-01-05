@@ -55,13 +55,6 @@
 #
 #testing run
 		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SOCS2/4f_Go_Go_Go.htm"
-			DISPLAY_TIMER="down"
-			END="Time:2s"
-			CONDITIONS="A"
-		</STATE>
-		<STATE>
 			MODE="Study"
 			FILE="Instructions/SOCS2/4f_Study_Phase_135.htm"
 				SET="BorderWidth:1.5"
