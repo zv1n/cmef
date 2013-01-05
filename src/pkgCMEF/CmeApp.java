@@ -117,11 +117,58 @@ public class CmeApp extends JFrame implements AncestorListener
 	public static final Font SysLabelFontP = new Font("SansSerif", Font.PLAIN, 20);
 	/** Small font used for instructions and labels on text widgets */
 	public static final Font SysSmallFont = new Font("SansSerif", Font.PLAIN, 18);
+	
+	static public class cmePropertyDescription {
+		public cmePropertyDescription(String desc, String def) {
+			m_sDescription = desc;
+			m_sDefaultValue = def;
+		}
+		
+		public String m_sDescription;
+		public String m_sDefaultValue;
+	};
+	
+	private static HashMap<String, cmePropertyDescription> m_vrPropertyListing;
+	
+	/**
+	 * Add a property to the property listing.
+	 * 
+	 * @param name Name of the property.
+	 * @param description Property description to display.
+	 * @param defaultval Default value assigned to the property when it is not externally defined.
+	 * 
+	 * @return True if the property of Name is not in the list, false otherwise.
+	 */
+	public static boolean addPropertyListing(String name, String description, String defaultval)
+	{
+		if (m_vrPropertyListing.containsKey(name))
+			return false;
 
+		m_vrPropertyListing.put(name, new CmeApp.cmePropertyDescription(description, defaultval));
+		return m_vrPropertyListing.containsKey(name);
+	}
+	
+	/**
+	 * Return the cmePropertyDescription associated with the name.
+	 * @param name Name of the property to retrieve
+	 * @return
+	 */
+	public static cmePropertyDescription getPropertyDescription(String name) {
+		return m_vrPropertyListing.get(name);
+	}
+	
+	/**
+	 * Return constant map for the PropertyListing.
+	 * @return Iterator associated with the listing.
+	 */
+	public Map<String, cmePropertyDescription> getPropertyListing() {
+		return java.util.Collections.unmodifiableMap(m_vrPropertyListing);
+	}
+	
 	/**
 	 * Pop-up a message box to be used for debug messages.
 	 * @param level - minimum debug level to show the MsgBox
-	 * @param msg - the msg to be displayed
+	 * @param msg - the message to be displayed
 	 */
 	public void dmsg(int level, String msg) {
 		if (level >= (m_iDebugLevel & 0xFF)) {
@@ -900,7 +947,7 @@ public class CmeApp extends JFrame implements AncestorListener
 
 		Iterator<String> viter = propList.iterator();
 		while (viter.hasNext()) {
-			String variable = (String) viter.next();
+			String variable = viter.next();
 			
 			Object value = Properties.get(variable);
 			if (value == null) {
@@ -1176,7 +1223,7 @@ public class CmeApp extends JFrame implements AncestorListener
 				break;
 				
 			dmsg(5, "Skipping State: Condition: :" + sCondition + ":, Condition Expected: " + stateConditions);
-			m_CurState = (CmeState) m_cIterator.next();	
+			m_CurState = m_cIterator.next();	
 		}
 	}
 	
@@ -1204,7 +1251,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			
 			if (m_CurState != null)
 				m_CurState.clean();
-			m_CurState = (CmeState) m_cIterator.next();
+			m_CurState = m_cIterator.next();
 			
 			skipInvalidConditions();
 			
