@@ -115,9 +115,10 @@ public class CmeClock extends JPanel implements CmeLimit
 	
 	public void tick() {
 		m_iCurTime += m_iResolution;
-		if (isComplete() && m_cResponse != null)
+		if (isComplete() && m_cResponse != null) {
 			m_cResponse.Respond();
-		if (m_iCurTime%(1000/m_iResolution) == 0)
+			paint(this.getGraphics());
+		} else if (m_iCurTime%(1000/m_iResolution) == 0)
 			paint(this.getGraphics());
 	}
 	
@@ -153,10 +154,16 @@ public class CmeClock extends JPanel implements CmeLimit
 		
 		int display = m_iCurTime;
 		
-		if (m_bCountDown)
+		if (m_bCountDown) {
 			display = m_iTimeLimit - m_iCurTime;
+			if (display <= 0)
+				g.setColor(Color.RED);
+		}
 		
+		if (display > 0)
+			display += 1000;
 		display /= 1000;
+		
 			// Draw the 10s if needed	
 		g.drawString(String.valueOf(display / 10), (int)(0.20*this.getWidth()), 26);
 			// Draw the 1s

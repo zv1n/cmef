@@ -55,6 +55,33 @@
 #
 #testing run
 		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS2/1_Prestudy_Phase_1.htm"
+			END="Time:2s"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS2/4f_Study_Phase_135.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:5s"
+				SET="Resolution:100"
+				SET="ContinuousTimer:yes"
+				SET="ContinuousAfterFirstSelection:no"
+				SET="ResetOnNext:yes"
+			STUDY_FILE="Instructions/SOCS2/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			STATE_POOL="SequenceIterator"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+		<STATE>
 			MODE="Study"
 			FILE="Instructions/SOCS2/4f_Study_Phase_135.htm"
 				SET="BorderWidth:1.5"
@@ -65,6 +92,7 @@
 				SET="Resolution:100"
 				SET="ContinuousTimer:yes"
 				SET="ContinuousAfterFirstSelection:yes"
+				SET="ResetOnNext:yes"
 			STUDY_FILE="Instructions/SOCS2/4f_Study_Phase_2.htm"
 			SET="LimitPromptButtons:yesno"
 			DISPLAY_TIMER="down"
@@ -127,6 +155,11 @@
 			FILE="Instructions/SOCS2/5_Study_Phase_4.htm"
 			END="Click:Continue"
 		</STATE>
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Point to a file that just says Will begin in 2 Seconds."
+#			END="Time:2s"
+#		</STATE>
 #Study 
 		<STATE>
 			MODE="Study"
@@ -135,8 +168,11 @@
 				SET="PreStudyColor:#0000A0"
 				SET="PostStudyColor:#FF0000"
 			ITERATOR="random:exclusive"
-			STUDY_LIMIT="time:unlimited"
+			STUDY_LIMIT="time:5s"
 				SET="Resolution:100"
+				SET="ResetOnNext:yes"
+				SET="ContinuousTimer:yes"
+				SET="ContinuousAfterFirstSelection:yes"
 			STUDY_FILE="Instructions/SOCS2/4f_Study_Phase_2.htm"
 			SET="LimitPromptButtons:yesno"
 			DISPLAY_TIMER="no"
@@ -157,6 +193,8 @@
 			STUDY_LIMIT="time:5s"
 				SET="ResetOnNext:yes"	
 				SET="Resolution:100"
+				SET="ContinuousTimer:yes"
+				SET="ContinuousAfterFirstSelection:no"
 			STUDY_FILE="Instructions/SOCS2/4f_Study_Phase_2.htm"
 			SET="LimitPromptButtons:yesno"
 			DISPLAY_TIMER="down"

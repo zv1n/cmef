@@ -453,9 +453,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		if (state == null)
 			return false;
 		
-		lhs = lhs.toUpperCase();
-		
-		if (lhs.equals("TIME")) {
+		if (lhs.toUpperCase().equals("TIME")) {
 			int limit = CmeTimer.getDelayStringValue(rhs);
 			
 			System.out.println("Limit: " + limit);

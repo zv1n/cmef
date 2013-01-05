@@ -167,7 +167,7 @@ public class CmeView extends JPanel {
 		this.add(m_ScrollPane);
 
 	}
-	
+
 	private void primaryClickEvent() {
 		if (m_bInStudyState) {
 			try {
@@ -180,16 +180,23 @@ public class CmeView extends JPanel {
 			m_CurState.TriggerEvent(CmeState.EVENT_CLICK_PRIMARY);
 		}
 	}
-	
+
 	private void clockLimitHit() {
 		try {
 			clearStudyState();
+			m_cClock.stop();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage() + ": Failed to propertly clear Study State.");
 			System.exit(1);
 		}
 	}
-	
+
+	public void updateHtmlContent() throws Exception {
+		String content = m_CurState.translateString(m_sContent);
+		content = m_App.translateString(content);
+		m_HtmlView.setContent(content, null);
+	}
+
 	public void updateLinkColor(String element) {
 		
 		String postStudyColor = (String)m_CurState.getProperty("PostStudyColor");
@@ -199,90 +206,107 @@ public class CmeView extends JPanel {
 			m_CurState.setProperty("Pair" + element + "Color", postStudyColor);
 		}
 	}
-	
-	public void clearStudyState() throws Exception {
+
+	public boolean clearStudyState() throws Exception
+	{
+		boolean ret = false;
+		
 		if (m_bInStudyState) {
-			String element = m_cClock.getElement();
-			
+			String pairNum = m_cClock.getElement();
 			int elapsed = 0;
 			
-			if (isContinuousTimer())
+			if (isContinuousTimer() && !m_cClock.isComplete())
 				elapsed = m_cClock.getElapsedTime();
 			else
 				elapsed = m_cClock.stop();
+			
+			double elapsedTime = ((double)elapsed)/1000.0;
 
-			updateLinkColor(element);
-
-			String content = m_CurState.translateString(m_sContent);
-			m_HtmlView.setContent(content, null);
-
+			/* Setup: trial variable. */
 			String trial = (String) m_CurState.getProperty("CurrentTrial");
-
 			if (trial == null)
 				trial = "";
 			else
 				trial = "_T" + trial;
-
-			String pair = (String) m_CurState.getProperty("Pair" + element);
 			
-			if (pair == null) throw new Exception("Failed to get the current pair!");
+			/* Setup: pair being studied. */
+			String pair = (String) m_CurState.getProperty("Pair" + pairNum);
 			
-			double elapsedTime = ((double)elapsed)/1000.0;
-			String name = "Study" + trial + "_" + pair;
-			String value = Double.toString(elapsedTime);
-			String fbval = m_App.getFeedback(name);
+			if (pair == null) 
+				throw new Exception("Failed to get the current pair!");
 			
-			if (fbval == null)
-				fbval = "";
-			else
-				fbval += ",";
-			fbval += Integer.toString(m_iStudyCount) + "," + value;
-			m_App.addFeedback(name, fbval);
-			
-			/* Calculate cumulative totals for this element */
-			name = "StudyTotalCount" + trial + "_" + pair;
-			value = m_App.getFeedback(name);
-			
-			if (value == null) {
-				value ="1";
-			} else try {
-				int ival = Integer.valueOf(value);
-				ival++;
-				value = String.valueOf(ival);
-			} catch (Exception ex) {
-				System.err.println("Failed to properly set value!");
-				throw new Exception("Failed to properly set total count value!");
-			}
-			
-			System.out.println("Count: " + name + ":" + value);	
-			m_App.addFeedback(name, value);
-			
-			
-			name = "StudyTotalTime" + trial + "_" + pair;
-			value = m_App.getFeedback(name);
-			
-			if (value == null) {
-				value = Double.toString(elapsedTime);;
-			} else try {
-				double dval = Double.valueOf(value);
-				dval += elapsedTime;
-				value = String.valueOf(dval);
-			} catch (Exception ex) {
-				System.err.println("Failed to properly set value!");
-				throw new Exception("Failed to properly set total time value!");
-			}
-			
-			System.out.println("Timer: " + name + ":" + value);
-			m_App.addFeedback(name, value);
+			updateLinkColor(pairNum);
+			updateHtmlContent();
+			updatePairSelection(trial, pair, elapsedTime);
+			updatePairTotals(trial, pair, elapsedTime);
+			updatePairCount(trial, pair);
 			
 			m_iStudyCount++;
+			ret = true;
 		}
 		
 		m_bInStudyState = false;
 		updateButtonText();
+		
+		return ret;
 	}
 	
-	public void setStudyState(String set) throws Exception {
+	private void updatePairSelection(String trial, String pair, double elapsedTime) throws Exception
+	{
+		String name = "Study" + trial + "_" + pair;
+		String value = Double.toString(elapsedTime);
+		String fbval = m_App.getFeedback(name);
+		
+		if (fbval == null)
+			fbval = "";
+		else
+			fbval += ",";
+		
+		fbval += Integer.toString(m_iStudyCount) + "," + value;
+		m_App.addFeedback(name, fbval);
+	}
+	
+	private void updatePairCount(String trial, String pair) throws Exception
+	{
+		String name = "StudyTotalCount" + trial + "_" + pair;
+		String value = m_App.getFeedback(name);
+
+		if (value == null) {
+			value ="1";
+		} else try {
+			int ival = Integer.valueOf(value);
+			ival++;
+			value = String.valueOf(ival);
+		} catch (Exception ex) {
+			System.err.println("Failed to properly set value!");
+			throw new Exception("Failed to properly set total count value!");
+		}
+
+		System.out.println("Count: " + name + ":" + value);	
+		m_App.addFeedback(name, value);
+	}
+	
+	private void updatePairTotals(String trial, String pair, double elapsedTime) throws Exception {
+		String name = "StudyTotalTime" + trial + "_" + pair;
+		String value = m_App.getFeedback(name);
+	
+		if (value == null) {
+			value = Double.toString(elapsedTime);;
+		} else try {
+			double dval = Double.valueOf(value);
+			dval += elapsedTime;
+			value = String.valueOf(dval);
+		} catch (Exception ex) {
+			System.err.println("Failed to properly set value!");
+			throw new Exception("Failed to properly set total time value!");
+		}
+	
+		System.out.println("Timer: " + name + ":" + value);
+		m_App.addFeedback(name, value);
+	}
+	
+	public void setStudyState(String set) throws Exception
+	{
 		if (!m_CurState.canStudy())
 			return;
 		
@@ -560,6 +584,10 @@ public class CmeView extends JPanel {
 
 		m_CurState.resetSeqState();
 		m_HtmlView.requestFirstFocus();
+		
+		/* The clock is continuous and is NOT only after first Study */
+		if (isContinuousTimer() && !isContinuousAfterFirstSelection())
+			m_cClock.start("");
 
 		return true;
 	}
@@ -794,7 +822,7 @@ public class CmeView extends JPanel {
 		if (m_bInStudyState) {
 			m_bNext.setText("Close");
 			m_bNext.setVisible(true);
-			} else if (m_CurState.getEventResponseCount(CmeState.EVENT_CLICK_PRIMARY) == 0) {
+		} else if (m_CurState.getEventResponseCount(CmeState.EVENT_CLICK_PRIMARY) == 0) {
 			m_bNext.setVisible(false);
 			if (m_bRefresh != null)
 				m_bRefresh.setVisible(false);
