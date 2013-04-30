@@ -70,6 +70,7 @@
 			SET="LimitPromptButtons:yesno"
 			DISPLAY_TIMER="down"
 			STATE_POOL="SequenceIterator"
+			POST_PROMPT="You are about to enter another 5 second set. Press Ok when Ready."
 			ITEMS="3"
 			SETS="16"
 			SCALE="1.0"
