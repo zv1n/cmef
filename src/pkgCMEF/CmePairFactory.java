@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -43,7 +44,7 @@ public class CmePairFactory
 		m_TypeList.clear();
 		
 		// Create the vector to hold all images
-		m_vPairs = new Vector<CmePair>();
+		m_vPairs = new CmeGroupedVector<CmePair>();
 		
 		// Open the ImageList.txt file
 		FileReader		instFile;
@@ -98,7 +99,7 @@ public class CmePairFactory
 				
 				if (m_TypeList.size() == 0)
 					m_TypeList.add(clss);
-				
+								
 				// Create the image and add to the vector of images
 				img = new CmePair(m_App);
 				img.setPairValue(val);
@@ -107,6 +108,7 @@ public class CmePairFactory
 				img.setImageA(strs[3].trim());
 				img.setNameB(strs[4].trim());
 				String ib = null;
+				
 				
 				if (strs.length > 5) {
 					ib = strs[5];
