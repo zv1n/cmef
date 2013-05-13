@@ -1,0 +1,28 @@
+<body align="center" top='0' left='0'> 
+<br><br><br><br>
+<br><br><br><br>
+<br><br><br><br>
+<table width="100%" cellpadding="1px" cellspacing="1px" border="1px">
+<tr align="center">
+<td><font size="+3"><a href="study:1" color="$Pair1Color">$Pair1B</a></td>
+<td><font size="+3"><a href="study:2" color="$Pair2Color">$Pair2B</a></td>
+<td><font size="+3"><a href="study:3" color="$Pair3Color">$Pair3B</a></td>
+</tr>
+<tr align="center">
+<td><font size="+2">${Sequence1}[$SequenceIterator] Point</font></td>
+<td><font size="+2">${Sequence2}[$SequenceIterator] Points</font></td>
+<td><font size="+2">${Sequence3}[$SequenceIterator] Points</font></td>
+</tr>
+</table>
+
+<input type="hidden" name="StudyGridNumber_$Pair1" value="$Pair1Sequence"/>
+<input type="hidden" name="StudyGridNumber_$Pair2" value="$Pair2Sequence"/>
+<input type="hidden" name="StudyGridNumber_$Pair3" value="$Pair3Sequence"/>
+<input type="hidden" name="Point_Value_$Pair1" value="${Sequence1}[$SequenceIterator]"/>
+<input type="hidden" name="Point_Value_$Pair2" value="${Sequence2}[$SequenceIterator]"/>
+<input type="hidden" name="Point_Value_$Pair3" value="${Sequence3}[$SequenceIterator]"/>
+<input type="hidden" name="StudyGridOrder_T2_$Pair1" value="1"/>
+<input type="hidden" name="StudyGridOrder_T2_$Pair2" value="2"/>
+<input type="hidden" name="StudyGridOrder_T2_$Pair3" value="3"/>
+
+</body>

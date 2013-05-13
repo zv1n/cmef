@@ -27,7 +27,7 @@ public class CmePairFactory
 	private CmeApp m_App;
 	
 	/** Vector of PCLE_Image objects */
-	private Vector<CmePair> m_vPairs;
+	private CmeGroupedVector<CmePair> m_vPairs;
 	
 	private Vector<String> m_TypeList;
 	
@@ -246,6 +246,14 @@ public class CmePairFactory
 	{
 		if((idx < 0) || (idx >= m_vPairs.size())) return null;
 		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairGroup());
+	}
+	
+	public void setDataSet(String name) {
+		m_vPairs.setActiveGroup(name);
+	}
+	
+	public void clearDataSet() {
+		m_vPairs.clearActiveGroup();
 	}
 	
 	public int getCount() {

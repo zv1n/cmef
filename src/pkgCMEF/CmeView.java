@@ -915,6 +915,17 @@ public class CmeView extends JPanel {
 	}
 
 	/**
+	 * Updates the PairFactory to the desired dataset settings.
+	 */
+	public void updateDataset() {
+		String group = m_CurState.getStringProperty("CurrentDataset");
+		if (group == null)
+			m_PairFactory.clearDataSet();
+		else
+			m_PairFactory.setDataSet(group);
+	}
+	
+	/**
 	 * Sets the current state and adjusts the layout appropriately
 	 * 
 	 * @param mCurState
@@ -924,6 +935,8 @@ public class CmeView extends JPanel {
 	public void setState(CmeState mCurState) throws Exception {
 		Object instructionFile = null;
 		m_CurState = mCurState;
+		
+		updateDataset();
 
 		updateClock();
 		updateButtonText();

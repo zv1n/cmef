@@ -388,9 +388,11 @@ public class CmeApp extends JFrame implements AncestorListener
 		m_eProperties.put("TotalPoints_T" + id, "0");
 	}
 	
-	private void configureStateGlobals(CmeState state, String trialId) {
+	private void configureStateGlobals(CmeState state, String trialId, String dataset) {
 		if (trialId != null)
 			state.setProperty("CurrentTrial", trialId);
+		if (dataset != null)
+			state.setProperty("CurrentDataset", dataset);
 
 		state.setProperty("MatchCount", "3");
 	}
@@ -438,6 +440,12 @@ public class CmeApp extends JFrame implements AncestorListener
 				itype &= ~CmeIterator.REVERSE;
 			}
 		}
+		
+		String group = state.getStringProperty("CurrentDataset");
+		if (group == null)
+			m_PairFactory.clearDataSet();
+		else
+			m_PairFactory.setDataSet(group);
 
 		dmsg(0xFF, "Set Iterator: " + Integer.toString(this.m_PairFactory.getCount()));
 
@@ -590,6 +598,18 @@ public class CmeApp extends JFrame implements AncestorListener
 			throw new Exception(text);
 	}
 	
+	public String getValue(String line, String var) {
+		int idx = line.indexOf(var);
+		if (idx < 0)
+			return "";
+		
+		String value = line.substring(idx + var.length());
+		int fquote = value.indexOf("\"");
+		int lquote = value.indexOf("\"", fquote+1);
+		
+		return value.substring(fquote+1, lquote).trim();
+	}
+	
 	/** 
 	 * Initialization function for preparing all States
 	 *  Reads in experiment configuration file and generates 
@@ -606,6 +626,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		int lc = 0;
 
 		String trialId = null;
+		String dataset = null;
 		BufferedReader bufReader = null;
 		CmeState thisState = null;
 
@@ -666,7 +687,15 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.startsWith("<TRIAL")) {
 					if (m_PairFactory == null)
 						throw new Exception ("The data file has not been specified!\n" + m_sExpFileName);
-					trialId = value;
+					if (line.contains("ID")) {
+						value = getValue(line, "ID");
+						trialId = value;	
+					}
+					if (line.contains("DATASET")) {
+						dataset = getValue(line, "DATASET");
+					} else 
+						dataset = null;
+
 					configureTrialGlobals(value);
 					
 				} else if (line.startsWith("</TRIAL")) {
@@ -674,7 +703,7 @@ public class CmeApp extends JFrame implements AncestorListener
 					
 				} else if (line.startsWith("<STATE>")) {
 					thisState = new CmeState(this);
-					configureStateGlobals(thisState, trialId);
+					configureStateGlobals(thisState, trialId, dataset);
 					
 				} else if (line.contains("TITLE")) {
 					if (thisState == null)

@@ -24,35 +24,56 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 		m_activeGroup = null;
 	}
 	
+	public int size() {
+		if (m_activeGroup == null)
+			return super.size();
+
+		Integer gcount = m_cGroups.get(m_activeGroup);
+		if (gcount == null)
+			return 0;
+
+		return gcount;
+	}
+	
 	public boolean add(CmePair pair) {
 		String group = pair.getPairGroup();
-		m_cGroups.put(group, m_cGroups.get(group)+1);
+		Integer val = m_cGroups.get(group);
+		if (val == null)
+			val = 0;
+		val++;
+		m_cGroups.put(group, val);
 		return super.add(pair);
 	}
 	
 	public CmePair elementAt(int index) {
+
 		Iterator<CmePair> iter = this.iterator();
 		
-		if (index < 0)
+		if (index < 0) {
 			return null;
+		}
 		
 		if (m_activeGroup == null) {
-			if (this.size() <= index)
+			if (this.size() <= index) {
 				return null;
+			}
 			return super.elementAt(index);
 		}
-
-		if (m_cGroups.get(m_activeGroup) <= index)
+		
+		Integer gcount = m_cGroups.get(m_activeGroup);
+		if (gcount == null || gcount <= index) {
 			return null;
+		}
 
 		while (iter.hasNext()) {
 			CmePair pair = iter.next();
-			if (m_activeGroup == pair.getPairGroup())
-				if (index == 0)
+			if (m_activeGroup.equals(pair.getPairGroup())) {
+				if (index == 0) {
 					return pair;
+				}
 				index--;
+			}
 		}
-
 		return null;
 	}
 }
