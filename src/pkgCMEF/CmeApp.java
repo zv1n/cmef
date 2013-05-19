@@ -470,7 +470,7 @@ public class CmeApp extends JFrame implements AncestorListener
 		return false;
 	}
 	
-	private boolean setEvent(String action, String lhs, String rhs, CmeState state) throws Exception {
+	private boolean setEvent(String action, String lhs, String rhs, CmeState state, int seq) throws Exception {
 		final CmeApp thisApp = this;
 		int type = CmeState.EVENT_MAX;
 		CmeEventResponse response = null;
@@ -543,7 +543,7 @@ public class CmeApp extends JFrame implements AncestorListener
 			}
 		} else throw new Exception("Unknown Event Type (Wanted Click or Time, got '" + lhs + "').");
 
-		state.addEventResponse(type, response);
+		state.addEventResponse(type, response, seq);
 		return true;
 	}
 	
@@ -644,6 +644,8 @@ public class CmeApp extends JFrame implements AncestorListener
 		String lhs;
 		String rhs;
 		
+		int stateSequence = -1;
+		
 		// Read the text strings and add them to the text area
 		try {
 			bufReader = new BufferedReader(instFile);
@@ -703,6 +705,7 @@ public class CmeApp extends JFrame implements AncestorListener
 					
 				} else if (line.startsWith("<STATE>")) {
 					thisState = new CmeState(this);
+					stateSequence = -1;
 					configureStateGlobals(thisState, trialId, dataset);
 					
 				} else if (line.contains("TITLE")) {
@@ -759,9 +762,10 @@ public class CmeApp extends JFrame implements AncestorListener
 // FILE=
 //			File to be used for the instruction page.
 //			File MUST exist!
-				} else if (line.startsWith("FILE=")) {
-					thisState.setProperty("InstructionFile", value);
+				} else if (line.startsWith("FILE=") || line.startsWith("FILE_SEQUENCE=")) {
 					validateFile(value);
+					thisState.addInstructionFile(value);
+					stateSequence++;
 					
 // PROMPT/POST_PROMPT/POST_STATE_PROMPT 
 //			Sets various prompt strings that occur at various times during an experiment.
@@ -786,13 +790,13 @@ public class CmeApp extends JFrame implements AncestorListener
 				} else if (line.contains("END=")) {
 					requirePair(splitValue, event + " must contain a name:value pair!");
 				
-					if (!setEvent(event, lhs, rhs, thisState))
+					if (!setEvent(event, lhs, rhs, thisState, stateSequence))
 						throw new Exception("Invalid State Interaction: " + line);
 
 				} else if (line.contains("BLANK=")) {
 					requirePair(splitValue, event + " must contain a name:value pair!");
 					
-					if (!setEvent(event, lhs, rhs, thisState))
+					if (!setEvent(event, lhs, rhs, thisState, stateSequence))
 						throw new Exception("Invalid State Interaction: " + line);
 
 				} else if (line.startsWith("NEXT=")) {
@@ -801,7 +805,7 @@ public class CmeApp extends JFrame implements AncestorListener
 
 					requirePair(splitValue, event + " must contain a name:value pair!");
 					
-					if (!setEvent(event, lhs, rhs, thisState))
+					if (!setEvent(event, lhs, rhs, thisState, stateSequence))
 						throw new Exception("Invalid State Interaction: " + line);
 
 				} else if (line.contains("STUDY_LIMIT=")) {

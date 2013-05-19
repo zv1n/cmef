@@ -575,6 +575,8 @@ public class CmeView extends JPanel {
 			this.updateUI();
 		}
 
+		// TODO: Restructure this to use new Display File interface.
+		// TODO: move stateful information into the STATE (is too much in this class?)
 		instructionFile = (String) m_CurState.getProperty("InstructionFile");
 		if (instructionFile != null) {
 			this.showProcessedInstructions((String) instructionFile);

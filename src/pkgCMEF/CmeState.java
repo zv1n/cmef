@@ -27,10 +27,35 @@ public class CmeState {
     private int m_iStepMax;
     /** Number of items to show simultaneously. */
     private int m_iCount;
+    
+    /** The string list storing file locations. */
+    private Vector<String> m_sSequence = new Vector<String>();
+    /** Current position in sequence. */
+    private int m_iSequenceIndex = 0;
 	
     private CmeState m_sPrevState;
+    
+    private class stateEventHandler {
+    	private CmeEventResponse m_erResponse;
+    	private int m_iSequence;
+    	
+    	public stateEventHandler(CmeEventResponse handler, int index) {
+    		m_erResponse = handler;
+    		m_iSequence = index;
+    	}
+    	
+    	public CmeEventResponse getEvent() {
+    		return m_erResponse;
+    	}
+
+    	public void Respond(int seq) {
+    		if (m_iSequence >= 0 & seq == m_iSequence)
+    			m_erResponse.Respond();
+    	}
+    	
+    }
 	
-    private Vector<Vector<CmeEventResponse>> m_erEvent = new Vector<Vector<CmeEventResponse>>();
+    private Vector<Vector<stateEventHandler>> m_erEvent = new Vector<Vector<stateEventHandler>>();
     /** HashSet used to store the properties for each state */
     private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
 	
@@ -65,7 +90,7 @@ public class CmeState {
     public CmeState(CmeApp thisApp) {
         m_App = thisApp;
 		for (int x=0; x<EVENT_MAX; x++)
-			m_erEvent.add(new Vector<CmeEventResponse>());
+			m_erEvent.add(new Vector<stateEventHandler>());
     }
 	
 	/** 
@@ -113,10 +138,10 @@ public class CmeState {
     /**
      * Set event response 
      */
-    public void addEventResponse(int eventId, CmeEventResponse event) {
+    public void addEventResponse(int eventId, CmeEventResponse event, int sequence) {
 		if (m_erEvent.get(eventId) == null)
-			m_erEvent.set(eventId, new Vector<CmeEventResponse>());
-        m_erEvent.get(eventId).add(event);
+			m_erEvent.set(eventId, new Vector<stateEventHandler>());
+        m_erEvent.get(eventId).add(new stateEventHandler(event, sequence));
     }
 	
     /**
@@ -125,7 +150,7 @@ public class CmeState {
     public CmeEventResponse getEventResponse(int eventId, int index) {
 		if (m_erEvent == null || m_erEvent.get(eventId) == null || index >= m_erEvent.get(eventId).size())
 			return null;
-        return m_erEvent.get(eventId).get(index);
+        return m_erEvent.get(eventId).get(index).getEvent();
     }
 	
 	public int getEventResponseCount(int eventId) {
@@ -140,7 +165,7 @@ public class CmeState {
 	 * @return true if valid timer; false else
 	 */
 	public boolean addEventTimer(CmeTimer timer) {
-		if (timer == null && timer.isValid())
+		if (timer == null || !timer.isValid())
 			return false;
 		System.out.print("Delay: ");
 		System.out.println(timer.getDelay());
@@ -201,9 +226,9 @@ public class CmeState {
 		System.out.println(m_erEvent.get(event).size());
 		
 		for (int x=0; x<m_erEvent.get(event).size(); x++) {
-			CmeEventResponse response = m_erEvent.get(event).get(x);
+			stateEventHandler response = m_erEvent.get(event).get(x);
 			if (response != null)
-				response.Respond();
+				response.Respond(m_iSequenceIndex);
 		}
     }
 
@@ -533,5 +558,64 @@ public class CmeState {
      */
     public String translateString(String text) {
         return CmeApp.translateString(m_sProperties, text, true);
+    }
+    
+    
+    /** State Display Sequence Interface
+     * Enables the CmeState class to handle multiple instruction display files in a single "State".
+     * The primary reason for this is so that one can collect information on a Per Item basis form "Multiple" views.
+     * A single file element is not enough to accomplish this.
+     */
+    
+    /**
+     * Get the number of files in the seqence specified by the Experiment configuration file.
+     * 
+     * @return Integer value length of the sequence, 0-N
+     */
+    public int getSequenceLength() {
+    	return m_sSequence.size();
+    }
+    
+    /**
+     * Get the current sequence position.
+     * @return the current sequence index.
+     */
+    public int getSequencePosition() {
+    	return m_iSequenceIndex;
+    }
+    
+    public boolean isSequenceValid() {
+    	int seqLength = getSequenceLength();
+    	return (m_iSequenceIndex < seqLength && m_iSequenceIndex > 0);
+    }
+    
+    /**
+     * Increment the sequence counter.
+     * @return true if there is a sequence to progress to. false if not.
+     */
+    public boolean nextSequencePosition() {
+    	m_iSequenceIndex++;
+    	return isSequenceValid();
+    }
+    
+    public String getSequenceFile() {
+    	if (!isSequenceValid())
+    		return "";
+    	return m_sSequence.get(m_iSequenceIndex);
+    }
+    
+    /**
+     * Reset sequnce counter.
+     */
+    public void resetSequencePosition() {
+    	m_iSequenceIndex = 0;
+    }
+    
+    /**
+     * Add file to sequence.
+     * @param file - Name of the file to add to the sequence.
+     */
+    public void addInstructionFile(String file) {
+    	m_sSequence.add(file);
     }
 }
