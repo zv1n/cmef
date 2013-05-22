@@ -430,34 +430,14 @@ public class CmeView extends JPanel {
 		Dimension newSz = this.getSize();
 
 		Dimension border = new Dimension(10, 10);
-		Dimension dimensions = new Dimension(64, 32);
-		Point location = new Point(newSz.width/2-dimensions.width/2+border.width, newSz.height);
+		Dimension dimensions = new Dimension(64, 35);
+		Point location = new Point(newSz.width/2-dimensions.width/2+border.width, newSz.height-1);
 
 		location.x -= border.width;
 		location.y -= border.height + dimensions.height;
 
 		m_cClock.setSize(dimensions);
 		m_cClock.setLocation(location);
-	}
-
-	/**
-	 * Used to determine if the sequential are complete.
-	 * 
-	 * @return true if the number of iterations has been met; false else.
-	 */
-	public boolean isDone() throws Exception {
-		if (m_CurState.getState() != CmeState.STATE_MULTIPLE) {
-			throw new Exception("Tested if a rating was done when NOT in a rating step!");
-		}
-		
-		CmeIterator iterator = m_CurState.getIterator();
-		if (iterator != null && iterator.isComplete())
-			return true;
-
-		int istep = m_CurState.getStep();
-		int ismax = m_CurState.getStepMax();
-
-		return (istep >= ismax);
 	}
 	
 	public boolean allowNextState() {
@@ -527,6 +507,47 @@ public class CmeView extends JPanel {
 		return false;
 	}
 	
+	private void updateInstructionFile(boolean reconfigure) throws Exception {
+		// TODO: move stateful information into the STATE (is too much in this class?)
+		String instructionFile = (String) m_CurState.getSequenceFile();
+		
+		if (reconfigure) {
+			int icount = m_CurState.getIntProperty("Count");
+			int isets = m_CurState.getIntProperty("Sets");
+			
+			if (isets < 1)
+				isets = 1;
+			if (icount < 1)
+				icount = 1;
+			
+			m_CurState.setStep(1);
+			m_CurState.setStepMax(isets);
+			m_CurState.setPerStepCount(icount);
+			
+			setProperties();
+		}
+
+		updateClock();
+		updateButtonText();
+		
+		if (instructionFile != null) {
+			try {
+				this.showProcessedInstructions((String) instructionFile);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+				throw new Exception("IO Error: " + ex.getMessage() + "\nFile: " + instructionFile);
+			}
+		} else {
+			throw new Exception("Failed to set instruction file! (InstructionFile == null)");
+		}
+		
+		m_HtmlView.requestFirstFocus();
+		
+		/* The clock is continuous and is NOT only after first Study */
+		if (isContinuousTimer() && !isContinuousAfterFirstSelection())
+			m_cClock.start("");
+	}
+	
 	
 	/**
 	 * Used to set the next rating environment.
@@ -534,22 +555,27 @@ public class CmeView extends JPanel {
 	 * @return true if the number of iterations has been met; false else.
 	 */
 	public boolean setNextInSequence() throws Exception {
-		String instructionFile = null;
-		
+
 		if (!allowNextState()) {
+			return true;
+		}
+		
+		// If there is another instruction file to show, then show it!
+		if (m_CurState.nextSequencePosition()) {
+			updateInstructionFile(false);
 			return true;
 		}
  
 		int cstep = m_CurState.getStep();
 		if (cstep > 0) {
-			if (!testAndSaveFeedback()) {
+			if (!isProvidedFeedbackValid()) {
 				return false;
 			}
 		
 			m_HtmlView.setVisible(false);
 			m_App.displayPrompt("PostPromptText");
 			
-			if (isDone()) {
+			if (m_CurState.isDone()) {
 				m_HtmlView.clearContent();
 				if (m_cClock != null)
 					m_cClock.complete();
@@ -575,53 +601,11 @@ public class CmeView extends JPanel {
 			this.updateUI();
 		}
 
-		// TODO: Restructure this to use new Display File interface.
-		// TODO: move stateful information into the STATE (is too much in this class?)
-		instructionFile = (String) m_CurState.getProperty("InstructionFile");
-		if (instructionFile != null) {
-			this.showProcessedInstructions((String) instructionFile);
-		} else {
-			throw new Exception("Failed to set instruction file! (InstructionFile == null)");
-		}
-
 		m_CurState.resetSeqState();
-		m_HtmlView.requestFirstFocus();
-		
-		/* The clock is continuous and is NOT only after first Study */
-		if (isContinuousTimer() && !isContinuousAfterFirstSelection())
-			m_cClock.start("");
 
+		updateInstructionFile(false);
 		return true;
 	}
-
-
-	/**
-	 * Configure the view for Simultaneous presentation.
-	 * @throws Exception 
-	 */
-	private void configureStudyState() throws Exception {
-		Object instructionFile = m_CurState.getProperty("InstructionFile");
-		assert (instructionFile != null);
-
-		int icount = m_CurState.getIntProperty("Count");
-		int isets = m_CurState.getIntProperty("Sets");
-		
-		System.out.println("Count: " + icount);
-		System.out.println("Sets: " + isets);
-		
-		if (isets < 1)
-			isets = 1;
-		if (icount < 1)
-			icount = 1;
-		
-		m_CurState.setStep(1);
-		m_CurState.setStepMax(isets);
-		m_CurState.setPerStepCount(icount);
-		
-		setProperties();
-		showProcessedInstructions((String) instructionFile);
-	}
-	
 	
 	private double getScale() {
 		double scale = 1.0;
@@ -811,9 +795,11 @@ public class CmeView extends JPanel {
 		int timeRes = m_CurState.getIntProperty("Resolution");
 		
 		if (timeLimit <= 0) {
-			System.out.println("Failed to properly retrieve limit:" + String.valueOf(timeLimit));
-			System.exit(1);
+			m_cClock.reset();
+			m_cClock.setVisible(false);
+			return;
 		}
+
 		if (timeRes < 0)
 			timeRes = 1;
 		
@@ -824,7 +810,6 @@ public class CmeView extends JPanel {
 		/* The clock is continuous and is NOT only after first Study */
 		if (isContinuousTimer() && !isContinuousAfterFirstSelection())
 			m_cClock.start("");
-			
 	}
 
 	private void updateButtonText() {
@@ -935,13 +920,10 @@ public class CmeView extends JPanel {
 	 * @throws Exception
 	 */
 	public void setState(CmeState mCurState) throws Exception {
-		Object instructionFile = null;
 		m_CurState = mCurState;
 		
 		updateDataset();
 
-		updateClock();
-		updateButtonText();
 		updateStudyContent();
 		
 		// Begin!
@@ -949,29 +931,23 @@ public class CmeView extends JPanel {
 			switch (m_CurState.getState()) {
 				case CmeState.STATE_INPUT:
 				case CmeState.STATE_INSTRUCTION:
-					instructionFile = m_CurState.getProperty("InstructionFile");
-					assert (instructionFile != null);
-
-					showProcessedInstructions((String) instructionFile);
+					updateInstructionFile(false);
 					break;
 
 				case CmeState.STATE_MULTIPLE:
-					configureStudyState();
+					updateInstructionFile(true);
 					break;
 
 				case CmeState.STATE_PROMPT:
 					this.setVisible(false);
 					showInputPrompt((String) m_CurState.getProperty("PromptText"));
-					if (testAndSaveFeedback())
+					if (isProvidedFeedbackValid())
 						m_App.setNextState();
 					return;
 
 				default:
 					throw new Exception("Default state handler hit!");
 			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			throw new Exception("IO Error: " + ex.getMessage());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new Exception("Failed to set Instruction State: "
@@ -983,7 +959,7 @@ public class CmeView extends JPanel {
 		m_HtmlView.requestFirstFocus();
 	}
 
-	public boolean testAndSaveFeedback() {
+	public boolean isProvidedFeedbackValid() {
 		boolean valid = false;
 		try {
 			Iterator<CmeResponse> iter = m_HtmlView.getResponseIterator();

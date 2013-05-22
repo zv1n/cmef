@@ -48,6 +48,10 @@ public class CmeState {
     		return m_erResponse;
     	}
 
+    	public int getSequence() {
+    		return m_iSequence;
+    	}
+
     	public void Respond(int seq) {
     		if (m_iSequence >= 0 & seq == m_iSequence)
     			m_erResponse.Respond();
@@ -58,6 +62,8 @@ public class CmeState {
     private Vector<Vector<stateEventHandler>> m_erEvent = new Vector<Vector<stateEventHandler>>();
     /** HashSet used to store the properties for each state */
     private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
+    /** The Properties that are used per sequence. */
+    private Vector<HashMap<String, Object> > m_sSequenceProperties = new Vector<HashMap<String, Object> >();
 	
     // -------- Defined Modes ----------
     /** Display instructions mode */
@@ -156,7 +162,12 @@ public class CmeState {
 	public int getEventResponseCount(int eventId) {
 		if (m_erEvent == null)
 			return 0;
-		return m_erEvent.get(eventId).size();
+		int count = 0;
+		for (int x=0; x < m_erEvent.get(eventId).size(); x++) {
+			if (m_erEvent.get(eventId).get(x).getSequence() == m_iSequenceIndex)
+				count++;
+		}
+		return count;
 	}
 	
 	/**
@@ -173,12 +184,35 @@ public class CmeState {
 		return true;
 	}
 	
+
+	/**
+	 * Used to determine if the sequential are complete.
+	 * 
+	 * @return true if the number of iterations has been met; false else.
+	 */
+	public boolean isDone() throws Exception {
+		if (getState() != CmeState.STATE_MULTIPLE) {
+			throw new Exception("Tested if a rating was done when NOT in a rating step!");
+		}
+		
+		CmeIterator iterator = getIterator();
+		if (iterator != null && iterator.isComplete())
+			return true;
+
+		int istep = getStep();
+		int ismax = getStepMax();
+
+		return (istep >= ismax);
+	}
+	
 	/**
 	 * Resets any per seq components which need to reinit.
 	 */
 	public void resetSeqState() {
 		for(int x=0; x<m_Timer.size(); x++)
 			m_Timer.get(x).restart();
+		
+		resetSequencePosition();
 	}
 
     /**
@@ -240,9 +274,30 @@ public class CmeState {
     }
 
     /** 
+     * Set a PropertyValue
+     */
+    public boolean setProperty(String name, Object prop, int seq) {
+    	if (seq == -1) {
+    		setProperty(name, prop);
+    		return true;
+    	}
+    	if (m_sSequenceProperties.size() <= seq)
+    		return false;
+    	m_sSequenceProperties.get(seq).put(name, prop);
+    	return true;
+    }
+
+
+    /** 
      * Set event response 
      */
     public Object getProperty(String name) {
+    	if (m_sSequenceProperties.size() > m_iSequenceIndex) {
+    		Object prop = m_sSequenceProperties.get(m_iSequenceIndex).get(name);
+    		if (prop != null)
+    			return prop;
+    	}
+		System.err.println("root Property: " + name);
         return m_sProperties.get(name);
     }
 	
@@ -250,14 +305,15 @@ public class CmeState {
      * Set event response 
      */
     public String getStringProperty(String name) {
-        return (String) m_sProperties.get(name);
+        return (String) this.getProperty(name);
     }
 
     /** 
      * Set event response 
      */
     public int getIntProperty(String name) {
-        String str = (String) m_sProperties.get(name);
+        String str = (String) this.getProperty(name);
+
         int ret = 0;
         if (str == null) {
             return -1;
@@ -586,7 +642,7 @@ public class CmeState {
     
     public boolean isSequenceValid() {
     	int seqLength = getSequenceLength();
-    	return (m_iSequenceIndex < seqLength && m_iSequenceIndex > 0);
+    	return (m_iSequenceIndex < seqLength && m_iSequenceIndex >= 0);
     }
     
     /**
@@ -600,10 +656,10 @@ public class CmeState {
     
     public String getSequenceFile() {
     	if (!isSequenceValid())
-    		return "";
+    		return null;
     	return m_sSequence.get(m_iSequenceIndex);
     }
-    
+
     /**
      * Reset sequnce counter.
      */
@@ -617,5 +673,13 @@ public class CmeState {
      */
     public void addInstructionFile(String file) {
     	m_sSequence.add(file);
+    	m_sSequenceProperties.add(new HashMap<String, Object>());
+    }
+    
+    public void printInstructionFiles() {
+    	System.out.println("Files for state:");
+    	for (int x=0; x<m_sSequence.size(); x++) {
+    		System.out.println(m_sSequence.get(x));
+    	}
     }
 }
