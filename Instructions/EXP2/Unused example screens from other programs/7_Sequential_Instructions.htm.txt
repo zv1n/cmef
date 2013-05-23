@@ -1,0 +1,42 @@
+<html>
+<body align="center">
+<br><br>
+<table cellspace="0" border="0">
+<td><tr>
+<font size="+1">
+
+In the upcoming study phase you will be able to decide which items to study.<br> 
+Remember that you will have 30 seconds per grid to study items. If you click<br>
+on a Chinese character a new screen will open containing the Chinese character<br>
+and its English equivalent.  A clock will begin counting down until you indicate<br>
+you are finished studying that item.  You may select or reselect items to study<br>
+until time runs out.  If you finish studying items before time runs out you can <br>
+move on to the next grid. Your goal is to prepare for the upcoming recall test in<br>
+which you will be presented with each Chinese character and asked to type what it<br> 
+means in English.  You will then receive instructions for Trial 2. We have provided<br> 
+an example word pair below so that you know what to expect during the study phase.<br>
+
+This is an example of how these word pairs will look.
+
+Please hit "Continue" after viewing this sample pair.
+
+
+
+
+
+
+<br></font></tr></td>
+<td><tr align="center">
+<br>
+<img src="Images/ChineseSample2.jpg">
+<br>
+</tr></td>
+<td><tr><br>
+<font size="+1"
+
+
+</font>
+</td></tr>
+</table>
+</body>
+</html>
