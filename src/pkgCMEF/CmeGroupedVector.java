@@ -24,7 +24,7 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 		m_activeGroup = null;
 	}
 	
-	public int size() {
+	public int groupSize() {
 		if (m_activeGroup == null)
 			return super.size();
 
@@ -37,17 +37,21 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 	
 	public boolean add(CmePair pair) {
 		String group = pair.getPairGroup();
+
 		Integer val = m_cGroups.get(group);
 		if (val == null)
 			val = 0;
 		val++;
+
 		m_cGroups.put(group, val);
+
 		return super.add(pair);
 	}
 	
 	public CmePair elementAt(int index) {
 
 		Iterator<CmePair> iter = this.iterator();
+		System.err.println(super.size());
 		
 		if (index < 0) {
 			return null;
@@ -67,6 +71,10 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 
 		while (iter.hasNext()) {
 			CmePair pair = iter.next();
+			System.err.println(pair);
+			System.err.println(index);
+			System.err.println(m_activeGroup);
+			System.err.println(pair.getPairGroup());
 			if (m_activeGroup.equals(pair.getPairGroup())) {
 				if (index == 0) {
 					return pair;
@@ -74,6 +82,8 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 				index--;
 			}
 		}
+		
+		System.err.println("Next");
 		return null;
 	}
 }

@@ -560,13 +560,19 @@ public class CmeView extends JPanel {
 		if (!allowNextState()) {
 			return true;
 		}
+		
+		if (!isProvidedFeedbackValid()) {
+			return false;
+		}
+
+		// If there is another instruction file to show, then show it!
+		if (m_CurState.nextSequencePosition()) {
+			updateInstructionFile(false);
+			return true;
+		}
  
 		int cstep = m_CurState.getStep();
 		if (cstep > 0) {
-			if (!isProvidedFeedbackValid()) {
-				return false;
-			}
-		
 			m_HtmlView.setVisible(false);
 			m_App.displayPrompt("PostPromptText");
 			
@@ -577,13 +583,7 @@ public class CmeView extends JPanel {
 				return false;
 			}
 		}
-		
-		// If there is another instruction file to show, then show it!
-		if (m_CurState.nextSequencePosition()) {
-			updateInstructionFile(false);
-			return true;
-		}
-		
+
 		m_iStudyCount = 1;
 
 		m_CurState.setStep(cstep + 1);

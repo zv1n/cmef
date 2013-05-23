@@ -109,7 +109,6 @@ public class CmePairFactory
 				img.setNameB(strs[4].trim());
 				String ib = null;
 				
-				
 				if (strs.length > 5) {
 					ib = strs[5];
 				} else {
@@ -118,12 +117,12 @@ public class CmePairFactory
 				
 				img.setImageB(ib);
 				
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "V", strs[0].trim());
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "D", clss);
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "A", strs[2].trim());
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IA", strs[3].trim());
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "B", strs[4].trim());
-				m_App.setProperty(Integer.toString(m_vPairs.size()) + "IB", ib.trim());
+				m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "V", strs[0].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "D", clss);
+				m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "A", strs[2].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "IA", strs[3].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "B", strs[4].trim());
+				m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "IB", ib.trim());
 				
 				m_vPairs.add(img);
 			}
@@ -154,7 +153,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public Image getImageA(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getImageA();
 	}
 	
@@ -163,7 +162,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public Image getImageB(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getImageB();
 	}
 	
@@ -172,7 +171,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getFileA(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getFileA();
 	}
 	
@@ -181,7 +180,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getFileB(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getFileB();
 	}
 
@@ -190,7 +189,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getNameA(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getNameA();
 	}
 
@@ -199,7 +198,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getNameB(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return ((CmePair)m_vPairs.elementAt(idx)).getNameB();
 	}
 
@@ -208,7 +207,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getFeedbackA(int idx, int scale)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor</h1>";
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return "<h1>Experiment Error: Please Notify Proctor</h1>";
 		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackA(scale);
 	}
 
@@ -217,7 +216,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getFeedbackB(int idx, int scale)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return "<h1>Experiment Error: Please Notify Proctor (" + Integer.toString(idx) + ")</h1>";
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return "<h1>Experiment Error: Please Notify Proctor (" + Integer.toString(idx) + ")</h1>";
 		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackB(scale);
 	}
 
@@ -226,7 +225,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getPairValue(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairValue());
 	}
 	
@@ -235,7 +234,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public int getIntValue(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return -1;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return -1;
 		return ((CmePair)m_vPairs.elementAt(idx)).getPairValue();
 	}
 	
@@ -244,7 +243,7 @@ public class CmePairFactory
 	//-------------------------------------------------------------
 	public String getPairGroup(int idx)
 	{
-		if((idx < 0) || (idx >= m_vPairs.size())) return null;
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
 		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairGroup());
 	}
 	
@@ -257,7 +256,7 @@ public class CmePairFactory
 	}
 	
 	public int getCount() {
-		return m_vPairs.size();
+		return m_vPairs.groupSize();
 	}
 	
 	//-------------------------------------------------------------

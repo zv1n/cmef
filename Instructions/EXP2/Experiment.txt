@@ -120,7 +120,7 @@
 
 		<STATE>
 			MODE="Feedback"
-			FILE="Instructions/EXP2/12f_Postdiction_1.htm"
+			FILE="Instructions/EXP2/12poststudyprediction_T2.htm"
 			CONSTRAINTS="range:0-60"
 			END="Click:Continue"
 		</STATE>
