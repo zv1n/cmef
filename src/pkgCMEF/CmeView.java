@@ -560,12 +560,6 @@ public class CmeView extends JPanel {
 		if (!allowNextState()) {
 			return true;
 		}
-		
-		// If there is another instruction file to show, then show it!
-		if (m_CurState.nextSequencePosition()) {
-			updateInstructionFile(false);
-			return true;
-		}
  
 		int cstep = m_CurState.getStep();
 		if (cstep > 0) {
@@ -582,6 +576,12 @@ public class CmeView extends JPanel {
 					m_cClock.complete();
 				return false;
 			}
+		}
+		
+		// If there is another instruction file to show, then show it!
+		if (m_CurState.nextSequencePosition()) {
+			updateInstructionFile(false);
+			return true;
 		}
 		
 		m_iStudyCount = 1;
