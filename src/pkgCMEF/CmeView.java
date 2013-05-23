@@ -99,7 +99,7 @@ public class CmeView extends JPanel {
 					try {
 						inst.setStudyState(desc[1]);
 					} catch (Exception ex) {
-						System.out.println("Failed to set study state!!\n" + desc[1]);
+						//System.out.println("Failed to set study state!!\n" + desc[1]);
 					}
 				}
 			}
@@ -127,7 +127,7 @@ public class CmeView extends JPanel {
 				try {
 					inst.refreshView();
 				} catch (Exception ex) {
-					System.out.println("Failed to catch refresh exception!");
+					//System.out.println("Failed to catch refresh exception!");
 				}
 			}
 		};
@@ -153,7 +153,6 @@ public class CmeView extends JPanel {
 			public void Respond() {
 				inst.clockLimitHit();
 			}
-			
 		};
 		
 		m_cClock = new CmeClock();
@@ -173,7 +172,7 @@ public class CmeView extends JPanel {
 			try {
 				clearStudyState();
 			} catch (Exception ex) {
-				System.out.println("Failed to clear study state!");
+				//System.out.println("Failed to clear study state!");
 				System.exit(1);
 			}
 		} else if (m_CurState != null) {
@@ -186,7 +185,7 @@ public class CmeView extends JPanel {
 			clearStudyState();
 			m_cClock.stop();
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage() + ": Failed to propertly clear Study State.");
+			//System.out.println(ex.getMessage() + ": Failed to propertly clear Study State.");
 			System.exit(1);
 		}
 	}
@@ -202,7 +201,7 @@ public class CmeView extends JPanel {
 		String postStudyColor = (String)m_CurState.getProperty("PostStudyColor");
 		
 		if (postStudyColor != null) {
-			System.out.println("Pair" + element + "Color");
+			//System.out.println("Pair" + element + "Color");
 			m_CurState.setProperty("Pair" + element + "Color", postStudyColor);
 		}
 	}
@@ -282,7 +281,7 @@ public class CmeView extends JPanel {
 			throw new Exception("Failed to properly set total count value!");
 		}
 
-		System.out.println("Count: " + name + ":" + value);	
+		//System.out.println("Count: " + name + ":" + value);	
 		m_App.addFeedback(name, value);
 	}
 	
@@ -301,14 +300,16 @@ public class CmeView extends JPanel {
 			throw new Exception("Failed to properly set total time value!");
 		}
 	
-		System.out.println("Timer: " + name + ":" + value);
+		//System.out.println("Timer: " + name + ":" + value);
 		m_App.addFeedback(name, value);
 	}
 	
 	public void setStudyState(String set) throws Exception
 	{
-		if (!m_CurState.canStudy())
-			return;
+		if (!m_CurState.canStudy()) {
+			throw new  Exception("Not a STUDY MODE!");
+			//return;
+		}
 		
 		m_CurState.setProperty("CurrentPairA", m_CurState.getProperty("Pair" + set + "A"));
 		m_CurState.setProperty("CurrentPairB", m_CurState.getProperty("Pair" + set + "B"));
@@ -330,7 +331,7 @@ public class CmeView extends JPanel {
 					" to Proceed", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		
+
 		m_bNext.setText("Close");
 		
 		m_HtmlView.setContent(translation, null);
@@ -441,10 +442,10 @@ public class CmeView extends JPanel {
 	}
 	
 	public boolean allowNextState() {
-		System.out.println("Clock check...");
+		//System.out.println("Clock check...");
 		
 		if (m_cClock != null && !m_cClock.isComplete()) {
-			System.out.println("Display Limit Prompt");
+			//System.out.println("Display Limit Prompt");
 			return (m_App.displayPrompt("LimitPromptText", "LimitPromptButtons"));
 		}
 		
@@ -615,7 +616,7 @@ public class CmeView extends JPanel {
 			try {	
 				scale = Double.parseDouble(sscale);
 			} catch (Exception ex) {
-				System.out.println("Ooops, no scale defined! Using 1.0.");
+				//System.out.println("Ooops, no scale defined! Using 1.0.");
 				scale = 1.0;
 				ex.printStackTrace();
 			}
@@ -647,7 +648,7 @@ public class CmeView extends JPanel {
 		for (int x = 0; x < count; x++) {
 			step = iter.getNext();
 			vx = Integer.toString(x + 1);
-			System.out.println("Generating Pairs for " + vx);
+			//System.out.println("Generating Pairs for " + vx);
 
 			m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
 			m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
@@ -668,7 +669,7 @@ public class CmeView extends JPanel {
 		setSetPoolProperties();
 		setStatePoolProperties();
 		
-		System.out.println("Done creating random pools.");
+		//System.out.println("Done creating random pools.");
 	}
 	
 	private boolean setSetPoolProperties() {
@@ -691,7 +692,7 @@ public class CmeView extends JPanel {
 						int next = sel.getNext();
 						handle = handle.trim();
 						String str = handle + String.valueOf(x+1);
-						System.out.println("Adding Property: " + str + " as '" + String.valueOf(next) + "'");
+						//System.out.println("Adding Property: " + str + " as '" + String.valueOf(next) + "'");
 						m_CurState.setProperty(str, String.valueOf(next));
 					}
 			
@@ -775,11 +776,6 @@ public class CmeView extends JPanel {
 	}
 	
 	private void updateClock() {
-		if (!m_CurState.canStudy()) {
-			m_cClock.setVisible(false);
-			return;
-		}
-		
 		int clockDirection = displayTimer();
 		if (clockDirection == 0)
 				m_cClock.setVisible(false);
@@ -844,9 +840,9 @@ public class CmeView extends JPanel {
 		
 		if (pbStudyFile != null) {
 			m_sStudyContent = CmeApp.readFile(pbStudyFile.toString());
-			System.out.println("Study File: " + pbStudyFile.toString());
+			//System.out.println("Study File: " + pbStudyFile.toString());
 		} else {
-			System.out.println("No Study File Set!");
+			//System.out.println("No Study File Set!");
 		}
 	}
 	/** 
@@ -961,19 +957,20 @@ public class CmeView extends JPanel {
 
 	public boolean isProvidedFeedbackValid() {
 		boolean valid = false;
+		
 		try {
 			Iterator<CmeResponse> iter = m_HtmlView.getResponseIterator();
 
 			valid = m_CurState.validateInput(iter);
 			if (!valid) {
-				System.out.println("Invalid input!");
+				//System.out.println("Invalid input!");
 				return false;
 			}
-
+			
 			valid = generateFeedback();
 		} catch (Exception ex) {
-			System.out.println(
-					"Failed to generate output for feedback:\n" + ex.getMessage());
+			//System.out.println(
+			//		"Failed to generate output for feedback:\n" + ex.getMessage());
 			ex.printStackTrace();
 			System.exit(1);
 		}

@@ -111,12 +111,12 @@ public class CmeState {
 	 * Clean up all stored variables so GC can pick them up
 	 */
 	public void clean() {
-		System.out.println("Clean");
 		for(int x=0; x<m_Timer.size(); x++)
 			m_Timer.set(x, null);
 		m_Timer.clear();
 		
 		m_Iterator = null;
+
 		/*for (int x=0; x<m_erEvent.size(); x++)
 			if (m_erEvent.get(x) != null) {
 				for (int y=0; y<m_erEvent.get(x).size(); y++)
@@ -124,7 +124,16 @@ public class CmeState {
 				m_erEvent.set(x, null);
 			}
 		m_erEvent = null;*/
-		
+
+		for (int x=0; x < m_sSequenceProperties.size(); x++) {
+			HashMap<String, Object> seq = m_sSequenceProperties.get(x);
+			if (seq != null)
+				seq.clear();				
+		}
+
+		m_sSequenceProperties.clear();
+		m_sSequenceProperties = null;
+
 		m_sProperties.clear();
 		m_sProperties = null;
 	}
@@ -297,7 +306,6 @@ public class CmeState {
     		if (prop != null)
     			return prop;
     	}
-		System.err.println("root Property: " + name);
         return m_sProperties.get(name);
     }
 	
@@ -550,7 +558,6 @@ public class CmeState {
      * @return boolean - true if valid string; false else
      */
     public boolean validateInput(CmeResponse response) throws Exception {
-    	System.out.println("Name: " + response.getName() + " Value: " + response.getValue());
         return validateInput(response.getValue());
     }
 
@@ -567,13 +574,13 @@ public class CmeState {
         text = translateString(text);
         text = m_App.translateString(text).trim();
 
-        String constraintType = (String) m_sProperties.get("ConstraintType");
-        String constraint = (String) m_sProperties.get("Constraint");
+        String constraintType = (String) this.getProperty("ConstraintType");
+        String constraint = (String) this.getProperty("Constraint");
 
 		if (constraintType == null || constraint == null) {
             return true;
         }
-
+		
         constraintType = constraintType.toLowerCase();
 
         constraint = translateString(constraint);

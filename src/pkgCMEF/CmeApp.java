@@ -381,17 +381,18 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 			m_eProperties.put("SubjectID", sSubjectId);
 			dmsg(5, "Subject Complete!");
-
-			do {
-				sCondition = JOptionPane
-						.showInputDialog("Please enter the experimental Condition\n"
-								+ "(This should be given by the experimenter).");
-				if (sCondition == null) {
-					System.exit(0);
-				}
-			} while (!setCondition(sCondition.toUpperCase()));
-			dmsg(5, "Conditions Complete!");
-
+			
+			if (multipleConditions()) {
+				do {
+					sCondition = JOptionPane
+							.showInputDialog("Please enter the experimental Condition\n"
+									+ "(This should be given by the experimenter).");
+					if (sCondition == null) {
+						System.exit(0);
+					}
+				} while (!setCondition(sCondition.toUpperCase()));
+				dmsg(5, "Conditions Complete!");
+			}
 		} else {
 			m_eProperties.put("SubjectID", "TESTID");
 			m_eProperties.put("ExpCondition", "B");
@@ -790,11 +791,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 					String valConditions = value.toUpperCase()
 							.replace(',', ':');
 					if (thisState == null)
-						m_eProperties.put("ValidConditions", ":"
-								+ valConditions + ":");
+						m_eProperties.put("ValidConditions", valConditions + ":");
 					else
-						thisState.setProperty("ValidConditions", ":"
-								+ valConditions + ":", stateSequence);
+						thisState.setProperty("ValidConditions", valConditions + ":", stateSequence);
 
 					// EXCLUDE=
 					// Excludes a property name from the long feedback list.
@@ -1196,6 +1195,26 @@ public class CmeApp extends JFrame implements AncestorListener {
 			m_eProperties.put("ExpCondition", condition);
 			return true;
 		}
+		return false;
+	}
+
+	/**
+	 * @return true if there is more than possible condition.
+	 */
+	public boolean multipleConditions() {
+		String validConditions = m_eProperties.get("ValidConditions")
+				.toString();
+		if (validConditions == null) {
+			return false;
+		}
+
+		String conds[] = validConditions.split(":");
+		if (conds.length > 1)
+			return true;
+		
+		if (conds.length == 1)
+			m_eProperties.put("ExpCondition", conds[0]);
+		
 		return false;
 	}
 
