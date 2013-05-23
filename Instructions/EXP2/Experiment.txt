@@ -4,77 +4,8 @@
 	CONDITIONS="A"
 	DATA_FILE="Instructions/EXP2/DataList.txt"
 	FORMAT_FILE="Instructions/EXP2/OutputFormat.txt"	
-	<TRIAL ID="1" DATASET="Trial1">
 
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/EXP2/1_instruction_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-
-		<STATE>
-			MODE="Feedback"
-			FILE="Instructions/EXP2/2f_prestudy_T1.htm"
-			CONSTRAINTS="range:0-60"
-			END= "Click:Continue"
-		</STATE>
-		
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/EXP2/3_studyphaseinstructions_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-
-		<STATE>
-			MODE="Study"
-			ITERATOR="random:exclusive"
-			SET="BorderWidth:1.5"
-			SET="PreStudyColor:#0000A0"
-			SET="PostStudyColor:#FF0000"
-			SET="Resolution:100"
-			SET="ContinuousTimer:yes"
-			SET="ContinuousAfterFirstSelection:no"
-			SET="ResetOnNext:yes"
-			ITEMS="1"
-			SETS="60"
-			SCALE="1.0"
-			CONSTRAINTS="range:0-100"
-			FILE_SEQUENCE="Instructions/EXP2/study_phase.htm"
-				DISPLAY_TIMER="down"
-				STUDY_LIMIT="time:5s"
-				NEXT="Time:5s"
-			FILE_SEQUENCE="Instructions/EXP2/4f_JOL_T1.htm"
-				NEXT="Click:Continue"
-		</STATE>
-
-		<STATE>
-			MODE="Feedback"
-			FILE="Instructions/EXP2/6f_poststudyprediction_T1.htm"
-			CONSTRAINTS="range:0-60"
-			END="Click:Continue"
-		</STATE>
-		
-		
-		<STATE>
-			MODE="Study"
-			ITERATOR="random:exclusive"
-			FILE="Instructions/EXP2/7f_recall_T1.htm"
-			ITEMS="1"
-			SETS="60"
-			SCALE="1.0"
-			CONSTRAINTS="match:$Pair1A"
-			SET="DisableSubmitHook:yes"
-			NEXT="Click:Continue"
-		</STATE>
-		<STATE>
-			MODE="Feedback"
-			FILE="Instructions/EXP2/8f_Postdiction_T1.htm"
-			CONSTRAINTS="range:0-60"
-			END="Click:Continue"
-		</STATE>
-	</TRIAL>
 	<TRIAL ID="2" DATASET="Trial2">
-		
 
 		<STATE>
 			MODE="Instruction"
@@ -120,11 +51,17 @@
 			END="Click:Continue"
 		</STATE>
 		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP2/13_Instructions_2.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
 		
 		<STATE>
 			MODE="Study"
 			ITERATOR="random:exclusive"
-			FILE="Instructions/EXP2/13f_Recall_T2.htm"
+			FILE="Instructions/EXP2/f_Recall.htm"
 			ITEMS="1"
 			SETS="60"
 			SCALE="1.0"
