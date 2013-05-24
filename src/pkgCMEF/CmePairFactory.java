@@ -111,6 +111,10 @@ public class CmePairFactory
 				
 				if (strs.length > 5) {
 					ib = strs[5];
+					for (int x=6; x<strs.length; x++) {
+						img.addExtraInfo(strs[x]);
+						m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "EX", img.getExtraInfoVector());
+					}
 				} else {
 					ib = "";
 				}
@@ -219,6 +223,11 @@ public class CmePairFactory
 		if((idx < 0) || (idx >= m_vPairs.groupSize())) return "<h1>Experiment Error: Please Notify Proctor (" + Integer.toString(idx) + ")</h1>";
 		return ((CmePair)m_vPairs.elementAt(idx)).getFeedbackB(scale);
 	}
+	
+	public String getExtraInfo(int idx, int val) {
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return "Invalid Parameter";
+		return ((CmePair)m_vPairs.elementAt(idx)).getExtraInfo(val);
+	}
 
 	//-------------------------------------------------------------
 	/** Get the string value of the image at index idx */
@@ -265,6 +274,11 @@ public class CmePairFactory
 	public Vector<CmePair> getImagesVector()
 	{
 		return this.m_vPairs;
+	}
+
+	public int getTrueIndex(int index) {
+		CmePair mypair = m_vPairs.elementAt(index);
+		return m_vPairs.indexOf(mypair);
 	}
 
 }

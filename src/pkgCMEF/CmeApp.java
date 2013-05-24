@@ -1516,6 +1516,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (response == null) {
 			throw new Exception("Invalid response!");
 		}
+		System.err.println(response.getName());
 		addFeedback(response.getName(), response.getValue());
 	}
 

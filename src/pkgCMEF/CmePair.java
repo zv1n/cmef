@@ -2,6 +2,8 @@ package pkgCMEF;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.Vector;
+
 import javax.swing.JOptionPane;
 
 //=====================================================================
@@ -32,6 +34,8 @@ public class CmePair
     
     /** Name Value of the Image */
     private String 		m_sValue;
+    
+    private Vector<String> m_sExtraInfo = new Vector<String>();
     
     //-----------------------------------------------------
     // The following variables are for storing information
@@ -183,5 +187,20 @@ public class CmePair
 	public void setPairGroup(String val)
 	{
 		m_sValue = val;
+	}
+
+	public void addExtraInfo(String val) {
+		if (val != null)
+			m_sExtraInfo.add(val);
+	}
+	
+	public String getExtraInfo(int val) {
+		if (val < 0 || val >= m_sExtraInfo.size())
+			return null;
+		return m_sExtraInfo.get(val);
+	}
+
+	public Object getExtraInfoVector() {
+		return m_sExtraInfo;
 	}
 }
