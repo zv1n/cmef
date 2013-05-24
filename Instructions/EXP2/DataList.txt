@@ -41,7 +41,7 @@
 5, Trial2, <span style="font-size: 24; font-weight: bold;">mars</span>,,<span style="font-size: 24;font-weight: bold;">couch</span>,
 5, Trial2, <span style="font-size: 24; font-weight: bold;">cup</span>,,<span style="font-size: 24;font-weight: bold;">baseball</span>,
 5, Trial2, <span style="font-size: 24; font-weight: bold;">piston</span>,,<span style="font-size: 24;font-weight: bold;">boulder</span>,
-5, Trial2, <span style="font-size: 24; font-weight: bold;">raccoon</span>,,<spanstyle="font-size: 24;font-weight: bold;">passport</span>,
+5, Trial2, <span style="font-size: 24; font-weight: bold;">raccoon</span>,,<span style="font-size: 24;font-weight: bold;">passport</span>,
 5, Trial2, <span style="font-size: 24; font-weight: bold;">fish</span>,,<span style="font-size: 24;font-weight: bold;">book</span>,
 5, Trial2, <span style="font-size: 64; font-weight: bold;">truck</span>,,<span style="font-size: 64;font-weight: bold;">briefcase</span>,
 5, Trial2, <span style="font-size: 64; font-weight: bold;">sign</span>,,<span style="font-size: 64;font-weight: bold;">koala</span>,
