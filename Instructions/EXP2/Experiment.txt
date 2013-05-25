@@ -25,27 +25,6 @@
 			END= "Click:Continue"
 		</STATE>
 
-		<STATE>
-			MODE="Study"
-			ITERATOR="random:exclusive"
-			SET="BorderWidth:1.5"
-			SET="PreStudyColor:#0000A0"
-			SET="PostStudyColor:#FF0000"
-			SET="Resolution:100"
-			SET="ContinuousTimer:yes"
-			SET="ContinuousAfterFirstSelection:no"
-			SET="ResetOnNext:yes"
-			ITEMS="1"
-			SETS="60"
-			SCALE="1.0"
-			CONSTRAINTS="range:0-100"
-			FILE_SEQUENCE="Instructions/EXP2/study_phase.htm"
-				DISPLAY_TIMER="down"
-				STUDY_LIMIT="time:5s"
-				NEXT="Time:5s"
-			FILE_SEQUENCE="Instructions/EXP2/4f_JOL_T1.htm"
-				NEXT="Click:Continue"
-		</STATE>
 
 		<STATE>
 			MODE="Feedback"
@@ -94,29 +73,6 @@
 			END= "Click:Continue"
 		</STATE>
 
-		
-		<STATE>
-			MODE="Study"
-			ITERATOR="random:exclusive"
-			SET="BorderWidth:1.5"
-			SET="PreStudyColor:#0000A0"
-			SET="PostStudyColor:#FF0000"
-			SET="Resolution:100"
-			SET="ContinuousTimer:yes"
-			SET="ContinuousAfterFirstSelection:no"
-			SET="ResetOnNext:yes"
-			SET="LimitPromptButtons:yesno"
-			CONSTRAINTS="range:0-100"
-			ITEMS="1"
-			SETS="60"
-			SCALE="1.0"
-			FILE_SEQUENCE="Instructions/EXP2/study_phase.htm"
-				STUDY_LIMIT="time:5s"
-				DISPLAY_TIMER="down"
-				NEXT="Time:5s"
-			FILE_SEQUENCE="Instructions/EXP2/4f_JOL_T1.htm"
-				NEXT="Click:Continue"
-		</STATE>
 
 		<STATE>
 			MODE="Feedback"

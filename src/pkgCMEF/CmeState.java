@@ -417,6 +417,10 @@ public class CmeState {
 		String matchon = matchstring.toLowerCase();
 		String match = null;
 		
+		if (matchon.trim().startsWith("<")) {
+			matchon = matchon.replaceAll("<[^>]*>", "");
+		}
+		
 		/* Nasty Hack to get around Theif */
 		matchon = matchon.replace("ie", "ee").replace("ei", "ee");
 		in = in.replace("ie", "ee").replace("ei", "ee");
@@ -451,6 +455,7 @@ public class CmeState {
 		if (pair == null)
 			throw new Exception("Failed to process the current pair!");
 			
+		
 		if (in.startsWith(match)) {
 			System.out.println("Correct!");
 			setProperty("Match", "correct");
