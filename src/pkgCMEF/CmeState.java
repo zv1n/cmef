@@ -435,7 +435,7 @@ public class CmeState {
 			match = matchon;
 		
 		String trial = (String) getProperty("CurrentTrial");
-		String pair = (String) getProperty("Pair1");
+		String pair = (String) getProperty("Pair1DataOrder");
 		String group = (String) getProperty("Pair1Group");
 		String name = (String) getProperty("RecallName");
 		
