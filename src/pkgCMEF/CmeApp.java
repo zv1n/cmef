@@ -426,6 +426,12 @@ public class CmeApp extends JFrame implements AncestorListener {
 		m_eProperties.put("ExpTotalCount", "0");
 		m_eProperties.put("ExpTotalPoints", "0");
 	}
+	
+	private String variableQuery(String name) {
+		String ret = "^";
+		ret += name + "\\s*=.*$";
+		return ret;
+	}
 
 	private int setIterator(String iterator, String[] type, CmeState state) {
 		String validIterators = "RANDOM:SELECTIVE:DIFFICULTY";
@@ -512,6 +518,10 @@ public class CmeApp extends JFrame implements AncestorListener {
 		action = action.toUpperCase();
 		lhs = lhs.toUpperCase();
 
+		final String _lhs = lhs;
+		final String _rhs = rhs;
+		final String _action = action;
+
 		if (m_EndResponse == null)
 			m_EndResponse = new CmeEventResponse() {
 
@@ -523,6 +533,12 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (m_NextResponse == null)
 			m_NextResponse = new CmeEventResponse() {
 				public void Respond() {
+					System.err.print("action: ");
+					System.err.println(_action);
+					System.err.print("lhs: ");
+					System.err.println(_lhs);
+					System.err.print("rhs: ");
+					System.err.println(_rhs);
 					try {
 						if (!m_ViewHandler.setNextInSequence()) {
 							thisApp.setNextState();
@@ -571,7 +587,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 			if (!timer.setResponse(response)) {
 				return false;
 			}
-			if (!state.addEventTimer(timer)) {
+			if (!state.addEventTimer(timer, seq)) {
 				return false;
 			}
 		} else
@@ -707,7 +723,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 					lhs = value;
 					rhs = "";
 				}
-
+				
 				// See if we need to create a new State
 				if (line.startsWith("<EXPERIMENT")) {
 					if (line.contains("CMEF_VERSION")) {
@@ -762,7 +778,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 				} else if (line.contains("STUDY_NAME")) {
 					m_eProperties.put("StudyName", value);
 
-				} else if (line.startsWith("RANDOM_POOL=")) {
+				} else if (line.matches(variableQuery("RANDOM_POOL"))) {
 					requirePair(splitValue,
 							"RANDOM_POOL must contain a name:value pair!");
 
@@ -770,26 +786,27 @@ public class CmeApp extends JFrame implements AncestorListener {
 					seliter.setList(rhs);
 					m_vrPools.put(lhs, seliter);
 
-				} else if (line.startsWith("FORMAT_FILE=")) {
+				} else if (line.matches(variableQuery("FORMAT_FILE"))) {
 					m_eProperties.put("FormatFile", value);
 					validateFile(value);
 
-				} else if (line.startsWith("DATA_FILE=")) {
+				} else if (line.matches(variableQuery("DATA_FILE"))) {
 					initDataSet(value);
 
-				} else if (line.startsWith("ESET=")) {
+				} else if (line.matches(variableQuery("ESET"))) {
 					requirePair(splitValue, event
 							+ " tag must contain the form 'property:value'");
 					m_eProperties.put(lhs, rhs);
 
-				} else if (line.startsWith("LIST_ESET=")) {
+				} else if (line.matches(variableQuery("LIST_ESET"))) {
 					requirePair(splitValue, event
 							+ " tag must contain the form 'property:value'");
 					compoundProperty(null, lhs, rhs);
 
-				} else if (line.contains("CONDITIONS=")) {
+				} else if (line.matches(variableQuery("CONDITIONS"))) {
 					String valConditions = value.toUpperCase()
 							.replace(',', ':');
+
 					if (thisState == null)
 						m_eProperties.put("ValidConditions", valConditions + ":");
 					else
@@ -799,7 +816,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 					// Excludes a property name from the long feedback list.
 					// * Stores in Experiment when placed globally
 					// * Stores in State when placed local to a <state></state>
-				} else if (line.startsWith("EXCLUDE=")) {
+				} else if (line.matches(variableQuery("EXCLUDE"))) {
 					if (thisState == null)
 						compoundProperty(null, "Exclude", value);
 					else
@@ -811,8 +828,8 @@ public class CmeApp extends JFrame implements AncestorListener {
 					// FILE=
 					// File to be used for the instruction page.
 					// File MUST exist!
-				} else if (line.startsWith("FILE=")
-						|| line.startsWith("FILE_SEQUENCE=")) {
+				} else if (line.matches(variableQuery("FILE"))
+						|| line.matches(variableQuery("FILE_SEQUENCE"))) {
 					validateFile(value);
 					thisState.addInstructionFile(value);
 					stateSequence++;
@@ -820,25 +837,25 @@ public class CmeApp extends JFrame implements AncestorListener {
 					// PROMPT/POST_PROMPT/POST_STATE_PROMPT
 					// Sets various prompt strings that occur at various times
 					// during an experiment.
-				} else if (line.startsWith("PROMPT=")) {
+				} else if (line.matches(variableQuery("PROMPT"))) {
 					thisState.setProperty("PromptText", value, stateSequence);
 
-				} else if (line.startsWith("POST_PROMPT=")) {
+				} else if (line.matches(variableQuery("POST_PROMPT"))) {
 					compoundProperty(thisState, "PostPromptText", value);
 
-				} else if (line.startsWith("POST_STATE_PROMPT=")) {
+				} else if (line.matches(variableQuery("POST_STATE_PROMPT"))) {
 					compoundProperty(thisState, "PostStatePromptText", value);
 
 					// SCALE =
 					// Sets the scale factor for a given image.
-				} else if (line.contains("SCALE=")) {
+				} else if (line.matches(variableQuery("SCALE"))) {
 					thisState.setProperty("Scale", value, stateSequence);
 
 					// END =
 					// Sets the action required to end a state.
 					// Standard: "Click:Next" or "Click:Continue"
 					// Value (Next,Continue) is placed on the button.
-				} else if (line.contains("END=")) {
+				} else if (line.matches(variableQuery("END"))) {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
 
@@ -846,7 +863,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 						throw new Exception("Invalid State Interaction: "
 								+ line);
 
-				} else if (line.contains("BLANK=")) {
+				} else if (line.matches(variableQuery("BLANK"))) {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
 
@@ -854,7 +871,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 						throw new Exception("Invalid State Interaction: "
 								+ line);
 
-				} else if (line.startsWith("NEXT=")) {
+				} else if (line.matches(variableQuery("NEXT"))) {
 					if (thisState.getState() != CmeState.STATE_MULTIPLE)
 						throw new Exception(
 								"NEXT should only be used with a mode of Multiple, Recall, or Study");
@@ -866,7 +883,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 						throw new Exception("Invalid State Interaction: "
 								+ line);
 
-				} else if (line.contains("STUDY_LIMIT=")) {
+				} else if (line.matches(variableQuery("STUDY_LIMIT"))) {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
 
@@ -877,26 +894,26 @@ public class CmeApp extends JFrame implements AncestorListener {
 						throw new Exception("Invalid State Interaction: "
 								+ line);
 
-				} else if (line.startsWith("POOL=")
-						|| line.startsWith("SET_POOL=")) {
+				} else if (line.matches(variableQuery("POOL"))
+						|| line.matches(variableQuery("SET_POOL"))) {
 					compoundProperty(thisState, "SetPool", value);
 
-				} else if (line.startsWith("STATE_POOL=")) {
+				} else if (line.matches(variableQuery("STATE_POOL"))) {
 					compoundProperty(thisState, "StatePool", value);
 
-				} else if (line.startsWith("SET=")) {
+				} else if (line.matches(variableQuery("SET"))) {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
 					thisState.setProperty(lhs, rhs, stateSequence);
 
-				} else if (line.contains("STUDY_FILE=")) {
+				} else if (line.matches(variableQuery("STUDY_FILE"))) {
 					thisState.setProperty("StudyFile", value, stateSequence);
 					thisState.setStudyInstruction(true);
 
-				} else if (line.contains("DISPLAY_TIMER=")) {
+				} else if (line.matches(variableQuery("DISPLAY_TIMER"))) {
 					thisState.setProperty("DisplayTimer", value, stateSequence);
 
-				} else if (line.contains("MODE=")) {
+				} else if (line.matches(variableQuery("MODE"))) {
 					String item = lhs.toUpperCase();
 
 					if (item.contains("INSTRUCTION")) {
@@ -920,15 +937,15 @@ public class CmeApp extends JFrame implements AncestorListener {
 				} else if (line.contains("</STATE>")) {
 					// Add this one to the vector
 					m_vStates.add(thisState);
-				} else if (line.contains("NAME=")) {
+				} else if (line.matches(variableQuery("NAME"))) {
 					thisState.setProperty("FeedbackName", value, stateSequence);
-				} else if (line.contains("SELECT=")) {
+				} else if (line.matches(variableQuery("SELECT"))) {
 					thisState.setProperty("Select", value, stateSequence);
-				} else if (line.contains("ITEMS=") || line.contains("COUNT=")) {
+				} else if (line.matches(variableQuery("ITEMS")) || line.matches(variableQuery("COUNT"))) {
 					thisState.setProperty("Count", value, stateSequence);
-				} else if (line.contains("SETS=") || line.contains("GRIDS=")) {
+				} else if (line.matches(variableQuery("SETS")) || line.matches(variableQuery("GRIDS"))) {
 					thisState.setProperty("Sets", value, stateSequence);
-				} else if (line.contains("ITERATOR=")) {
+				} else if (line.matches(variableQuery("ITERATOR"))) {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
 
@@ -945,7 +962,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 						throw new Exception("Invalid Iterate: " + lhs + ":"
 								+ rhs);
 
-				} else if (line.contains("CONSTRAINTS=")) {
+				} else if (line.matches(variableQuery("CONSTRAINTS"))) {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
 
@@ -1179,7 +1196,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (validConditions == null) {
 			return false;
 		}
-		return validConditions.contains(":" + condition + ":");
+		return validConditions.contains(condition + ":");
 	}
 
 	/**

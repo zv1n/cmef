@@ -98,6 +98,9 @@ public class CmeTimer {
 			}
 		};
 		
+		System.err.print("Event Delay: ");
+		System.err.println(m_iMilliseconds);
+
 		m_jTimer.schedule(task, m_iMilliseconds);
 	}
 	

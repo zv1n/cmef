@@ -322,6 +322,7 @@ public class CmeView extends JPanel {
 		m_CurState.setProperty("CurrentValue", m_CurState.getProperty("Pair" + set + "Value"));	
 		m_CurState.setProperty("CurrentOrder", m_CurState.getProperty("Pair" + set + "Order"));
 		m_CurState.setProperty("CurrnetDataOrder", m_CurState.getProperty("Pair" + set + "DataOrder"));
+		m_CurState.setProperty("CurrentExtraInfo", m_CurState.getProperty("Pair" + set + "ExtraInfo"));
 		
 		String translation = m_CurState.translateString(m_sStudyContent);
 		translation = m_App.translateString(translation);
@@ -662,6 +663,7 @@ public class CmeView extends JPanel {
 			m_CurState.setProperty("Pair" + vx + "Order", Integer.toString(x));	
 			m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
 			m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
+			m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
 			
 			if (m_CurState.canStudy() && preStudyColor != null) {
 				m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);

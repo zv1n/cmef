@@ -1,0 +1,289 @@
+  <EXPERIMENT CMEF_VERSION="2.2">
+	TITLE="EXP3 - Experiment"
+	STUDY_NAME="Grant Experiment 3"
+	CONDITIONS="A,B,C"
+	DATA_FILE="Instructions/EXP3/DataList.txt"
+	FORMAT_FILE="Instructions/EXP3/OutputFormat.txt"	
+	<TRIAL ID="1" DATASET="Trial1">
+
+
+# ---Conditions---
+#A. Prestudy JOL 
+#B. Immediate JOL
+#C. Combo (Prestudy + Immediate JOL)
+#The design is a 2 (font size: 18 or 48) x 2 (Relatedness: Related or Unrelated) x 3 (condition: Prestudy, I-JOL, Combo) where condition is manipulated between Ss the other factors are manipulated within Ss.
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/1_instruction_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/2_instruction_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/EXP3/2f_prestudy_T1.htm"
+			CONSTRAINTS="range:0-60"
+			END= "Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/3_studyphaseinstructions_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/EXP3/4_INFOSCREEN_T1.htm"
+				NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/4f_PREJOL_T1.htm"
+				NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/study_phase.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			CONDITIONS = "A"
+		</STATE>
+
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/EXP3/4_INFOSCREEN_T1.htm"
+				NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/study_phase.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/EXP3/4f_JOL_T1.htm"
+				NEXT="Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+		
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/EXP3/4_INFOSCREEN_T1.htm"
+        NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/4f_PREJOL_T1.htm"
+        NEXT="Click:Continue"	
+			FILE_SEQUENCE="Instructions/EXP3/study_phase.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/EXP3/4f_JOL_T1.htm"
+				NEXT="Click:Continue"
+			CONDITIONS="C"
+		</STATE>
+
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/EXP3/6f_poststudyprediction_T1.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/7_recall_T1.htm"
+			END="Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/EXP3/f_Recall.htm"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			CONSTRAINTS="match:$Pair1B"
+			SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/EXP3/8f_Postdiction_T1.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2" DATASET="Trial2">
+		
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/9_studyphaseinstructions_T2.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/EXP3/10f_prestudy_T2.htm"
+			CONSTRAINTS="range:0-60"
+			END= "Click:Continue"
+		</STATE>
+
+		
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/EXP3/4_INFOSCREEN_T2.htm"
+        NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/4f_PREJOL_T2.htm"
+        NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/study_phase.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			CONDITIONS="A"
+		</STATE>
+
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/EXP3/4_INFOSCREEN_T2.htm"
+        NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/study_phase.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/EXP3/4f_JOL_T2.htm"
+				NEXT="Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+		
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/EXP3/4_INFOSCREEN_T2.htm"
+        NEXT="Click:Continue"
+			FILE_SEQUENCE="Instructions/EXP3/4f_PREJOL_T2.htm"		
+        NEXT="Click:Continue"	
+			FILE_SEQUENCE="Instructions/EXP3/study_phase.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/EXP3/4f_JOL_T2.htm"
+				NEXT="Click:Continue"
+			CONDITIONS="C"
+		</STATE>
+
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/EXP3/12poststudyprediction_T2.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+				
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/13_Instructions_2.htm"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/EXP3/f_Recall.htm"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			CONSTRAINTS="match:$Pair1B"
+			SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/EXP3/14f_Postdiction_T2.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/15_Last_Screen.htm"
+			END= "Click:Continue"
+		</STATE>
+
+	</TRIAL>
+</EXPERIMENT>

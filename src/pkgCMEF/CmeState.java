@@ -85,7 +85,7 @@ public class CmeState {
     /** Iterators */
     private CmeIterator m_Iterator;
 	/** Timer */
-	private Vector<CmeTimer> m_Timer = new Vector<CmeTimer>();
+	private HashMap<Integer, Vector<CmeTimer> > m_hvTimer = new HashMap<Integer, Vector<CmeTimer>>();
 	
 	private boolean m_bStudy;
 	
@@ -98,22 +98,43 @@ public class CmeState {
 		for (int x=0; x<EVENT_MAX; x++)
 			m_erEvent.add(new Vector<stateEventHandler>());
     }
+
+    private Vector<CmeTimer> getSequenceTimers() {
+    	return getSequenceTimers(m_iSequenceIndex);
+    }
+    
+    private Vector<CmeTimer> getSequenceTimers(Integer seq) {
+    	Vector<CmeTimer> timer = m_hvTimer.get(seq);
+    	if (timer == null) {
+    		timer = new Vector<CmeTimer>();
+    		m_hvTimer.put(seq, timer);
+    	}
+    	return m_hvTimer.get(seq);
+    }
 	
 	/** 
-	 * Kick-off the timer.
+	 * Init global stuff...
 	 */
 	public void init() {
-		for(int x=0; x<m_Timer.size(); x++)
-			m_Timer.get(x).start();
+	}
+	
+	/**
+	 * Init at a per sequence level.
+	 */
+	public void initSequence() {
+		Vector<CmeTimer> timers = getSequenceTimers();
+		for(int x=0; x<timers.size(); x++)
+			timers.get(x).start();
 	}
 	
 	/**
 	 * Clean up all stored variables so GC can pick them up
 	 */
 	public void clean() {
-		for(int x=0; x<m_Timer.size(); x++)
-			m_Timer.set(x, null);
-		m_Timer.clear();
+		Vector<CmeTimer> timers = getSequenceTimers();
+		for(int x=0; x<timers.size(); x++)
+			timers.set(x, null);
+		timers.clear();
 		
 		m_Iterator = null;
 
@@ -183,13 +204,18 @@ public class CmeState {
 	 * Sets the timer object associated with this state.
 	 * @param timer - CmeTimer object
 	 * @return true if valid timer; false else
+	 * @throws Exception 
 	 */
-	public boolean addEventTimer(CmeTimer timer) {
+	public boolean addEventTimer(CmeTimer timer, int seq) throws Exception {
 		if (timer == null || !timer.isValid())
 			return false;
+
 		System.out.print("Delay: ");
 		System.out.println(timer.getDelay());
-		m_Timer.add(timer);
+
+		Vector<CmeTimer> timers = getSequenceTimers(seq);
+		timers.add(timer);
+
 		return true;
 	}
 	
@@ -218,8 +244,9 @@ public class CmeState {
 	 * Resets any per seq components which need to reinit.
 	 */
 	public void resetSeqState() {
-		for(int x=0; x<m_Timer.size(); x++)
-			m_Timer.get(x).restart();
+		Vector<CmeTimer> timers = getSequenceTimers();
+		for(int x=0; x<timers.size(); x++)
+			timers.get(x).restart();
 		
 		resetSequencePosition();
 	}
@@ -663,7 +690,13 @@ public class CmeState {
      */
     public boolean nextSequencePosition() {
     	m_iSequenceIndex++;
-    	return isSequenceValid();
+
+    	boolean valid = isSequenceValid();
+    	if (!valid)
+    		return false;
+
+    	initSequence();
+    	return true;
     }
     
     public String getSequenceFile() {

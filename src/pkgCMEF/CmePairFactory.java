@@ -111,8 +111,10 @@ public class CmePairFactory
 				
 				if (strs.length > 5) {
 					ib = strs[5];
-					for (int x=6; x<strs.length; x++) {
-						img.addExtraInfo(strs[x]);
+					if (strs.length > 6) {
+						for (int x=6; x<strs.length; x++) {
+							img.addExtraInfo(strs[x]);
+						}
 						m_App.setProperty(Integer.toString(m_vPairs.groupSize()) + "EX", img.getExtraInfoVector());
 					}
 				} else {
@@ -266,6 +268,12 @@ public class CmePairFactory
 	
 	public int getCount() {
 		return m_vPairs.groupSize();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Vector<String> getPairExtraInfoVector(int idx) {
+		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
+		return (Vector<String>) ((CmePair)m_vPairs.elementAt(idx)).getExtraInfoVector();
 	}
 	
 	//-------------------------------------------------------------
