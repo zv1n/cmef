@@ -21,9 +21,27 @@
 
 		<STATE>
 			MODE="Instruction"
-			FILE="Instructions/EXP3/2_instruction_T1.htm"
+			FILE="Instructions/EXP3/2_instruction_T1_PREJOL.htm"
 			END= "Click:Continue"
+			CONDITIONS = "A"
 		</STATE>
+
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/2_instruction_T1_IJOL.htm"
+			END= "Click:Continue"
+			CONDITIONS = "B"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/EXP3/2_instruction_T1_COMBO.htm"
+			END= "Click:Continue"
+			CONDITIONS = "C"
+		</STATE>
+
+
 
 		<STATE>
 			MODE="Feedback"
@@ -106,9 +124,9 @@
 			SETS="60"
 			SCALE="1.0"
 			FILE_SEQUENCE="Instructions/EXP3/4_INFOSCREEN_T1.htm"
-        		NEXT="Click:Continue"
+        NEXT="Click:Continue"
 			FILE_SEQUENCE="Instructions/EXP3/4f_PREJOL_T1.htm"
-        		NEXT="Click:Continue"	
+        NEXT="Click:Continue"	
 			FILE_SEQUENCE="Instructions/EXP3/study_phase.htm"
 				DISPLAY_TIMER="down"
 				STUDY_LIMIT="time:5s"

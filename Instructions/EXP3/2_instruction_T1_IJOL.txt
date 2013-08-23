@@ -1,0 +1,34 @@
+<html>
+<body align="center">
+<br><br>
+<table cellspace="0" border="0">
+<td><tr>
+<font size="+2">
+
+After you are told whether the word pair is related/unrelated and in large/small <br>
+font, you will be given 5 seconds to study the word pair. You will then be asked to <br>
+estimate how likely you will be to remember the word pair on a later recall test <br>
+using a 0 to 100 scale where 0 = no confidence and 100 = complete confidence that you <br>
+ will be able to recall the second word of the pair when shown the first word of each pair. <br>
+<br>
+For example, you may be told that the upcoming word pair is related and in small font.<br>
+Then, after 5 seconds of study time asked, "On a scale of 0 to 100, how likely are you <br>
+to remember the second word of the pair when shown the first word on the upcoming recall test?"<br>
+You will be asked to type ANY NUMBER between 0 and 100 to indicate your confidence level. After<br>
+you provide your judgment, you would be told about the next word pair and whether it is <br>
+related/unrelated and in large/small font, study the word pair, and provide your judgment. This <br>
+process will repeat until you have studied all 60 word pairs in Trial 1. You will then begin the <br>
+recall test where you will be shown the first word, "table - ?" and asked to type the second <br>
+word of the pair, "chair." Once you have attempted to recall all 60 pairs, you will begin a final <br>
+trial that uses different word pairs, but follows the same steps as Trial 1.<br> <br>  
+<br>
+If you have any questions at this time, please raise your hand quietly to alert the research <br>
+assistant. If you are ready to begin then please click on the word "continue" at the bottom of the<br> 
+screen. <br>
+<br>
+
+</font>
+</td></tr>
+</table>
+</body>
+</html>
