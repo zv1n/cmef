@@ -188,9 +188,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 	 *            - the message to be displayed
 	 */
 	public void dmsg(int level, String msg) {
-		if (level >= (m_iDebugLevel & 0xFF)) {
-			System.out.println("Dmsg: " + msg);
-		}
+		//if (level >= (m_iDebugLevel & 0xFF)) {
+		//	System.out.println("Dmsg: " + msg);
+		//}
 	}
 
 	public CmePairFactory getPairFactory() {
@@ -459,7 +459,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 			if (!validTypes.contains(type[x])) {
 				return -1;
 			}
-			System.out.println("Iterator Type: " + type[x]);
+			//System.out.println("Iterator Type: " + type[x]);
 
 			if (type[x].equals("EXCLUSIVE")) {
 				itype |= CmeIterator.EXCLUSIVE;
@@ -479,9 +479,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 		else
 			m_PairFactory.setDataSet(group);
 
-		dmsg(0xFF,
-				"Set Iterator: "
-						+ Integer.toString(this.m_PairFactory.getCount()));
+		//dmsg(0xFF,
+		//		"Set Iterator: "
+		//			+ Integer.toString(this.m_PairFactory.getCount()));
 
 		CmeIterator iter = m_IteratorFactory.createIterator(iiter);
 		iter.initIterator(itype, 0, this.m_PairFactory.getCount() - 1);
@@ -497,7 +497,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (lhs.toUpperCase().equals("TIME")) {
 			int limit = CmeTimer.getDelayStringValue(rhs);
 
-			System.out.println("Limit: " + limit);
+			//System.out.println("Limit: " + limit);
 			state.setProperty("Limit", String.valueOf(limit), seq);
 			return true;
 		}
@@ -533,12 +533,6 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (m_NextResponse == null)
 			m_NextResponse = new CmeEventResponse() {
 				public void Respond() {
-					System.err.print("action: ");
-					System.err.println(_action);
-					System.err.print("lhs: ");
-					System.err.println(_lhs);
-					System.err.print("rhs: ");
-					System.err.println(_rhs);
 					try {
 						if (!m_ViewHandler.setNextInSequence()) {
 							thisApp.setNextState();
@@ -762,7 +756,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 				} else if (line.startsWith("<STATE>")) {
 					if (thisState != null) {
-						thisState.printInstructionFiles();
+						//thisState.printInstructionFiles();
 					}
 
 					thisState = new CmeState(this);
@@ -810,7 +804,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 					if (thisState == null)
 						m_eProperties.put("ValidConditions", valConditions + ":");
 					else
-						thisState.setProperty("ValidConditions", valConditions + ":", stateSequence);
+						thisState.setProperty("ValidConditions", valConditions + ":", -1);
 
 					// EXCLUDE=
 					// Excludes a property name from the long feedback list.
@@ -1208,7 +1202,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 	 */
 	public boolean setCondition(String condition) {
 		if (validateCondition(condition)) {
-			System.out.println("Set Condition!");
+			//System.out.println("Set Condition!");
 			m_eProperties.put("ExpCondition", condition);
 			return true;
 		}
@@ -1290,8 +1284,8 @@ public class CmeApp extends JFrame implements AncestorListener {
 		int col = text.indexOf(":");
 		if (col >= 0) {
 			if (!conditionInSet(text.substring(0, col))) {
-				System.out.println("Condition invalid!"
-						+ text.substring(0, col));
+				//System.out.println("Condition invalid!"
+				//		+ text.substring(0, col));
 				return null;
 			}
 			prompt = col + 1;
@@ -1333,7 +1327,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 	/** Prompt the pre prompt */
 	public boolean displayPrompt(String post, String buttons) {
 		if (m_CurState == null) {
-			System.out.println("No State!");
+			//System.out.println("No State!");
 			return true;
 		}
 
@@ -1342,7 +1336,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 		Object property = m_CurState.getProperty(post);
 		if (property == null) {
-			System.out.println("No Property (" + post + ")!");
+			//System.out.println("No Property (" + post + ")!");
 			return true;
 		}
 
@@ -1391,11 +1385,12 @@ public class CmeApp extends JFrame implements AncestorListener {
 			if (stateConditions == null)
 				break;
 
-			if (stateConditions.contains(":" + sCondition + ":"))
+			if (stateConditions.contains(sCondition + ":"))
 				break;
 
 			dmsg(5, "Skipping State: Condition: :" + sCondition
 					+ ":, Condition Expected: " + stateConditions);
+
 			m_CurState = m_cIterator.next();
 		}
 	}
@@ -1533,14 +1528,14 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (response == null) {
 			throw new Exception("Invalid response!");
 		}
-		System.err.println(response.getName());
+		//System.err.println(response.getName());
 		addFeedback(response.getName(), response.getValue());
 	}
 
 	public void addFeedback(String name, String value) throws Exception {
 		m_fbHashmap.put(name, value);
 		if (isExcluded(name)) {
-			System.out.println("excluded? " + name);
+			//System.out.println("excluded? " + name);
 			return;
 		}
 		m_fbHashmap.put(name + "Time",

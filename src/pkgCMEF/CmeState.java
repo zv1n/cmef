@@ -210,8 +210,8 @@ public class CmeState {
 		if (timer == null || !timer.isValid())
 			return false;
 
-		System.out.print("Delay: ");
-		System.out.println(timer.getDelay());
+		//System.out.print("Delay: ");
+		//System.out.println(timer.getDelay());
 
 		Vector<CmeTimer> timers = getSequenceTimers(seq);
 		timers.add(timer);
@@ -291,9 +291,9 @@ public class CmeState {
 			m_erEvent.size() <= event || m_erEvent.get(event) == null) {
             return;
         }
-		System.out.print("Event: ");
-		System.out.println(event);
-		System.out.println(m_erEvent.get(event).size());
+		//System.out.print("Event: ");
+		//System.out.println(event);
+		//System.out.println(m_erEvent.get(event).size());
 		
 		for (int x=0; x<m_erEvent.get(event).size(); x++) {
 			stateEventHandler response = m_erEvent.get(event).get(x);
@@ -571,14 +571,14 @@ public class CmeState {
                 System.out.println("Validate Input: Response Value Invalid!");
                 return false;
             }
-            System.out.println(rsp.getName() + ":" + rsp.getValue());
+            //System.out.println(rsp.getName() + ":" + rsp.getValue());
             if (rsp.getName().matches("^Select[0-9]*$") && !rsp.getValue().equals("")) {
                 selCount++;
             }
         }
 
         if (selCount != selReq && selReq != -1) {
-            System.out.println("Selection Count Invalid: " + Integer.toString(selCount) + " of " + Integer.toString(selReq));
+            //System.out.println("Selection Count Invalid: " + Integer.toString(selCount) + " of " + Integer.toString(selReq));
             return false;
         }
         return true;

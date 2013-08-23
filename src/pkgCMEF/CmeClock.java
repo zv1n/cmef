@@ -52,7 +52,7 @@ public class CmeClock extends JPanel implements CmeLimit
 	public CmeClock()
 	{
 		final CmeClock sclock = this;
-		System.out.println("Start...");
+		//System.out.println("Start...");
 		this.setSize(45, 35);
 		// Creater sets the location
 		this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -182,18 +182,18 @@ public class CmeClock extends JPanel implements CmeLimit
 		m_iLast = m_iCurTime;
 		
 		if (isEnabled()) {
-			System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit + "\nStarted Running Clock");
+			//System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit + "\nStarted Running Clock");
 			return true;
 		}
 		
 		setEnable(true);
-		System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
+		//System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
 		return true;
 	}
 
 	public int stop() {
 		setEnable(false);
-		System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
+		//System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
 		return (m_iCurTime - m_iLast);
 	}
 	

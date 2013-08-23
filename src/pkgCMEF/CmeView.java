@@ -558,7 +558,6 @@ public class CmeView extends JPanel {
 	 * @return true if the number of iterations has been met; false else.
 	 */
 	public boolean setNextInSequence() throws Exception {
-
 		if (!allowNextState()) {
 			return true;
 		}
@@ -725,7 +724,6 @@ public class CmeView extends JPanel {
 						String snext = String.valueOf(next);
 						
 						handle = handle.trim();
-						System.err.println("Adding Property: " + handle + " as '" + snext + "'");
 						m_CurState.setProperty(handle, snext);
 						
 						return true;
