@@ -432,6 +432,82 @@ public class CmeState {
 		
 		return incrementValue(name, points);
     }
+    
+    /**
+     * Validate the first three characters of any input.
+     * 
+     * @param range - the match to be evaluated.
+     * @param input - the input string to validate.
+     * @return true on match; false else
+     */
+	private boolean validateMatchAny(String dataset, String matchstring, String datafield)
+		throws Exception
+	{
+		String input = matchstring.toLowerCase();
+		
+		/* Nasty Hack to get around Theif */
+		input = input.replace("ie", "ee").replace("ei", "ee");
+
+		int matchCount = getIntProperty("MatchCount");
+		if (matchCount == -1)
+			matchCount = 3;
+		
+		String trial = (String) getProperty("CurrentTrial");
+		String name = (String) getProperty("RecallName");
+
+		if (name == null)
+			name = "Recall_";
+		else
+			name = m_App.translateString(name);
+
+		if (trial == null)
+			trial = "";
+		else
+			trial = "_T" + trial;
+
+		CmePair pairc = m_App.getPairFactory().getPairByValue(dataset, datafield, matchstring, matchCount);
+		
+		if (pairc != null) {
+			String pair = Integer.toString(m_App.getPairFactory().getTrueIndex(pairc));
+			String group = pairc.getPairGroup();
+
+			System.out.println("Correct!");
+			setProperty("Match", "correct");
+
+			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
+			m_App.addFeedback(name + "Response_" + pair, matchstring);
+
+			incrementValue(group + "Count" + trial, 1);
+			incrementValue("TotalCount" + trial, 1);
+			incrementValue("ExpTotalCount", 1);
+
+			int points = getIntProperty("Pair1Value");
+			if (points == -1)
+				points = 1;
+
+			incrementValue(group + "Points" + trial, points);
+			incrementValue("TotalPoints" + trial, points);
+			incrementValue("ExpTotalPoints", points);
+		} else {	
+			System.out.println("Incorrect!");
+			setProperty("Match", "incorrect");
+		}
+		
+		// Ensure that the spot we're currently modifying is set to false,
+		// if its not already true.
+		String pair = (String) getProperty("Pair1DataOrder");
+		if (pair != null) {
+			String correct_name = name + "Correct" + trial + "_" + pair;
+			String feedback = m_App.getFeedback(correct_name);
+			if (feedback == null) {
+				m_App.addFeedback(correct_name, "false");
+			}
+		}
+
+		return true;
+	}
+
+    
     /**
      * Validate the first three characters of an input.
      * 
@@ -567,7 +643,7 @@ public class CmeState {
         while (responses.hasNext()) {
             CmeResponse rsp = responses.next();
 
-            if (!validateInput(rsp)) {
+            if (rsp.getType() != CmeComponent.HIDDEN && !validateInput(rsp)) {
                 System.out.println("Validate Input: Response Value Invalid!");
                 return false;
             }
@@ -608,6 +684,7 @@ public class CmeState {
 
         String constraintType = (String) this.getProperty("ConstraintType");
         String constraint = (String) this.getProperty("Constraint");
+        String param1 = (String) this.getProperty("ConstraintParam");
 
 		if (constraintType == null || constraint == null) {
             return true;
@@ -633,6 +710,10 @@ public class CmeState {
             } else if (constraintType.equals("match")) {
                 m_App.dmsg(10, "Match!");
                 validateMatch(constraint, text);
+				return true;
+            } else if (constraintType.equals("match_any")) {
+                m_App.dmsg(10, "Match Any!");
+                validateMatchAny(constraint, text, param1);
 				return true;
 			} else {
                 m_App.dmsg(10, "None!");

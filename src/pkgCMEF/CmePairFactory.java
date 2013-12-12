@@ -153,6 +153,62 @@ public class CmePairFactory
 	public Vector<String> getTypeList() {
 		return m_TypeList;
 	}
+
+	//-------------------------------------------------------------
+	/** Get the first matched pair value, based on the provided
+	 * input, and field */
+	//-------------------------------------------------------------
+	public CmePair getPairByValue(String dataset, String field, String input, int matchcount)
+	{
+		if(input == null || field == null) return null;
+		if(input.length() < matchcount) return null;
+
+		input = input.replace("ie", "ee").replace("ei", "ee");
+
+		field = field.toLowerCase();
+		int _field = -2;
+		
+		if (field == "pairb") {
+			_field = -1;
+		} else if (field.startsWith("extra")) {
+			try {
+				_field = Integer.valueOf(field.substring(5));
+			} catch (Exception e) {
+				_field = 0;
+				System.err.println("Invalid substring for field value. Using '0'.");
+			}
+		}
+
+		for (CmePair obj : m_vPairs) {
+			if (!obj.getPairGroup().equals(dataset)) continue;
+
+			String value = null;
+			switch(_field) {
+			case -2:
+				value = obj.getNameA();
+				break;
+			case -1:
+				value = obj.getNameB();
+				break;
+			default:
+				value = obj.getExtraInfo(_field);
+				break;
+			}
+			
+			// Do we match this one?
+			if (value instanceof String) {
+				if (value.trim().startsWith("<")) {
+					value = value.trim().replaceAll("<[^>]*>", "");
+				}
+				
+				if (value.contains(input.substring(0, matchcount))) {
+					return obj;
+				}
+			}
+		}
+		
+		return null;
+	}
 	
 	//-------------------------------------------------------------
 	/** Get an image from the factory by vector index */
@@ -286,6 +342,10 @@ public class CmePairFactory
 
 	public int getTrueIndex(int index) {
 		CmePair mypair = m_vPairs.elementAt(index);
+		return m_vPairs.indexOf(mypair);
+	}
+
+	public int getTrueIndex(CmePair mypair) {
 		return m_vPairs.indexOf(mypair);
 	}
 

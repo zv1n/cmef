@@ -640,7 +640,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 	}
 
 	private void requirePair(String[] value, String text) throws Exception {
-		if (value.length != 2)
+		if (value.length < 2)
 			throw new Exception(text);
 	}
 
@@ -676,7 +676,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 		BufferedReader bufReader = null;
 		CmeState thisState = null;
 
-		String validConstraints = "REGEX|RANGE|MATCH";
+		String validConstraints = "REGEX|RANGE|MATCH|MATCH_ANY";
 
 		// Open the file
 		try {
@@ -963,6 +963,8 @@ public class CmeApp extends JFrame implements AncestorListener {
 					if (validConstraints.contains(lhs.toUpperCase())) {
 						thisState.setProperty("ConstraintType", lhs, stateSequence);
 						thisState.setProperty("Constraint", rhs, stateSequence);
+						if (splitValue.length > 2)
+							thisState.setProperty("ConstraintParam", splitValue[2], stateSequence);
 					} else
 						throw new Exception("Invalid constraint type: " + lhs);
 				} else if (line.contains("</EXPERIMENT>")) {

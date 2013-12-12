@@ -321,7 +321,7 @@ public class CmeView extends JPanel {
 		m_CurState.setProperty("CurrentGroup", m_CurState.getProperty("Pair" + set + "Group"));	
 		m_CurState.setProperty("CurrentValue", m_CurState.getProperty("Pair" + set + "Value"));	
 		m_CurState.setProperty("CurrentOrder", m_CurState.getProperty("Pair" + set + "Order"));
-		m_CurState.setProperty("CurrnetDataOrder", m_CurState.getProperty("Pair" + set + "DataOrder"));
+		m_CurState.setProperty("CurrentDataOrder", m_CurState.getProperty("Pair" + set + "DataOrder"));
 		m_CurState.setProperty("CurrentExtraInfo", m_CurState.getProperty("Pair" + set + "ExtraInfo"));
 		
 		String translation = m_CurState.translateString(m_sStudyContent);

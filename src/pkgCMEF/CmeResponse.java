@@ -6,7 +6,10 @@ public interface CmeResponse {
 	
 	/** Get the variable group associated with the response */
 	public String getGroup();
-	
+
 	/** Get the value associated with the response */ 
 	public String getValue(); 
+
+	/** Get the type of input field associated with this response */ 
+	public int getType(); 
 }
