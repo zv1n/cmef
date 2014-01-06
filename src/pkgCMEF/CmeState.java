@@ -468,6 +468,7 @@ public class CmeState {
 		
 		String trial = (String) getProperty("CurrentTrial");
 		String name = (String) getProperty("RecallName");
+    String seq = (String) getProperty("Pair1Sequence");
 
 		if (name == null)
 			name = "Recall_";
@@ -490,6 +491,7 @@ public class CmeState {
 
 			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
 			m_App.addFeedback(name + "Response_" + pair, matchstring);
+      m_App.addFeedback(name + "Order_" + pair, seq);
 
 			incrementValue(group + "Count" + trial, 1);
 			incrementValue("TotalCount" + trial, 1);
