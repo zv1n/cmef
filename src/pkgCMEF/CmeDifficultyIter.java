@@ -10,21 +10,23 @@ public class CmeDifficultyIter implements CmeIterator {
 	
 	private Vector<Integer> m_idxList = new Vector<Integer>();
 	private int m_iPos = 0;
+  private int m_iType;
 	
-	public CmeDifficultyIter(CmeApp app) {
+	public CmeDifficultyIter(int type, CmeApp app) {
+    m_iType = type;
 		m_App = app;
 		m_iPos = 0;
 	}
 	
 	@Override
-	public boolean initIterator(int type, int lowerBound, int upperBound) {
-		boolean descending = ((type&CmeIterator.REVERSE) == CmeIterator.REVERSE);
+	public boolean initIterator(int lowerBound, int upperBound) {
+		boolean descending = ((m_iType&CmeIterator.REVERSE) == CmeIterator.REVERSE);
 		CmePairFactory pf = m_App.getPairFactory();
 		
 		m_idxList.clear();
 		m_iPos = 0;
 		
-		if ((type&(~CmeIterator.REVERSE)) != 0)
+		if ((m_iType&(~CmeIterator.REVERSE)) != 0)
 			return false;
 		
 		HashMap<Integer, Vector<Integer>> pointmap = new HashMap<Integer, Vector<Integer>>();

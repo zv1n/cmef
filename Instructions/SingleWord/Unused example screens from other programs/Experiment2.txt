@@ -1,0 +1,443 @@
+<EXPERIMENT>
+	TITLE="CHIPS 6 - Experiment"
+	STUDY_NAME="CHIPS6"
+	CONDITIONS="A,B,C,D,E,F,G,H"
+	DATA_FILE="Instructions/CHIPS6/DataList.txt"
+	FORMAT_FILE="Instructions/CHIPS6/OutputFormat.txt"
+	ESET="SimpleTotalT1:0"
+	ESET="SimpleTotalT2:0"
+	ESET="ModerateTotalT1:0"
+	ESET="ModerateTotalT2:0"
+	ESET="ComplexTotalT1:0"
+	ESET="ComplexTotalT2:0"
+	ESET="TotalCorrectT1:0"
+	ESET="TotalCorrectT2:0"
+	<TRIAL ID="1">
+# --- Conditions ---
+#A. None - EMH
+#B. None - HME 
+#C. Item - EMH (You got this simple item correct/incorrect)
+#D. Item - HME (You got this simple item correct/incorrect)
+#E. Global- EMH(You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
+#F. Global- HME (You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
+#G. Combo - EMH (You got this simple item correct; You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
+#H. Combo - HME (You got this simple item correct; You got 16 items correct; 7 simple, 5 moderate, and 4 complex)
+#
+#-Item level: occurs after each item is recalled
+#-Global level: occurs at the end of the recall test
+#
+#The design is a 2 x 3 x 4 x 2
+#Within subjects- 2 (Trial: 1 or 2) x 3 (Item type: simple, moderate, or complex)
+#Between subjects- 4 (Feedback type: none, item-level, global, or combination) x 2 (EMH vs. HME order)
+#
+#
+# --- T1 ---
+#Rate Characters (Seq)
+#Num Correct (Fb)
+#Study (Seq)
+#Num Correct (Fb)
+#Likelyhood of correct (Seq)
+#recall test (Seq) (match 3)
+#Num Correct (Fb)
+#
+# --- T2 ---
+#Num Correct (Fb)
+
+#Study (Seq)
+#Num Correct (Fb)
+#Likelyhood of correct (Seq)
+#recall test (Seq) (match 3)
+#
+# ------ Trial 1 ------
+#
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/1_EOLs_1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/2_EOLs_2.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/3_EOLs_3.htm"
+			END="Click:Begin"
+		</STATE>
+#Rate Characters (Seq)
+		<STATE>
+			MODE="Sequential"
+			FILE="Instructions/CHIPS6/3f_EOL_Rating_T1.htm"
+			ITERATOR="random:exclusive"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/4_Instructions_1.htm"
+			END="Click:Continue"
+		</STATE>
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/CHIPS6/5_Prestudy_Prediction_1.htm"
+#			END="Click:Continue"
+#		</STATE>
+#Num Correct (Fb)
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/CHIPS6/5f_Prestudy_Prediction_1.htm"
+			CONSTRAINTS="range:0-36"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/6_Prestudy_Prediction_TX_1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/7_Sequential_Instructions.htm"
+			END="Click:Continue"
+		</STATE>
+#Selection
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/15_Study_18_1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/16_Study_18_2.htm"
+			END="Click:Continue"9
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/17_Study_18_3.htm"
+			END="Click:Continue"
+		</STATE>
+
+
+#Study 
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_135.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:unlimited"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="no"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_135.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:5s"
+				SET="ResetOnNext:yes"	
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_531.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:unlimited"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="no"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="C"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_531.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:5s"
+				SET="ResetOnNext:yes"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="D"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_rand.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:unlimited"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="no"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="E"
+		</STATE>
+		<STATE>
+			MODE="Study"
+			FILE="Instructions/SOCS/4f_Study_Phase_rand.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#0000A0"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="random:exclusive"
+			STUDY_LIMIT="time:5s"
+				SET="ResetOnNext:yes"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/SOCS/4f_Study_Phase_2.htm"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			POOL="ImageValues"
+			ITEMS="3"
+			SETS="16"
+			SCALE="1.0"
+			NEXT="Click:Continue"
+			CONDITIONS="F"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SOCS/6_Poststudy.htm"
+			CONSTRAINTS="range:0-48"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SOCS/7_Recall.htm"
+			END="Click:Continue"
+		</STATE>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Study (Seq)
+		<STATE>
+			MODE="Simultaneous"
+			FILE="Instructions/CHIPS6/17f_StudyGrid_2.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#00FF00"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="selective:exclusive"
+			STUDY_LIMIT="time:30s"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/CHIPS6/17f_Study_2.htm"
+			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			COUNT="6"
+			SCALE="0.7"
+			END="Click:Continue"
+		</STATE>
+#Num Correct (Fb)
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/CHIPS6/8f_Poststudy_Prediction_1.htm"
+			CONSTRAINTS="range:0-36"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/9_Poststudy_Prediction_TX_1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/10_JOLs_1.htm"
+			END="Click:Continue"
+		</STATE>
+#JOL (Seq)
+		<STATE>
+			MODE="Sequential"
+			FILE="Instructions/CHIPS6/10f_JOL_Collection_1.htm"
+			CONSTRAINTS="range:0-100"
+			ITERATOR="random:exclusive"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/11_Recall_Test_1.htm"
+			END="Click:Continue"
+		</STATE>
+#recall test (Seq) (match 3)
+		<STATE>
+			MODE="Sequential"
+			FILE="Instructions/CHIPS6/11f_Recall_1.htm"
+			ITERATOR="random:exclusive"
+			CONSTRAINTS="match:$CurrentPairA"
+			SET="DisableSubmitHook:yes"
+			POST_PROMPT="C,G:You got the previous answer $Match"
+			POST_PROMPT="B,F:You got the previous answer $Match, which was a $CurrentGroup character."
+			NEXT="Click:Continue"
+		</STATE>
+#Num Correct (Fb)
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/CHIPS6/12f_Postdiction_1.htm"
+			CONSTRAINTS="range:0-36"
+			POST_STATE_PROMPT="E,G:You got $TotalCorrect_T1 correct this trial."
+			POST_STATE_PROMPT="D,F:You got $TotalCorrect_T1 correct this trial (Simple: $SimpleTotal_T1; Moderate: $ModerateTotal_T1; Complex: $ComplexTotal_T1)."
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2">
+#
+#Num Correct (Fb)
+#Selection (Sim)
+#Seq Learn (Seq)
+#Num Correct (Fb)
+#Likelyhood of correct (Seq)
+#recall test (Seq) (match 3)
+#
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/13_Instructions_2.htm"
+			END="Click:Continue"
+		</STATE>
+#Num Correct (Fb)
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/CHIPS6/14f_Prestudy_Prediction_2.htm"
+			CONSTRAINTS="range:0-36"
+			END="Click:Continue"
+		</STATE>
+#Selection
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/15_Study_18_1.htm"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/16_Study_18_2.htm"
+			END="Click:Continue"9
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/17_Study_18_3.htm"
+			END="Click:Continue"
+		</STATE>
+#Study (Seq)
+		<STATE>
+			MODE="Simultaneous"
+			FILE="Instructions/CHIPS6/17f_StudyGrid_2.htm"
+				SET="BorderWidth:1.5"
+				SET="PreStudyColor:#00FF00"
+				SET="PostStudyColor:#FF0000"
+			ITERATOR="selective:exclusive"
+			STUDY_LIMIT="time:30s"
+				SET="Resolution:100"
+			STUDY_FILE="Instructions/CHIPS6/17f_Study_2.htm"
+			SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"
+			SET="LimitPromptButtons:yesno"
+			DISPLAY_TIMER="down"
+			COUNT="6"
+			SCALE="0.7"
+			END="Click:Continue"
+		</STATE>
+#Num Correct (Fb)
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/CHIPS6/18f_Poststudy_Prediction_2.htm"
+			CONSTRAINTS="range:0-36"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/19_JOLs_2.htm"
+			END="Click:Continue"
+		</STATE>
+#JOL (Seq)
+		<STATE>
+			MODE="Sequential"
+			FILE="Instructions/CHIPS6/19f_JOL_Collection_2.htm"
+			CONSTRAINTS="range:0-100"
+			ITERATOR="random:exclusive"
+			Count="36"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/20_Recall_Test_2.htm"
+			END="Click:Continue"
+		</STATE>
+#recall test (Seq) (match 3)
+		<STATE>
+			MODE="Sequential"
+			FILE="Instructions/CHIPS6/20f_Recall_2.htm"
+			ITERATOR="random:exclusive"
+			CONSTRAINTS="match:$CurrentPairA"
+			SET="DisableSubmitHook:yes"
+			POST_PROMPT="C,G:You got the previous answer $Match"
+			POST_PROMPT="B,F:You got the previous answer $Match, which was a $CurrentGroup character."
+			NEXT="Click:Continue"
+		</STATE>
+#Num Correct (Fb)
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/CHIPS6/21f_Postdiction_2.htm"
+			CONSTRAINTS="range:0-36"
+			END="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/CHIPS6/22_Last_Screen.htm"
+			POST_STATE_PROMPT="E,G:You got $TotalCorrect_T2 correct this trial."
+			POST_STATE_PROMPT="D,F:You got $TotalCorrect_T2 correct this trial (Simple: $SimpleTotal_T2; Moderate: $ModerateTotal_T2; Complex: $ComplexTotal_T2)."
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+</EXPERIMENT>

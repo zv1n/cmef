@@ -9,13 +9,13 @@ public class CmeIteratorFactory {
 		m_App = app;
 	}
 	
-	public CmeIterator createIterator(int flags) {
+	public CmeIterator createIterator(int flags, int type) {
 		if ((flags&CmeIterator.RANDOM) == CmeIterator.RANDOM) {
-			return new CmeRandomIter();
+			return new CmeRandomIter(type);
 		} else if ((flags&CmeIterator.SELECTIVE) == CmeIterator.SELECTIVE) {
 			return new CmeSelectiveIter(m_App);
 		} else if ((flags&CmeIterator.DIFFICULTY) == CmeIterator.DIFFICULTY) {
-			return new CmeDifficultyIter(m_App);
+			return new CmeDifficultyIter(type, m_App);
 		}
 		return null;
 	}

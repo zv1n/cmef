@@ -20,11 +20,9 @@ public class CmeRandomIter implements CmeIterator {
 	/** Random number gen */
 	private static Random m_RandomGen;
 	
-	public boolean initIterator(int type, int lowerBound, int upperBound) {
-		
+	public boolean initIterator(int lowerBound, int upperBound) {
 		m_iUpperBound = upperBound;
 		m_iLowerBound = lowerBound;
-		m_iType = type;
 		
 		boolean ret = true;
 		
@@ -36,9 +34,17 @@ public class CmeRandomIter implements CmeIterator {
 		
 		return ret;
 	}
+
+  public boolean initIterator(Vector<Integer> bounds) {
+    m_iExclusiveList = new Vector<Integer>(bounds.size());
+    for(int x = 0; x < bounds.size(); x++)
+      m_iExclusiveList.add(bounds.elementAt(x));
+
+    return true;
+  }
 	
-	public CmeRandomIter() {
-		m_iType = -1;
+	public CmeRandomIter(int type) {
+		m_iType = type;
 	}
 	
 	public static int getRange(int low, int high) {
@@ -53,13 +59,13 @@ public class CmeRandomIter implements CmeIterator {
 		return ((Math.abs(m_RandomGen.nextInt()) % range) + low);
 	}
 
-	private boolean genExclusive() {
-		m_iExclusiveList = new Vector<Integer>(m_iUpperBound-m_iLowerBound);
-		for(int x = m_iLowerBound; x <= m_iUpperBound; x++)
-			m_iExclusiveList.add(x);
+  private boolean genExclusive() {
+    m_iExclusiveList = new Vector<Integer>(m_iUpperBound-m_iLowerBound);
+    for(int x = m_iLowerBound; x <= m_iUpperBound; x++)
+      m_iExclusiveList.add(x);
 
-		return true;
-	}
+    return true;
+  }
 	
 	private int getExclusive() {
 		if (m_iExclusiveList == null)
@@ -70,7 +76,6 @@ public class CmeRandomIter implements CmeIterator {
 		
 		int idx = getRange(0, m_iExclusiveList.size()-1);
 		int rand = m_iExclusiveList.get(idx);
-
 		m_iExclusiveList.remove(idx);
 		
 		return rand;

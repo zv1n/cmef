@@ -1,0 +1,19 @@
+<html>
+<body align="center">
+<br><br>
+<table cellspace="0" border="0">
+<td><tr>
+<font size="+1">
+
+We will now begin the study phase of trial 1. Once you click continue below, you will<br>
+be presented with 60 word pairs. Each pair will be presented for 5 seconds and then you<br>
+will be asked to predict how likely you will be able to remember the word pair<br>
+on a later recall test. The scale will be presented from 0 (no likelihood of recall) to<br>
+100 (likelihood of recall is certain).<br>
+Please click continue to begin the study phase of trial 1.<br>
+
+</font>
+</td></tr>
+</table>
+</body>
+</html>

@@ -23,13 +23,12 @@ public interface CmeIterator {
 	/**
 	 * Initialize the iterator with upper and lower bounds.
 	 *
-	 * @param flags - flags to determine how to iterate through values
 	 * @param lowerBound - the lower range bound of numbers
 	 * @param upperBound - the upper range bound of numbers
 	 * 
 	 * @return true on success; false else
 	 */
-	public boolean initIterator(int type, int lowerBound, int upperBound);
+	public boolean initIterator(int lowerBound, int upperBound);
 	
 	/**
 	 * Get the next random number in the sequence.

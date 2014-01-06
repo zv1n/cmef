@@ -433,14 +433,14 @@ public class CmeApp extends JFrame implements AncestorListener {
 		return ret;
 	}
 
-	private int setIterator(String iterator, String[] type, CmeState state) {
+	private CmeIterator getIterator(String iterator, String[] type, CmeState state) {
 		String validIterators = "RANDOM:SELECTIVE:DIFFICULTY";
 		String validTypes = "NONEXCLUSIVE:REVERSE:DESCENDING:ASCENDING";
 		int itype = 0;
 		int iiter = 0;
 
 		if (!validIterators.contains(iterator)) {
-			return -1;
+			return null;
 		}
 
 		if (iterator.equals("RANDOM")) {
@@ -457,7 +457,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 		for (int x = 0; x < type.length; x++) {
 			if (!validTypes.contains(type[x])) {
-				return -1;
+				return null;
 			}
 			//System.out.println("Iterator Type: " + type[x]);
 
@@ -473,20 +473,11 @@ public class CmeApp extends JFrame implements AncestorListener {
 			}
 		}
 
-		String group = state.getStringProperty("CurrentDataset");
-		if (group == null)
-			m_PairFactory.clearDataSet();
-		else
-			m_PairFactory.setDataSet(group);
-
 		//dmsg(0xFF,
 		//		"Set Iterator: "
 		//			+ Integer.toString(this.m_PairFactory.getCount()));
 
-		CmeIterator iter = m_IteratorFactory.createIterator(iiter);
-		iter.initIterator(itype, 0, this.m_PairFactory.getCount() - 1);
-
-		return state.setIterator(iter);
+		return m_IteratorFactory.createIterator(iiter, itype);
 	}
 
 	private boolean setStudyLimit(String action, String lhs, String rhs,
@@ -935,13 +926,13 @@ public class CmeApp extends JFrame implements AncestorListener {
 					thisState.setProperty("FeedbackName", value, stateSequence);
 				} else if (line.matches(variableQuery("SELECT"))) {
 					thisState.setProperty("Select", value, stateSequence);
-				} else if (line.matches(variableQuery("ITEMS")) || line.matches(variableQuery("COUNT"))) {
-					thisState.setProperty("Count", value, stateSequence);
+        } else if (line.matches(variableQuery("ITEMS")) || line.matches(variableQuery("COUNT"))) {
+          thisState.setProperty("Count", value, stateSequence);
 				} else if (line.matches(variableQuery("SETS")) || line.matches(variableQuery("GRIDS"))) {
 					thisState.setProperty("Sets", value, stateSequence);
+
 				} else if (line.matches(variableQuery("ITERATOR"))) {
-					requirePair(splitValue, event
-							+ " must contain a name:value pair!");
+					requirePair(splitValue, event + " must contain a name:value pair!");
 
 					lhs = lhs.toUpperCase();
 					rhs = rhs.toUpperCase();
@@ -952,9 +943,18 @@ public class CmeApp extends JFrame implements AncestorListener {
 					else
 						types = new String[] { rhs };
 
-					if (setIterator(lhs, types, thisState) != 0)
-						throw new Exception("Invalid Iterate: " + lhs + ":"
-								+ rhs);
+          CmeIterator iter = getIterator(lhs, types, thisState);
+          String group = thisState.getStringProperty("CurrentDataset");
+
+          if (group == null)
+            m_PairFactory.clearDataSet();
+          else
+            m_PairFactory.setDataSet(group);
+
+          iter.initIterator(0, m_PairFactory.getCount() - 1);
+
+          if (thisState.setIterator(iter) != 0)
+            throw new Exception("Invalid Iterate: " + lhs + ":" + rhs);
 
 				} else if (line.matches(variableQuery("CONSTRAINTS"))) {
 					requirePair(splitValue, event

@@ -101,7 +101,7 @@ public class CmeSelectiveIter implements CmeIterator {
 		return (m_iExclusiveList.size() > 0);
 	}
 	
-	public boolean initIterator(int type, int lowerBound, int upperBound) {
+	public boolean initIterator(int lowerBound, int upperBound) {
 		m_LowerBound = lowerBound;
 		m_UpperBound = upperBound;
 		return true;

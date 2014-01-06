@@ -1,0 +1,20 @@
+<html>
+<body align="center">
+<br><br>
+<table cellspace="0" border="0">
+<td><tr>
+<font size="+1">
+
+Now that you have completed the study phase for trial 1, you will be asked to try to remember<br>
+the previously presented word pairs.<br>
+You will be shown the first word of each pair and asked to type in the corresponding word.<br>
+For example, you may be presented with the clue, "clown - ?" You will then type in<br>
+the missing word, "spoon."<br> 
+<br>
+Please click continue to begin the recall test.<br>
+
+</font>
+</td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<EXPERIMENT CMEF_VERSION="2.2">
+	TITLE="EXP2 - Experiment"
+	STUDY_NAME="Grant Experiment 2"
+	CONDITIONS="A"
+	DATA_FILE="Instructions/EXP2/DataList.txt"
+	FORMAT_FILE="Instructions/EXP2/OutputFormat.txt"	
+	<TRIAL ID="1" DATASET="Trial1">
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/EXP2/f_Recall.htm"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			CONSTRAINTS="match_any:Trial1:paira" # paira, pairb, extra1, extra2...
+			SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+	</TRIAL>
+</EXPERIMENT>

@@ -328,12 +328,26 @@ public class CmeState {
      * Set event response 
      */
     public Object getProperty(String name) {
-    	if (m_sSequenceProperties.size() > m_iSequenceIndex) {
-    		Object prop = m_sSequenceProperties.get(m_iSequenceIndex).get(name);
-    		if (prop != null)
-    			return prop;
-    	}
+      if (m_sSequenceProperties.size() > m_iSequenceIndex) {
+        Object prop = m_sSequenceProperties.get(m_iSequenceIndex).get(name);
+        if (prop != null)
+          return prop;
+      }
         return m_sProperties.get(name);
+    }
+
+    /** 
+     * Set event response 
+     */
+    public boolean getBooleanProperty(String name, boolean def) {
+      Object prop = this.getProperty(name);
+      
+      if (prop != null && prop instanceof String) {
+        String val = ((String) prop).toLowerCase();
+        return (val.equals("yes") || val.equals("true"));
+      }
+      
+      return def;
     }
 	
     /** 

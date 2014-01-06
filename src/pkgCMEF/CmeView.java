@@ -12,6 +12,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.io.IOException;
+import java.util.Vector;
 import java.util.Iterator;
 
 //====================================================================
@@ -47,7 +48,8 @@ public class CmeView extends JPanel {
 	private CmeClock m_cClock;
 	
 	private CmeEventResponse m_LimitResponse;
-	
+
+  private Vector<Integer> m_viCurrentItems = new Vector<Integer>();
 	
 	private String m_bString;
 	private String m_sContent;
@@ -202,7 +204,10 @@ public class CmeView extends JPanel {
 		
 		if (postStudyColor != null) {
 			//System.out.println("Pair" + element + "Color");
-			m_CurState.setProperty("Pair" + element + "Color", postStudyColor);
+      m_CurState.setProperty("Pair" + element + "Color", postStudyColor);
+      int step = m_CurState.getIntProperty("Pair" + element);
+      if (step >= 0)
+        m_CurState.setProperty("Item" + step + "Color", postStudyColor);
 		}
 	}
 
@@ -233,8 +238,12 @@ public class CmeView extends JPanel {
 			
 			if (pair == null) 
 				throw new Exception("Failed to get the current pair!");
-			
+
 			updateLinkColor(pairNum);
+
+      if (m_CurState.getBooleanProperty("ShuffleItems", false))
+        shuffleProperties();
+
 			updateHtmlContent();
 			updatePairSelection(trial, pair, elapsedTime);
 			updatePairTotals(trial, pair, elapsedTime);
@@ -310,6 +319,8 @@ public class CmeView extends JPanel {
 			throw new  Exception("Not a STUDY MODE!");
 			//return;
 		}
+
+    System.err.println("SetStudyState: " + set.toString());
 		
 		m_CurState.setProperty("CurrentPairA", m_CurState.getProperty("Pair" + set + "A"));
 		m_CurState.setProperty("CurrentPairB", m_CurState.getProperty("Pair" + set + "B"));
@@ -626,6 +637,54 @@ public class CmeView extends JPanel {
 		return scale;
 	}
 
+  /**
+   * Set the display properties for a shuffled study state.
+   *
+   * @throws Exception
+   */
+  private void shuffleProperties() throws Exception {
+    double scale = getScale(); 
+    int count = m_CurState.getPerStepCount();
+    final int currentStep = m_CurState.getStep();
+    String preStudyColor = m_CurState.getStringProperty("PreStudyColor");
+    
+    int step;
+    String vx;
+
+    CmeRandomIter iter = new CmeRandomIter(CmeIterator.EXCLUSIVE);
+    iter.initIterator(m_viCurrentItems);
+
+    for (int x = 0; x < count; x++) {
+      step = iter.getNext();
+      System.err.println(step);
+      vx = Integer.toString(x + 1);
+      //System.out.println("Generating Pairs for " + vx);
+
+      m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
+      m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
+      m_CurState.setProperty("Pair" + vx + "AFile", m_PairFactory.getFileA(step));
+      m_CurState.setProperty("Pair" + vx + "BFile", m_PairFactory.getFileB(step));
+      m_CurState.setProperty("Pair" + vx, Integer.toString(step));
+      
+      m_CurState.setProperty("Pair" + vx + "Sequence", Integer.toString(m_CurState.getStep()));
+      m_CurState.setProperty("Pair" + vx + "Group", m_PairFactory.getPairGroup(step));  
+      m_CurState.setProperty("Pair" + vx + "Order", Integer.toString(x));  
+      m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
+      m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
+      m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
+      
+      if (m_CurState.canStudy() && preStudyColor != null) {
+        String color = preStudyColor;
+
+        Object itemColor = m_CurState.getProperty("Item" + Integer.toString(step) + "Color");
+        if (itemColor != null && itemColor instanceof String)
+          color = (String) itemColor;
+
+        m_CurState.setProperty("Pair" + vx + "Color", color);
+      }
+    }
+  }
+
 	/**
 	 * Set the display properties for a study state.
 	 * 
@@ -645,9 +704,11 @@ public class CmeView extends JPanel {
 		String vx;
 
 		m_CurState.setProperty("CurrentSet", Integer.toString(currentStep));
+    m_viCurrentItems.clear();
 
 		for (int x = 0; x < count; x++) {
 			step = iter.getNext();
+      m_viCurrentItems.add(step);
 			vx = Integer.toString(x + 1);
 			//System.out.println("Generating Pairs for " + vx);
 
