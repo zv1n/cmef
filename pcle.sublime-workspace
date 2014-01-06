@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"shuffl",
+				"shuffleProperties"
+			],
+			[
 				"review",
 				"reviewed_class"
 			],
@@ -39,13 +43,131 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "src/pkgCMEF/CmeState.java",
+			"settings":
+			{
+				"buffer_size": 23006,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "Searching 958 files for \"ITEM_ORDER\" (regex, case sensitive)\n\n/Users/terrymeacham/projects/pcle/bin/EXP2/Experiment.txt:\n   45  			FILE=\"Instructions/EXP2/f_Recall.htm\"\n   46  			ITEMS=\"6\"\n   47:       ITEM_ORDER=\"random:exclusive\"\n   48  			SETS=\"1\"\n   49  			SCALE=\"1.0\"\n\n/Users/terrymeacham/projects/pcle/bin/EXP2/IteratorExperiment.txt:\n   12  			FILE=\"Instructions/EXP2/f_Recall.htm\"\n   13  			ITEMS=\"6\"\n   14:       ITEM_ORDER=\"random:exclusive\"\n   15  			SETS=\"1\"\n   16  			SCALE=\"1.0\"\n\n2 matches across 2 files\n\n\nSearching 962 files for \"getIntProperty\" (regex, case sensitive)\n\n/Users/terrymeacham/projects/pcle/.tag:\n  159  getImagePrefix	src/pkgCMEF/CmeApp.java	/^	public String getImagePrefix() {$/;\"	m	class:CmeApp\n  160  getImagesVector	src/pkgCMEF/CmePairFactory.java	/^	public Vector<CmePair> getImagesVector()$/;\"	m	class:CmePairFactory\n  161: getIntProperty	src/pkgCMEF/CmeApp.java	/^	public int getIntProperty(String name) {$/;\"	m	class:CmeApp\n  162: getIntProperty	src/pkgCMEF/CmeState.java	/^    public int getIntProperty(String name) {$/;\"	m	class:CmeState\n  163  getIntValue	src/pkgCMEF/CmePairFactory.java	/^	public int getIntValue(int idx)$/;\"	m	class:CmePairFactory\n  164  getIterator	src/pkgCMEF/CmeState.java	/^    public CmeIterator getIterator() {$/;\"	m	class:CmeState\n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java:\n  292  	 * Set event response\n  293  	 */\n  294: 	public int getIntProperty(String name) {\n  295  		String str = (String) m_eProperties.get(name);\n  296  		int ret = 0;\n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeState.java:\n  347       * Set event response \n  348       */\n  349:     public int getIntProperty(String name) {\n  350          String str = (String) this.getProperty(name);\n  351  \n  ...\n  417  	\n  418      private boolean incrementValue(String name, Integer inc) {\n  419:     	int total = m_App.getIntProperty(name);\n  420  		if (total == -1)\n  421  			total = 0;\n  ...\n  427      @SuppressWarnings(\"unused\")\n  428  	private boolean incrementValue(String name, String value) {\n  429: 		int points = getIntProperty(\"Pair1Value\");\n  430  		if (points == -1)\n  431  			points = 1;\n  ...\n  449  		input = input.replace(\"ie\", \"ee\").replace(\"ei\", \"ee\");\n  450  \n  451: 		int matchCount = getIntProperty(\"MatchCount\");\n  452  		if (matchCount == -1)\n  453  			matchCount = 3;\n  ...\n  482  			incrementValue(\"ExpTotalCount\", 1);\n  483  \n  484: 			int points = getIntProperty(\"Pair1Value\");\n  485  			if (points == -1)\n  486  				points = 1;\n  ...\n  529  		in = in.replace(\"ie\", \"ee\").replace(\"ei\", \"ee\");\n  530  		\n  531: 		int matchCount = getIntProperty(\"MatchCount\");\n  532  		if (matchCount == -1)\n  533  			matchCount = 3;\n  ...\n  570  			incrementValue(\"ExpTotalCount\", 1);\n  571  \n  572: 			int points = getIntProperty(\"Pair1Value\");\n  573  			if (points == -1)\n  574  				points = 1;\n  ...\n  638       */\n  639      public boolean validateInput(Iterator<CmeResponse> responses) throws Exception {\n  640:         int selReq = getIntProperty(\"Select\");\n  641          int selCount = 0;\n  642  \n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeView.java:\n  206  			//System.out.println(\"Pair\" + element + \"Color\");\n  207        m_CurState.setProperty(\"Pair\" + element + \"Color\", postStudyColor);\n  208:       int step = m_CurState.getIntProperty(\"Pair\" + element);\n  209  		}\n  210  	}\n  ...\n  519  		\n  520  		if (reconfigure) {\n  521: 			int icount = m_CurState.getIntProperty(\"Count\");\n  522: 			int isets = m_CurState.getIntProperty(\"Sets\");\n  523  			\n  524  			if (isets < 1)\n  ...\n  837  		}\n  838  		\n  839: 		int timeLimit = m_CurState.getIntProperty(\"Limit\");\n  840: 		int timeRes = m_CurState.getIntProperty(\"Resolution\");\n  841  		\n  842  		if (timeLimit <= 0) {\n\n18 matches across 4 files\n\n\nSearching 956 files for \"match_any\" (regex, case sensitive)\n\n/Users/terrymeacham/projects/pcle/bin/EXP2/TestExperiment.txt:\n   13  			SETS=\"60\"\n   14  			SCALE=\"1.0\"\n   15: 			CONSTRAINTS=\"match_any:Trial1:paira\" # paira, pairb, extra1, extra2...\n   16  			SET=\"DisableSubmitHook:yes\"\n   17  			NEXT=\"Click:Continue\"\n\n/Users/terrymeacham/projects/pcle/Instructions/SingleWord/TestExperiment.txt:\n   13  			SETS=\"60\"\n   14  			SCALE=\"1.0\"\n   15: 			CONSTRAINTS=\"match_any:Trial1:paira\" # paira, pairb, extra1, extra2...\n   16  			SET=\"DisableSubmitHook:yes\"\n   17  			NEXT=\"Click:Continue\"\n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeState.java:\n  726                  validateMatch(constraint, text);\n  727  				return true;\n  728:             } else if (constraintType.equals(\"match_any\")) {\n  729                  m_App.dmsg(10, \"Match Any!\");\n  730                  validateMatchAny(constraint, text, param1);\n\n3 matches across 3 files\n",
+			"settings":
+			{
+				"buffer_size": 4727,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "src/pkgCMEF/CmeIteratorFactory.java",
+			"settings":
+			{
+				"buffer_size": 580,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/pkgCMEF/CmeIterator.java",
+			"settings":
+			{
+				"buffer_size": 1061,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/pkgCMEF/CmeRandomIter.java",
+			"settings":
+			{
+				"buffer_size": 2284,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "bin/EXP2/f_RecallSet.htm",
+			"settings":
+			{
+				"buffer_size": 423,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "bin/EXP1/study_phase.htm",
+			"settings":
+			{
+				"buffer_size": 168,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Instructions/SOCS2/Experiment.txt",
+			"settings":
+			{
+				"buffer_size": 5418,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "bin/EXP2/4f_Study_Phase_135.htm",
+			"settings":
+			{
+				"buffer_size": 4783,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/pkgCMEF/CmeView.java",
+			"settings":
+			{
+				"buffer_size": 28543,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/pkgCMEF/CmeApp.java",
+			"settings":
+			{
+				"buffer_size": 46134,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "bin/EXP2/DataList.txt",
+			"settings":
+			{
+				"buffer_size": 786,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "bin/EXP2/IteratorExperiment.txt",
+			"settings":
+			{
+				"buffer_size": 2536,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 187.0,
 		"selected_items":
 		[
+			[
+				"packinst",
+				"Package Control: Install Package"
+			],
+			[
+				"packinstal",
+				"Package Control: Install Package"
+			],
+			[
+				"Packinsall",
+				"Package Control: Install Package"
+			],
 			[
 				"packin",
 				"Package Control: Install Package"
@@ -55,15 +177,7 @@
 				"Package Control: Remove Package"
 			],
 			[
-				"packinst",
-				"Package Control: Install Package"
-			],
-			[
 				"packinsta",
-				"Package Control: Install Package"
-			],
-			[
-				"packinstal",
 				"Package Control: Install Package"
 			],
 			[
@@ -83,7 +197,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 467.0
+		"width": 548.0
 	},
 	"console":
 	{
@@ -100,6 +214,22 @@
 	},
 	"file_history":
 	[
+		"/Users/terrymeacham/projects/pcle/Instructions/EXP2/OutputFormat.txt",
+		"/Users/terrymeacham/projects/pcle/bin/CHIPS6/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/bin/EXP2/IteratorExperiment.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java",
+		"/Users/terrymeacham/projects/pcle/bin/EXP2/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/bin/EXP2/4f_Study_Phase_2.htm",
+		"/Users/terrymeacham/projects/pcle/bin/EXP1/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeDifficultyIter.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeSelectiveIter.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIteratorFactory.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeRandomIter.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIterator.java",
+		"/Users/terrymeacham/projects/pcle/bin/EXP3/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/CHIPS6/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmePairFactory.java",
+		"/Users/terrymeacham/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/application.css.scss",
 		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/bootstrap_and_overrides.css.scss",
 		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_review_button.html.haml",
@@ -211,23 +341,7 @@
 		"/Users/terrymeacham/projects/tasker/app/views/task_images/_form.html.haml",
 		"/Users/terrymeacham/projects/tasker/config/environments/production.rb",
 		"/Users/terrymeacham/projects/tasker/config/application.rb",
-		"/Users/terrymeacham/projects/tasker/config/initializers/carrierwave.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_images/edit.html.haml",
-		"/Users/terrymeacham/projects/tasker/config/initializers/devise.rb",
-		"/Users/terrymeacham/projects/processcards.sh",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131107185106_create_task_images.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_images/new.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/index.json.jbuilder",
-		"/Users/terrymeacham/projects/tasker/app/views/layouts/_navigation.html.haml",
-		"/Users/terrymeacham/projects/tasker/lib/templates/erb/scaffold/_form.html.erb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_sets/_form.html.erb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_images/edit.html.erb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_form.html.erb",
-		"/Users/terrymeacham/projects/tasker/config/initializers/markdown.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/layouts/application.html.erb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_images/_form.html.erb",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131107184842_create_task_sets.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_sets/new.html.erb"
+		"/Users/terrymeacham/projects/tasker/config/initializers/carrierwave.rb"
 	],
 	"find":
 	{
@@ -235,7 +349,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 93.0,
 		"where_history":
 		[
 			"",
@@ -253,6 +367,56 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"match_any",
+			"140",
+			"2",
+			"6",
+			"setProperties\\(\\)",
+			"setProperties()",
+			"setPropert",
+			"lower",
+			"Hard, [a-z^]+,,[a-z^]+,",
+			"Medium, [a-z^]+,,[a-z^]+,",
+			"Easy, [a-z^]+,,[a-z^]+,",
+			"Trial1",
+			"shufflePropert",
+			"Item",
+			"bool",
+			"Bool",
+			"shuffleProperties",
+			"getProper",
+			"Color",
+			"getIntProperty",
+			"Color",
+			"ITEM_",
+			"Vector",
+			"new Vector",
+			"<[^,]*>([^,]*)<[^,]*>",
+			"<[^,]*>([^,]*) - <[^,]*>",
+			"ITEM_ORDER",
+			"Vector<>",
+			"compoundProperty",
+			"throw new Exception",
+			"Exception e",
+			"System.err",
+			"Vector[^<]",
+			"Vector<>",
+			"throw",
+			"getIterator",
+			"CmeSelectiveiter",
+			"getIterator",
+			"m_Iter",
+			"type",
+			"getIterator",
+			"m_iType",
+			"type",
+			"initIterator",
+			"setIterator",
+			"getIterator",
+			"setIterator",
+			"difficulty:ascending",
+			"dif",
+			"main",
 			"pretty_",
 			"Accept",
 			"accept",
@@ -330,57 +494,7 @@
 			"custom_json",
 			"red",
 			"orange",
-			"srv/www",
-			"fetch_instance",
-			"help_text",
-			"merge!",
-			"ConfigWizard",
-			"fetch_instance",
-			"valid_inst",
-			"chef",
-			"service_roles_configured",
-			"service_arn",
-			"primary_role",
-			"Ridoku::",
-			"fetch_roles",
-			"iam_client",
-			"required_inputs",
-			"fetch_stack",
-			"configure",
-			"Permissions.",
-			"fetch_",
-			"fetch_permissions",
-			"awesome",
-			"awesome_print",
-			"\",",
-			"\"([^\"]+)\":",
-			"\"",
-			"\",",
-			"\"([^\"]+)\":",
-			"\",",
-			"\"([^\"]+)\":",
-			"fetch_instances",
-			"fetch_layers",
-			"layers",
-			"fetch_layers",
-			"fetch_layer",
-			"layers",
-			":stacks",
-			":apps",
-			":stacks",
-			":layers",
-			":stacks",
-			"InvalidApp",
-			"NoStackSpecified",
-			"Base.(.*)",
-			"Base.(.*=)",
-			"Ridoku::Base.(.*=)",
-			"practice",
-			"awesome_print",
-			"require \"#\\{File.dirname\\(__FILE__\\)\\}/base.rb\"",
-			"require \"#{File.dirname\\(__FILE__\\)}/base.rb\"",
-			"require \"#{File.dirname(__FILE__)}/base.rb\"",
-			"print_env_help"
+			"srv/www"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -388,6 +502,20 @@
 		"regex": true,
 		"replace_history":
 		[
+			"125",
+			"1",
+			"4",
+			"3",
+			"5",
+			"2",
+			"Hard, hard,, hard,",
+			"Medium, medium,, medium,",
+			"Easy, easy,, easy,",
+			"Hard",
+			"Medium",
+			"Easy",
+			"\\1",
+			"Vector",
 			"review",
 			"reviewed",
 			"review",
@@ -501,21 +629,7 @@
 			"\\1\\2",
 			"",
 			"\\1 \\2",
-			"\\1\\2",
-			"\\1*\\2*\\3",
-			"\\1**\\2**\\3",
-			"\\1,\\2",
-			"\\1*\\2*\\3",
-			"",
-			"*\\1*",
-			"\\1",
-			"**\\1**",
-			"*\\1*",
-			"\\1,\\2",
-			"\"",
-			"*\\1*",
-			"'",
-			"\\2\\3"
+			"\\1\\2"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -526,8 +640,453 @@
 	"groups":
 	[
 		{
+			"selected": 12,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "src/pkgCMEF/CmeState.java",
+					"settings":
+					{
+						"buffer_size": 23006,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9079,
+								9079
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4754.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"settings":
+					{
+						"buffer_size": 4727,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										202,
+										212
+									],
+									[
+										422,
+										432
+									],
+									[
+										861,
+										875
+									],
+									[
+										914,
+										928
+									],
+									[
+										970,
+										984
+									],
+									[
+										1028,
+										1042
+									],
+									[
+										1420,
+										1434
+									],
+									[
+										1661,
+										1675
+									],
+									[
+										1875,
+										1889
+									],
+									[
+										2079,
+										2093
+									],
+									[
+										2262,
+										2276
+									],
+									[
+										2432,
+										2446
+									],
+									[
+										2613,
+										2627
+									],
+									[
+										2783,
+										2797
+									],
+									[
+										3005,
+										3019
+									],
+									[
+										3309,
+										3323
+									],
+									[
+										3442,
+										3456
+									],
+									[
+										3500,
+										3514
+									],
+									[
+										3623,
+										3637
+									],
+									[
+										3682,
+										3696
+									],
+									[
+										3971,
+										3980
+									],
+									[
+										4243,
+										4252
+									],
+									[
+										4566,
+										4575
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								3993,
+								3971
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"output_tag": 3,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1635.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/pkgCMEF/CmeIteratorFactory.java",
+					"settings":
+					{
+						"buffer_size": 580,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								428,
+								428
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/pkgCMEF/CmeIterator.java",
+					"settings":
+					{
+						"buffer_size": 1061,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16,
+								16
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/pkgCMEF/CmeRandomIter.java",
+					"settings":
+					{
+						"buffer_size": 2284,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1259,
+								1259
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 359.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "bin/EXP2/f_RecallSet.htm",
+					"settings":
+					{
+						"buffer_size": 423,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								409,
+								409
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "bin/EXP1/study_phase.htm",
+					"settings":
+					{
+						"buffer_size": 168,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Instructions/SOCS2/Experiment.txt",
+					"settings":
+					{
+						"buffer_size": 5418,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								632,
+								632
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "bin/EXP2/4f_Study_Phase_135.htm",
+					"settings":
+					{
+						"buffer_size": 4783,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								39,
+								39
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/pkgCMEF/CmeView.java",
+					"settings":
+					{
+						"buffer_size": 28543,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								18911,
+								18926
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 10333.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/pkgCMEF/CmeApp.java",
+					"settings":
+					{
+						"buffer_size": 46134,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2299,
+								2299
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 629.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "bin/EXP2/DataList.txt",
+					"settings":
+					{
+						"buffer_size": 786,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								786,
+								786
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "bin/EXP2/IteratorExperiment.txt",
+					"settings":
+					{
+						"buffer_size": 2536,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								636,
+								636
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -576,6 +1135,98 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"outpu",
+				"Instructions/EXP2/OutputFormat.txt"
+			],
+			[
+				"cmeapp",
+				"src/pkgCMEF/CmeApp.java"
+			],
+			[
+				"interexp",
+				"bin/EXP2/IteratorExperiment.txt"
+			],
+			[
+				"cmeran",
+				"src/pkgCMEF/CmeRandomIter.java"
+			],
+			[
+				"chipsexper",
+				"bin/CHIPS6/Experiment.txt"
+			],
+			[
+				"binexp2dat",
+				"bin/EXP2/DataList.txt"
+			],
+			[
+				"socsexper",
+				"Instructions/SOCS2/Experiment.txt"
+			],
+			[
+				"app",
+				"src/pkgCMEF/CmeApp.java"
+			],
+			[
+				"binexpdatal",
+				"bin/EXP2/DataList.txt"
+			],
+			[
+				"binexp4fstud",
+				"bin/EXP2/4f_Study_Phase_135.htm"
+			],
+			[
+				"binexp24fstu",
+				"bin/EXP2/4f_Study_Phase_2.htm"
+			],
+			[
+				"binexp2",
+				"bin/EXP2/4f_Study_Phase_2.htm"
+			],
+			[
+				"instructionexper",
+				"Instructions/SOCS2/Experiment.txt"
+			],
+			[
+				"exp1/exp",
+				"bin/EXP1/Experiment.txt"
+			],
+			[
+				"binexpstudph",
+				"bin/EXP1/study_phase.htm"
+			],
+			[
+				"exp2f_reca",
+				"bin/EXP2/f_Recall.htm"
+			],
+			[
+				"cmeap",
+				"src/pkgCMEF/CmeApp.java"
+			],
+			[
+				"cmeiter",
+				"src/pkgCMEF/CmeIteratorFactory.java"
+			],
+			[
+				"cmestate",
+				"src/pkgCMEF/CmeState.java"
+			],
+			[
+				"exp2exper",
+				"bin/EXP2/Experiment.txt"
+			],
+			[
+				"exp3/exper",
+				"bin/EXP3/Experiment.txt"
+			],
+			[
+				"chiexper",
+				"Instructions/CHIPS6/Experiment.txt"
+			],
+			[
+				"exper",
+				"bin/EXP3/Experiment.txt"
+			],
 			[
 				"taskentry",
 				"app/models/task_entry.rb"
@@ -995,98 +1646,6 @@
 			[
 				"orien",
 				"app/views/task_entries/_orientable_image.html.haml"
-			],
-			[
-				"or",
-				"app/assets/javascripts/image_orientation.js"
-			],
-			[
-				"_comm",
-				"app/views/partials/_comment.html.haml"
-			],
-			[
-				"_comments",
-				"app/views/partials/_comments.html.haml"
-			],
-			[
-				"appliha",
-				"app/views/layouts/application.html.haml"
-			],
-			[
-				"tasiaindha",
-				"app/views/task_images/index.html.haml"
-			],
-			[
-				"tasimashoham",
-				"app/views/task_images/show.html.haml"
-			],
-			[
-				"commeshow",
-				"app/views/comments/show.html.haml"
-			],
-			[
-				"entrshow",
-				"app/views/task_entries/show.html.haml"
-			],
-			[
-				"commenshowha",
-				"app/views/comments/show.html.haml"
-			],
-			[
-				"commjs",
-				"app/assets/javascripts/comments.js"
-			],
-			[
-				"commecontr",
-				"app/controllers/comments_controller.rb"
-			],
-			[
-				"abili",
-				"app/models/ability.rb"
-			],
-			[
-				"route",
-				"config/routes.rb"
-			],
-			[
-				"_for",
-				"app/views/task_entries/_form.html.haml"
-			],
-			[
-				"applic",
-				"app/assets/javascripts/application.js"
-			],
-			[
-				"taskerjs",
-				"app/assets/javascripts/tasker.js"
-			],
-			[
-				"_ori",
-				"app/views/task_entries/_orientable_image.html.haml"
-			],
-			[
-				"taskenin",
-				"app/views/task_entries/index.html.haml"
-			],
-			[
-				"_orie",
-				"app/views/task_entries/_orientable_image.html.haml"
-			],
-			[
-				"createpayhi",
-				"db/migrate/20131224182922_create_payment_histories.rb"
-			],
-			[
-				"addpay",
-				"db/migrate/20131224183652_add_payment_history_id_to_task_entry.rb"
-			],
-			[
-				"payhistaske",
-				"db/migrate/20131224183317_create_payment_history_task_entry_table.rb"
-			],
-			[
-				"migpaytask",
-				"db/migrate/20131224183233_payment_history_task_entries.rb"
 			]
 		],
 		"width": 0.0
@@ -1097,15 +1656,15 @@
 		"selected_items":
 		[
 			[
+				"",
+				"/Users/terrymeacham/projects/tasker/tasker.sublime-project"
+			],
+			[
 				"san",
 				"/Users/terrymeacham/projects/snake/snake.sublime-project"
 			],
 			[
 				"surv",
-				"/Users/terrymeacham/projects/survly/survly.sublime-project"
-			],
-			[
-				"",
 				"/Users/terrymeacham/projects/survly/survly.sublime-project"
 			],
 			[

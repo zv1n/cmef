@@ -2,8 +2,8 @@
 	TITLE="EXP2 - Experiment"
 	STUDY_NAME="Grant Experiment 2"
 	CONDITIONS="A"
-	DATA_FILE="Instructions/EXP2/DataList.txt"
-	FORMAT_FILE="Instructions/EXP2/OutputFormat.txt"	
+	DATA_FILE="Instructions/MISSFIT/DataList.txt"
+	FORMAT_FILE="Instructions/MISSFIT/OutputFormat.txt"	
 	<TRIAL ID="1" DATASET="Trial1">
 
 		<STATE>
@@ -46,7 +46,7 @@
 			ITEMS="1"
 			SETS="60"
 			SCALE="1.0"
-			CONSTRAINTS="match:$Pair1A"
+			CONSTRAINTS="match_any:Trials1:paira"
 			SET="DisableSubmitHook:yes"
 			NEXT="Click:Continue"
 		</STATE>
@@ -94,7 +94,7 @@
 			ITEMS="1"
 			SETS="60"
 			SCALE="1.0"
-			CONSTRAINTS="match:$Pair1A"
+      CONSTRAINTS="match_any:Trials2:paira"
 			SET="DisableSubmitHook:yes"
 			NEXT="Click:Continue"
 		</STATE>
