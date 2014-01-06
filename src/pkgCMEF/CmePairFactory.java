@@ -83,13 +83,14 @@ public class CmePairFactory
 				
 				int val = 0;
 				// Parse the name key and image name
-				String[] strs = line.split(",");
+				String[] strs = line.split(",", -1);
 				try {
 					val = Integer.valueOf(strs[0]);
 				} catch(Exception ex) {
 					System.out.println("Failed to parse image value:" + line);
 				}
-				
+
+
 				String clss = strs[1].trim();
 				for (int x=0; x<m_TypeList.size(); x++) {
 					String cc = m_TypeList.get(x);
@@ -105,6 +106,7 @@ public class CmePairFactory
 				img.setPairValue(val);
 				img.setPairGroup(clss);
 				img.setNameA(strs[2].trim());
+
 				img.setImageA(strs[3].trim());
 				img.setNameB(strs[4].trim());
 				String ib = null;
