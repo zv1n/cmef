@@ -18,15 +18,20 @@ public class CmeTimer {
 	
 	/** Event response */
 	private CmeEventResponse m_Response;
+
+  private CmeApp m_aApp;
 	
 	/** Timer */
 	private Timer m_jTimer;
 	
 	/** Constructor */
-	public CmeTimer() {
+	public CmeTimer(CmeApp app) {
+    m_aApp = app;
 		m_iMilliseconds = 0;
 		m_Response = null;
 		m_jTimer = new Timer();
+
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "New Timer.");
 	}
 	
 	public int getDelay() {
@@ -89,18 +94,18 @@ public class CmeTimer {
 	}
 	
 	public void start() {
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Start Timer.");
 		TimerTask task = new TimerTask() {
 			CmeEventResponse response = m_Response;
 			@Override
 			public void run() {
+        m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Response Event!");
 				if (response != null)
 					response.Respond();
 			}
 		};
 		
-		//System.err.print("Event Delay: ");
-		//System.err.println(m_iMilliseconds);
-
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Scheduling timer: " + String.valueOf(m_iMilliseconds));
 		m_jTimer.schedule(task, m_iMilliseconds);
 	}
 	

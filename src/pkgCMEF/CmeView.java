@@ -157,7 +157,7 @@ public class CmeView extends JPanel {
 			}
 		};
 		
-		m_cClock = new CmeClock();
+		m_cClock = new CmeClock(m_App);
 		m_cClock.setEventResponse(m_LimitResponse);
 		m_cClock.setVisible(false);
 		this.add(m_cClock);
@@ -615,6 +615,7 @@ public class CmeView extends JPanel {
 		}
 
 		m_CurState.resetSeqState();
+    m_CurState.initSequence();
 
 		updateInstructionFile(false);
 		return true;
@@ -812,7 +813,7 @@ public class CmeView extends JPanel {
 		
 		ActionListener listener = m_SubmitListener;
 		
-		m_App.dmsg(10, "Setting Contents");
+		// m_App.dmsg(10, "Setting Contents");
 		if (m_CurState.getProperty("DisableSubmitHook") != null)
 			listener = null;
 		if (m_CurState.getProperty("DisableSubmitOnEnter") != null)

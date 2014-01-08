@@ -42,6 +42,8 @@ public class CmeClock extends JPanel implements CmeLimit
 	
 	private CmeEventResponse m_cResponse;
 	private ActionListener m_tPerformer;
+
+  private CmeApp m_aApp;
 	
 	private boolean m_bCountDown;
 	private boolean m_bEnable;
@@ -49,8 +51,9 @@ public class CmeClock extends JPanel implements CmeLimit
 	//---------------------------------------------------
 	/** Default constructor */
 	//---------------------------------------------------
-	public CmeClock()
+	public CmeClock(CmeApp app)
 	{
+    m_aApp = app;
 		final CmeClock sclock = this;
 		//System.out.println("Start...");
 		this.setSize(45, 35);
@@ -76,6 +79,8 @@ public class CmeClock extends JPanel implements CmeLimit
 		m_tTimer.start();
 		
 		m_iLast = 0;
+
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "New Clock.");
 	}
 
 	//---------------------------------------------------
@@ -177,6 +182,8 @@ public class CmeClock extends JPanel implements CmeLimit
 	public boolean start(String item) {
 		if (isComplete())
 			return false;
+
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Start Clock.");
 		
 		m_sItem = item;
 		m_iLast = m_iCurTime;
@@ -193,6 +200,7 @@ public class CmeClock extends JPanel implements CmeLimit
 
 	public int stop() {
 		setEnable(false);
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Stop Clock.");
 		//System.out.println("Time:" + m_iCurTime + "\nLimit: " + m_iTimeLimit);
 		return (m_iCurTime - m_iLast);
 	}

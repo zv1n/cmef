@@ -5,10 +5,10 @@ function die() {
   exit 1
 }
 
-if [[ $# -eq 1 ]]; then
-  experiment=$(shift)
+if [[ $# -ge 1 ]]; then
+  experiment=$*
 else
-  experiment=$(pwd)/bin/EXP2/IteratorExperiment.txt
+  experiment=$(pwd)/bin/dev/Experiment.txt
 fi
 
-java -jar CMEF.jar -x $experiment $*
+java -jar CMEF.jar $experiment

@@ -73,6 +73,10 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 	public static final int CME_ENABLE_REFRESH = 0x1;
 	public static final int CME_TEXT_ONLY = 0x2;
+
+  public static final int DEBUG_TIMERS = 1;
+  public static final int DEBUG_RESPONSES = 2;
+  public static final int DEBUG_STATES = 4;
 	// ------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
 	// ------------------------------------------------------------------
@@ -188,9 +192,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 	 *            - the message to be displayed
 	 */
 	public void dmsg(int level, String msg) {
-		//if (level >= (m_iDebugLevel & 0xFF)) {
-		//	System.out.println("Dmsg: " + msg);
-		//}
+    if ((level & m_iDebugLevel) != 0) {
+			System.err.println("Dmsg: " + msg);
+		}
 	}
 
 	public CmePairFactory getPairFactory() {
@@ -248,7 +252,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 			initParticipantData();
 
 			this.setTitle(m_eProperties.get("Title").toString());
-			dmsg(5, "Title Set");
+			// dmsg(5, "Title Set");
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, ex.getMessage(), "Error!",
 					JOptionPane.ERROR_MESSAGE);
@@ -359,7 +363,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 		m_ExperimentHandler.setVisible(false);
 		m_MainPanel.add(m_ExperimentHandler);
 
-		dmsg(5, "State Handler Init Successful!");
+		// dmsg(5, "State Handler Init Successful!");
 	}
 
 	/**
@@ -380,7 +384,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 			} while (sSubjectId == "");
 
 			m_eProperties.put("SubjectID", sSubjectId);
-			dmsg(5, "Subject Complete!");
+			// dmsg(5, "Subject Complete!");
 			
 			if (multipleConditions()) {
 				do {
@@ -391,7 +395,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 						System.exit(0);
 					}
 				} while (!setCondition(sCondition.toUpperCase()));
-				dmsg(5, "Conditions Complete!");
+				// dmsg(5, "Conditions Complete!");
 			}
 		} else {
 			m_eProperties.put("SubjectID", "TESTID");
@@ -473,7 +477,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 			}
 		}
 
-		//dmsg(0xFF,
+		//// dmsg(0xFF,
 		//		"Set Iterator: "
 		//			+ Integer.toString(this.m_PairFactory.getCount()));
 
@@ -517,6 +521,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 			m_EndResponse = new CmeEventResponse() {
 
 				public void Respond() {
+          dmsg(CmeApp.DEBUG_RESPONSES, "End Response Triggered");
 					thisApp.setNextState();
 				}
 			};
@@ -524,12 +529,13 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (m_NextResponse == null)
 			m_NextResponse = new CmeEventResponse() {
 				public void Respond() {
+          dmsg(CmeApp.DEBUG_RESPONSES, "Next Response Triggered");
 					try {
 						if (!m_ViewHandler.setNextInSequence()) {
 							thisApp.setNextState();
 						}
 					} catch (Exception ex) {
-						thisApp.dmsg(0, ex.getMessage());
+						// thisApp.dmsg(0, ex.getMessage());
 					}
 				}
 			};
@@ -537,10 +543,11 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (m_BlankResponse == null)
 			m_BlankResponse = new CmeEventResponse() {
 				public void Respond() {
+          dmsg(CmeApp.DEBUG_RESPONSES, "Blank Response Triggered");
 					try {
 						m_ViewHandler.blankInstructions();
 					} catch (Exception ex) {
-						thisApp.dmsg(0, ex.getMessage());
+						// thisApp.dmsg(0, ex.getMessage());
 					}
 				}
 			};
@@ -564,7 +571,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 			}
 		} else if (lhs.equals("TIME")) {
 			type = CmeState.EVENT_TIME;
-			CmeTimer timer = new CmeTimer();
+
+      dmsg(CmeApp.DEBUG_TIMERS, "Timer action: " + action);
+			CmeTimer timer = new CmeTimer(this);
 
 			if (!timer.setDelayByString(rhs)) {
 				return false;
@@ -982,7 +991,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 					+ Integer.toString(lc) + "): \n" + e.getMessage());
 		}
 
-		dmsg(5, "Experiment Init Successful!");
+		// dmsg(5, "Experiment Init Successful!");
 	}
 
 	private void validateFile(String insFile) throws Exception {
@@ -1390,8 +1399,8 @@ public class CmeApp extends JFrame implements AncestorListener {
 			if (stateConditions.contains(sCondition + ":"))
 				break;
 
-			dmsg(5, "Skipping State: Condition: :" + sCondition
-					+ ":, Condition Expected: " + stateConditions);
+			// dmsg(5, "Skipping State: Condition: :" + sCondition
+			//		+ ":, Condition Expected: " + stateConditions);
 
 			m_CurState = m_cIterator.next();
 		}
@@ -1401,6 +1410,8 @@ public class CmeApp extends JFrame implements AncestorListener {
 	/** Set the next state */
 	// -----------------------------------------------
 	public void setNextState() {
+    dmsg(CmeApp.DEBUG_STATES, "setNextState()");
+
 		if (m_cIterator == null) {
 			m_cIterator = m_vStates.iterator();
 		} else if (!m_ViewHandler.isProvidedFeedbackValid()) {
@@ -1429,13 +1440,14 @@ public class CmeApp extends JFrame implements AncestorListener {
 			System.exit(0);
 		}
 
-		dmsg(5, "Next State!");
+		// dmsg(5, "Next State!");
 
 		try {
 			m_ViewHandler.setState(m_CurState);
 			// m_StudyHandler.setState(m_CurState);
 			// m_ExperimentHandler.setState(m_CurState);
 			m_CurState.init();
+      m_CurState.initSequence();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this,
 					"FATAL Error:\n" + ex.toString() + "\n" + ex.getMessage(),
@@ -1493,8 +1505,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 				try {
 					debug = Integer.parseInt(args[x + 1]);
 				} catch (Exception ex) {
-					debug = 1;
+					debug = 0;
 				}
+        System.err.println("Debug Level: " + String.valueOf(debug));
 			}
 			if (args[x].equals("-x") || args[x].equals("--experiment")) {
 				if (++x >= len)
@@ -1549,11 +1562,11 @@ public class CmeApp extends JFrame implements AncestorListener {
 			}
 		}
 		m_fbVectString.add(name);
-		/* dmsg(0xFF, "Current Feedback(nv): " + m_fbHashmap.toString()); */
+		/* // dmsg(0xFF, "Current Feedback(nv): " + m_fbHashmap.toString()); */
 	}
 
 	public String getFeedback(String name) {
-		dmsg(0xFF, "getting feedback: " + name);
+		// dmsg(0xFF, "getting feedback: " + name);
 		return (String) m_fbHashmap.get(name);
 	}
 

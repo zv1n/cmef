@@ -88,14 +88,14 @@ public class CmeHtmlView extends JEditorPane {
 					try {
 						component = getComponentByName(hl.getDescription());
 					} catch (Exception e) {
-						m_App.dmsg(10, "Unknown Link URL(CBN): " + hl.getDescription());
+						// m_App.dmsg(10, "Unknown Link URL(CBN): " + hl.getDescription());
 						e.printStackTrace();
 					}
 
 					if (component == null) {
 						if (response != null)
 							response.hyperlinkUpdate(hl);
-						m_App.dmsg(10, "Unknown Link URL: " + hl.getDescription());
+						// m_App.dmsg(10, "Unknown Link URL: " + hl.getDescription());
 						return;
 					}
 

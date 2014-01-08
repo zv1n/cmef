@@ -17,112 +17,119 @@ import java.util.Vector;
 // ===================================================================
 public class CmeState {
 
-    /** Effectively the parent application instance */
-    private CmeApp m_App;
-    /** State for this state */
-    private int m_iState;
-    /** Current rating step (if this is a STATE_RATING state). */
-    private int m_iStep;
-    /** Maximum rating step (if this is a STATE_RATING state). */
-    private int m_iStepMax;
-    /** Number of items to show simultaneously. */
-    private int m_iCount;
-    
-    /** The string list storing file locations. */
-    private Vector<String> m_sSequence = new Vector<String>();
-    /** Current position in sequence. */
-    private int m_iSequenceIndex = 0;
-	
-    private CmeState m_sPrevState;
-    
-    private class stateEventHandler {
-    	private CmeEventResponse m_erResponse;
-    	private int m_iSequence;
-    	
-    	public stateEventHandler(CmeEventResponse handler, int index) {
-    		m_erResponse = handler;
-    		m_iSequence = index;
-    	}
-    	
-    	public CmeEventResponse getEvent() {
-    		return m_erResponse;
-    	}
+  /** Effectively the parent application instance */
+  private CmeApp m_App;
+  /** State for this state */
+  private int m_iState;
+  /** Current rating step (if this is a STATE_RATING state). */
+  private int m_iStep;
+  /** Maximum rating step (if this is a STATE_RATING state). */
+  private int m_iStepMax;
+  /** Number of items to show simultaneously. */
+  private int m_iCount;
+  
+  /** The string list storing file locations. */
+  private Vector<String> m_sSequence = new Vector<String>();
+  /** Current position in sequence. */
+  private int m_iSequenceIndex = 0;
 
-    	public int getSequence() {
-    		return m_iSequence;
-    	}
+  private CmeState m_sPrevState;
+  
+  private class stateEventHandler {
+  	private CmeEventResponse m_erResponse;
+  	private int m_iSequence;
+  	
+  	public stateEventHandler(CmeEventResponse handler, int index) {
+  		m_erResponse = handler;
+  		m_iSequence = index;
+  	}
+  	
+  	public CmeEventResponse getEvent() {
+  		return m_erResponse;
+  	}
 
-    	public void Respond(int seq) {
-    		if (m_iSequence >= 0 & seq == m_iSequence)
-    			m_erResponse.Respond();
-    	}
-    	
-    }
+  	public int getSequence() {
+  		return m_iSequence;
+  	}
+
+  	public void Respond(int seq) {
+  		if (m_iSequence >= 0 & seq == m_iSequence)
+  			m_erResponse.Respond();
+  	}
+  	
+  }
 	
-    private Vector<Vector<stateEventHandler>> m_erEvent = new Vector<Vector<stateEventHandler>>();
-    /** HashSet used to store the properties for each state */
-    private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
-    /** The Properties that are used per sequence. */
-    private Vector<HashMap<String, Object> > m_sSequenceProperties = new Vector<HashMap<String, Object> >();
-	
-    // -------- Defined Modes ----------
-    /** Display instructions mode */
-    public static final int STATE_INSTRUCTION = 1;
-    /** Display feedback mode */
-    public static final int STATE_INPUT = 2;
-    /** Display prompt mode */
-    public static final int STATE_PROMPT = 3;
-    /** Display rating mode */
-    public static final int STATE_MULTIPLE = 4;
-    // ---------- Events -------
-    /** Event for Clicking a Continue Button */
-    public static final int EVENT_CLICK_PRIMARY = 0;
-    /** Event for Time Elapsed */
-    public static final int EVENT_TIME = 1;
-    /** Number of events */
-    public static final int EVENT_MAX = 2;
-	
-    /** Iterators */
-    private CmeIterator m_Iterator;
+  private Vector<Vector<stateEventHandler>> m_erEvent = new Vector<Vector<stateEventHandler>>();
+  /** HashSet used to store the properties for each state */
+  private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
+  /** The Properties that are used per sequence. */
+  private Vector<HashMap<String, Object> > m_sSequenceProperties = new Vector<HashMap<String, Object> >();
+
+  // -------- Defined Modes ----------
+  /** Display instructions mode */
+  public static final int STATE_INSTRUCTION = 1;
+  /** Display feedback mode */
+  public static final int STATE_INPUT = 2;
+  /** Display prompt mode */
+  public static final int STATE_PROMPT = 3;
+  /** Display rating mode */
+  public static final int STATE_MULTIPLE = 4;
+  // ---------- Events -------
+  /** Event for Clicking a Continue Button */
+  public static final int EVENT_CLICK_PRIMARY = 0;
+  /** Event for Time Elapsed */
+  public static final int EVENT_TIME = 1;
+  /** Number of events */
+  public static final int EVENT_MAX = 2;
+
+  /** Iterators */
+  private CmeIterator m_Iterator;
 	/** Timer */
 	private HashMap<Integer, Vector<CmeTimer> > m_hvTimer = new HashMap<Integer, Vector<CmeTimer>>();
 	
 	private boolean m_bStudy;
 	
 
-    /** 
-     * Default constructor 
-     */
-    public CmeState(CmeApp thisApp) {
-        m_App = thisApp;
+  /** 
+   * Default constructor 
+   */
+  public CmeState(CmeApp thisApp) {
+    m_App = thisApp;
+
 		for (int x=0; x<EVENT_MAX; x++)
 			m_erEvent.add(new Vector<stateEventHandler>());
+  }
+
+  private Vector<CmeTimer> getSequenceTimers() {
+    return getSequenceTimers(m_iSequenceIndex);
+  }
+  
+  private Vector<CmeTimer> getSequenceTimers(Integer seq) {
+    Vector<CmeTimer> timer = m_hvTimer.get(seq);
+
+    if (timer == null) {
+      timer = new Vector<CmeTimer>();
+      m_hvTimer.put(seq, timer);
     }
 
-    private Vector<CmeTimer> getSequenceTimers() {
-    	return getSequenceTimers(m_iSequenceIndex);
-    }
-    
-    private Vector<CmeTimer> getSequenceTimers(Integer seq) {
-    	Vector<CmeTimer> timer = m_hvTimer.get(seq);
-    	if (timer == null) {
-    		timer = new Vector<CmeTimer>();
-    		m_hvTimer.put(seq, timer);
-    	}
-    	return m_hvTimer.get(seq);
-    }
+    return m_hvTimer.get(seq);
+  }
 	
 	/** 
 	 * Init global stuff...
 	 */
 	public void init() {
+    m_App.dmsg(CmeApp.DEBUG_STATES, "Global State Init.");
 	}
 	
 	/**
 	 * Init at a per sequence level.
 	 */
 	public void initSequence() {
+    m_App.dmsg(CmeApp.DEBUG_STATES, "Sequence State Init.");
+
 		Vector<CmeTimer> timers = getSequenceTimers();
+    m_App.dmsg(CmeApp.DEBUG_TIMERS, "Init Sequence -- Timer Count: " + timers.size());
 		for(int x=0; x<timers.size(); x++)
 			timers.get(x).start();
 	}
@@ -425,7 +432,7 @@ public class CmeState {
      * @return true on regex match; false else
      */
     private boolean validateRegex(String regex, String input) {
-        m_App.dmsg(11, "Regex: " + regex + "\nInput: |" + input + "|");
+        // m_App.dmsg(11, "Regex: " + regex + "\nInput: |" + input + "|");
         return input.matches(regex);
     }
 	
@@ -614,7 +621,7 @@ public class CmeState {
         String[] rangeData = range.split("-");
         int value = Integer.parseInt(input);
 
-        m_App.dmsg(10, Integer.toString(value));
+        // m_App.dmsg(10, Integer.toString(value));
 
         if (rangeData.length > 2 || rangeData.length < 1) {
             throw new Exception("To many numbers in the expected range!");
@@ -622,13 +629,13 @@ public class CmeState {
             int lValue = Integer.parseInt(rangeData[0]);
             int hValue = Integer.parseInt(rangeData[1]);
 
-            m_App.dmsg(10, Integer.toString(lValue) + "<=" + Integer.toString(value) + "<=" + Integer.toString(hValue));
+            // m_App.dmsg(10, Integer.toString(lValue) + "<=" + Integer.toString(value) + "<=" + Integer.toString(hValue));
 
             return (value >= lValue && value <= hValue);
         } else if (rangeData.length == 1) {
             int expValue = Integer.parseInt(rangeData[0]);
 
-            m_App.dmsg(10, Integer.toString(expValue) + "==" + Integer.toString(value));
+            // m_App.dmsg(10, Integer.toString(expValue) + "==" + Integer.toString(value));
 
             return (value == expValue);
         }
@@ -711,28 +718,28 @@ public class CmeState {
         constraint = translateString(constraint);
         constraint = m_App.translateString(constraint).trim();
 
-        m_App.dmsg(10, "Type: |" + constraintType + "|\nConstraint: " + constraint);
+        // m_App.dmsg(10, "Type: |" + constraintType + "|\nConstraint: " + constraint);
 
         try {
             if (constraintType.equals("regex")) {
-                m_App.dmsg(10, "Regex");
+                // m_App.dmsg(10, "Regex");
                 return validateRegex(constraint, text);
             } else if (constraintType.equals("range")) {
-                m_App.dmsg(10, "Range");
+                // m_App.dmsg(10, "Range");
                 return validateRange(constraint, text);
             } else if (constraintType.equals("value")) {
-                m_App.dmsg(10, "Value!");
+                // m_App.dmsg(10, "Value!");
                 return validateValue(constraint, text);
             } else if (constraintType.equals("match")) {
-                m_App.dmsg(10, "Match!");
+                // m_App.dmsg(10, "Match!");
                 validateMatch(constraint, text);
 				return true;
             } else if (constraintType.equals("match_any")) {
-                m_App.dmsg(10, "Match Any!");
+                // m_App.dmsg(10, "Match Any!");
                 validateMatchAny(constraint, text, param1);
 				return true;
 			} else {
-                m_App.dmsg(10, "None!");
+                // m_App.dmsg(10, "None!");
             }
         } catch (Exception ex) {
             System.out.println("Catch: " + ex.getMessage());

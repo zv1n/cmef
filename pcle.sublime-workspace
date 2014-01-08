@@ -44,84 +44,10 @@
 	"buffers":
 	[
 		{
-			"file": "src/pkgCMEF/CmeState.java",
+			"file": "Instructions/MISSFIT/DataList.txt",
 			"settings":
 			{
-				"buffer_size": 23006,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"contents": "Searching 958 files for \"ITEM_ORDER\" (regex, case sensitive)\n\n/Users/terrymeacham/projects/pcle/bin/EXP2/Experiment.txt:\n   45  			FILE=\"Instructions/EXP2/f_Recall.htm\"\n   46  			ITEMS=\"6\"\n   47:       ITEM_ORDER=\"random:exclusive\"\n   48  			SETS=\"1\"\n   49  			SCALE=\"1.0\"\n\n/Users/terrymeacham/projects/pcle/bin/EXP2/IteratorExperiment.txt:\n   12  			FILE=\"Instructions/EXP2/f_Recall.htm\"\n   13  			ITEMS=\"6\"\n   14:       ITEM_ORDER=\"random:exclusive\"\n   15  			SETS=\"1\"\n   16  			SCALE=\"1.0\"\n\n2 matches across 2 files\n\n\nSearching 962 files for \"getIntProperty\" (regex, case sensitive)\n\n/Users/terrymeacham/projects/pcle/.tag:\n  159  getImagePrefix	src/pkgCMEF/CmeApp.java	/^	public String getImagePrefix() {$/;\"	m	class:CmeApp\n  160  getImagesVector	src/pkgCMEF/CmePairFactory.java	/^	public Vector<CmePair> getImagesVector()$/;\"	m	class:CmePairFactory\n  161: getIntProperty	src/pkgCMEF/CmeApp.java	/^	public int getIntProperty(String name) {$/;\"	m	class:CmeApp\n  162: getIntProperty	src/pkgCMEF/CmeState.java	/^    public int getIntProperty(String name) {$/;\"	m	class:CmeState\n  163  getIntValue	src/pkgCMEF/CmePairFactory.java	/^	public int getIntValue(int idx)$/;\"	m	class:CmePairFactory\n  164  getIterator	src/pkgCMEF/CmeState.java	/^    public CmeIterator getIterator() {$/;\"	m	class:CmeState\n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java:\n  292  	 * Set event response\n  293  	 */\n  294: 	public int getIntProperty(String name) {\n  295  		String str = (String) m_eProperties.get(name);\n  296  		int ret = 0;\n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeState.java:\n  347       * Set event response \n  348       */\n  349:     public int getIntProperty(String name) {\n  350          String str = (String) this.getProperty(name);\n  351  \n  ...\n  417  	\n  418      private boolean incrementValue(String name, Integer inc) {\n  419:     	int total = m_App.getIntProperty(name);\n  420  		if (total == -1)\n  421  			total = 0;\n  ...\n  427      @SuppressWarnings(\"unused\")\n  428  	private boolean incrementValue(String name, String value) {\n  429: 		int points = getIntProperty(\"Pair1Value\");\n  430  		if (points == -1)\n  431  			points = 1;\n  ...\n  449  		input = input.replace(\"ie\", \"ee\").replace(\"ei\", \"ee\");\n  450  \n  451: 		int matchCount = getIntProperty(\"MatchCount\");\n  452  		if (matchCount == -1)\n  453  			matchCount = 3;\n  ...\n  482  			incrementValue(\"ExpTotalCount\", 1);\n  483  \n  484: 			int points = getIntProperty(\"Pair1Value\");\n  485  			if (points == -1)\n  486  				points = 1;\n  ...\n  529  		in = in.replace(\"ie\", \"ee\").replace(\"ei\", \"ee\");\n  530  		\n  531: 		int matchCount = getIntProperty(\"MatchCount\");\n  532  		if (matchCount == -1)\n  533  			matchCount = 3;\n  ...\n  570  			incrementValue(\"ExpTotalCount\", 1);\n  571  \n  572: 			int points = getIntProperty(\"Pair1Value\");\n  573  			if (points == -1)\n  574  				points = 1;\n  ...\n  638       */\n  639      public boolean validateInput(Iterator<CmeResponse> responses) throws Exception {\n  640:         int selReq = getIntProperty(\"Select\");\n  641          int selCount = 0;\n  642  \n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeView.java:\n  206  			//System.out.println(\"Pair\" + element + \"Color\");\n  207        m_CurState.setProperty(\"Pair\" + element + \"Color\", postStudyColor);\n  208:       int step = m_CurState.getIntProperty(\"Pair\" + element);\n  209  		}\n  210  	}\n  ...\n  519  		\n  520  		if (reconfigure) {\n  521: 			int icount = m_CurState.getIntProperty(\"Count\");\n  522: 			int isets = m_CurState.getIntProperty(\"Sets\");\n  523  			\n  524  			if (isets < 1)\n  ...\n  837  		}\n  838  		\n  839: 		int timeLimit = m_CurState.getIntProperty(\"Limit\");\n  840: 		int timeRes = m_CurState.getIntProperty(\"Resolution\");\n  841  		\n  842  		if (timeLimit <= 0) {\n\n18 matches across 4 files\n\n\nSearching 956 files for \"match_any\" (regex, case sensitive)\n\n/Users/terrymeacham/projects/pcle/bin/EXP2/TestExperiment.txt:\n   13  			SETS=\"60\"\n   14  			SCALE=\"1.0\"\n   15: 			CONSTRAINTS=\"match_any:Trial1:paira\" # paira, pairb, extra1, extra2...\n   16  			SET=\"DisableSubmitHook:yes\"\n   17  			NEXT=\"Click:Continue\"\n\n/Users/terrymeacham/projects/pcle/Instructions/SingleWord/TestExperiment.txt:\n   13  			SETS=\"60\"\n   14  			SCALE=\"1.0\"\n   15: 			CONSTRAINTS=\"match_any:Trial1:paira\" # paira, pairb, extra1, extra2...\n   16  			SET=\"DisableSubmitHook:yes\"\n   17  			NEXT=\"Click:Continue\"\n\n/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeState.java:\n  726                  validateMatch(constraint, text);\n  727  				return true;\n  728:             } else if (constraintType.equals(\"match_any\")) {\n  729                  m_App.dmsg(10, \"Match Any!\");\n  730                  validateMatchAny(constraint, text, param1);\n\n3 matches across 3 files\n",
-			"settings":
-			{
-				"buffer_size": 4727,
-				"line_ending": "Unix",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "src/pkgCMEF/CmeIteratorFactory.java",
-			"settings":
-			{
-				"buffer_size": 580,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/pkgCMEF/CmeIterator.java",
-			"settings":
-			{
-				"buffer_size": 1061,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/pkgCMEF/CmeRandomIter.java",
-			"settings":
-			{
-				"buffer_size": 2284,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "bin/EXP2/f_RecallSet.htm",
-			"settings":
-			{
-				"buffer_size": 423,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "bin/EXP1/study_phase.htm",
-			"settings":
-			{
-				"buffer_size": 168,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Instructions/SOCS2/Experiment.txt",
-			"settings":
-			{
-				"buffer_size": 5418,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "bin/EXP2/4f_Study_Phase_135.htm",
-			"settings":
-			{
-				"buffer_size": 4783,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "src/pkgCMEF/CmeView.java",
-			"settings":
-			{
-				"buffer_size": 28543,
+				"buffer_size": 7078,
 				"line_ending": "Windows"
 			}
 		},
@@ -134,18 +60,10 @@
 			}
 		},
 		{
-			"file": "bin/EXP2/DataList.txt",
+			"file": "Instructions/MISSFIT/Experiment.txt",
 			"settings":
 			{
-				"buffer_size": 786,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "bin/EXP2/IteratorExperiment.txt",
-			"settings":
-			{
-				"buffer_size": 2536,
+				"buffer_size": 3713,
 				"line_ending": "Windows"
 			}
 		}
@@ -214,21 +132,35 @@
 	},
 	"file_history":
 	[
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeState.java",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/OutputFormat.txt",
+		"/Users/terrymeacham/projects/pcle/run.sh",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmePairFactory.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/f_Recall.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/Grant Experiment 2_A_SIDa_06012014.txt",
+		"/Users/terrymeacham/projects/pcle/bin/EXP1/f_Recall.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/SingleWord/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/bin/EXP2/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeView.java",
+		"/Users/terrymeacham/projects/pcle/bin/EXP2/4f_Study_Phase_135.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/SOCS2/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/bin/EXP1/study_phase.htm",
+		"/Users/terrymeacham/projects/pcle/bin/EXP2/f_RecallSet.htm",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeRandomIter.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIterator.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIteratorFactory.java",
+		"/Users/terrymeacham/projects/pcle/bin/EXP2/IteratorExperiment.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/EXP2/OutputFormat.txt",
 		"/Users/terrymeacham/projects/pcle/bin/CHIPS6/Experiment.txt",
-		"/Users/terrymeacham/projects/pcle/bin/EXP2/IteratorExperiment.txt",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java",
-		"/Users/terrymeacham/projects/pcle/bin/EXP2/DataList.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/4f_Study_Phase_2.htm",
 		"/Users/terrymeacham/projects/pcle/bin/EXP1/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeDifficultyIter.java",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeSelectiveIter.java",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIteratorFactory.java",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeRandomIter.java",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIterator.java",
 		"/Users/terrymeacham/projects/pcle/bin/EXP3/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/CHIPS6/Experiment.txt",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmePairFactory.java",
 		"/Users/terrymeacham/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/application.css.scss",
 		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/bootstrap_and_overrides.css.scss",
@@ -327,21 +259,7 @@
 		"/Users/terrymeacham/projects/tasker/task.rb",
 		"/Users/terrymeacham/projects/tasker/app/models/task_application.rb",
 		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/task_applications.css.scss",
-		"/Users/terrymeacham/projects/tasker/app/controllers/task_applications_controller.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_applications/index.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/task_applications/new.html.haml",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131130230339_add_price_per_to_task_set.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_applications/show.html.haml",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131130221258_create_task_applications.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_sets/_task_summary.html.haml",
-		"/Users/terrymeacham/projects/tasker/test/fixtures/task_sets.yml",
-		"/Users/terrymeacham/projects/tasker/app/views/task_applications/edit.html.haml",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131130215342_add_start_stop_date_time_to_task_set.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_sets/_json_info.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/task_images/_form.html.haml",
-		"/Users/terrymeacham/projects/tasker/config/environments/production.rb",
-		"/Users/terrymeacham/projects/tasker/config/application.rb",
-		"/Users/terrymeacham/projects/tasker/config/initializers/carrierwave.rb"
+		"/Users/terrymeacham/projects/tasker/app/controllers/task_applications_controller.rb"
 	],
 	"find":
 	{
@@ -367,6 +285,21 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"match_any",
+			",$",
+			"^#(.*)",
+			"(.*)",
+			"RecallOrder",
+			"MatchAny",
+			"Failed to parse",
+			"Failed to process",
+			",,,",
+			"(.*)",
+			"([^,]*,[^,]*,[^,]*),,[^,]*,",
+			" - ",
+			"<[^>,]+>([^<]+)<[^>,]+>",
+			"<[^>,]+>[^<]+<[^>,]+>",
+			"EXP2",
 			"match_any",
 			"140",
 			"2",
@@ -479,22 +412,7 @@
 			"when",
 			"\\|ap\\|",
 			"|ap|",
-			"app_list",
-			"\\sap\\s",
-			"ap\\s",
-			"ap",
-			"create_deployment",
-			"save_stack",
-			"fetch_layer\n",
-			"fetch_layer",
-			"pretend",
-			"config",
-			"info_for",
-			"downcase",
-			"custom_json",
-			"red",
-			"orange",
-			"srv/www"
+			"app_list"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -502,6 +420,16 @@
 		"regex": true,
 		"replace_history":
 		[
+			",,,",
+			"\\1",
+			"#\\1",
+			"Recall_Order",
+			",,,,",
+			"#\\1",
+			"\\1,,,",
+			"",
+			"\\1",
+			"MISSFIT",
 			"125",
 			"1",
 			"4",
@@ -619,17 +547,7 @@
 			"\"",
 			"*\\1*",
 			"\\1,\\2",
-			"\\1*\\2*\\3",
-			"\\1*\\2*\\3\\4",
-			"\\1",
-			"\\1**\\2**\\3",
-			"\\1*\\2*\\3",
-			"\\1\\2",
-			"\\1,\\2",
-			"\\1\\2",
-			"",
-			"\\1 \\2",
-			"\\1\\2"
+			"\\1*\\2*\\3"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -640,311 +558,23 @@
 	"groups":
 	[
 		{
-			"selected": 12,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "src/pkgCMEF/CmeState.java",
+					"file": "Instructions/MISSFIT/DataList.txt",
 					"settings":
 					{
-						"buffer_size": 23006,
+						"buffer_size": 7078,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9079,
-								9079
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Java/Java.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 4754.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"settings":
-					{
-						"buffer_size": 4727,
-						"regions":
-						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										202,
-										212
-									],
-									[
-										422,
-										432
-									],
-									[
-										861,
-										875
-									],
-									[
-										914,
-										928
-									],
-									[
-										970,
-										984
-									],
-									[
-										1028,
-										1042
-									],
-									[
-										1420,
-										1434
-									],
-									[
-										1661,
-										1675
-									],
-									[
-										1875,
-										1889
-									],
-									[
-										2079,
-										2093
-									],
-									[
-										2262,
-										2276
-									],
-									[
-										2432,
-										2446
-									],
-									[
-										2613,
-										2627
-									],
-									[
-										2783,
-										2797
-									],
-									[
-										3005,
-										3019
-									],
-									[
-										3309,
-										3323
-									],
-									[
-										3442,
-										3456
-									],
-									[
-										3500,
-										3514
-									],
-									[
-										3623,
-										3637
-									],
-									[
-										3682,
-										3696
-									],
-									[
-										3971,
-										3980
-									],
-									[
-										4243,
-										4252
-									],
-									[
-										4566,
-										4575
-									]
-								],
-								"scope": ""
-							}
-						},
-						"selection":
-						[
-							[
-								3993,
-								3971
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"output_tag": 3,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1635.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "src/pkgCMEF/CmeIteratorFactory.java",
-					"settings":
-					{
-						"buffer_size": 580,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								428,
-								428
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Java/Java.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/pkgCMEF/CmeIterator.java",
-					"settings":
-					{
-						"buffer_size": 1061,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								16,
-								16
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Java/Java.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "src/pkgCMEF/CmeRandomIter.java",
-					"settings":
-					{
-						"buffer_size": 2284,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1259,
-								1259
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Java/Java.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 359.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "bin/EXP2/f_RecallSet.htm",
-					"settings":
-					{
-						"buffer_size": 423,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								409,
-								409
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "bin/EXP1/study_phase.htm",
-					"settings":
-					{
-						"buffer_size": 168,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "Instructions/SOCS2/Experiment.txt",
-					"settings":
-					{
-						"buffer_size": 5418,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								632,
-								632
+								57,
+								57
 							]
 						],
 						"settings":
@@ -958,59 +588,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "bin/EXP2/4f_Study_Phase_135.htm",
-					"settings":
-					{
-						"buffer_size": 4783,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								39,
-								39
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "src/pkgCMEF/CmeView.java",
-					"settings":
-					{
-						"buffer_size": 28543,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								18911,
-								18926
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Java/Java.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 10333.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
+					"buffer": 1,
 					"file": "src/pkgCMEF/CmeApp.java",
 					"settings":
 					{
@@ -1021,8 +599,8 @@
 						"selection":
 						[
 							[
-								2299,
-								2299
+								27801,
+								27801
 							]
 						],
 						"settings":
@@ -1030,51 +608,25 @@
 							"syntax": "Packages/Java/Java.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 629.0,
+						"translation.y": 13032.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "bin/EXP2/DataList.txt",
+					"buffer": 2,
+					"file": "Instructions/MISSFIT/Experiment.txt",
 					"settings":
 					{
-						"buffer_size": 786,
+						"buffer_size": 3713,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								786,
-								786
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "bin/EXP2/IteratorExperiment.txt",
-					"settings":
-					{
-						"buffer_size": 2536,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								636,
-								636
+								478,
+								478
 							]
 						],
 						"settings":
@@ -1136,12 +688,64 @@
 		"selected_items":
 		[
 			[
-				"outpu",
-				"Instructions/EXP2/OutputFormat.txt"
+				"missfit/exp",
+				"Instructions/MISSFIT/Experiment.txt"
 			],
 			[
 				"cmeapp",
 				"src/pkgCMEF/CmeApp.java"
+			],
+			[
+				"inmissfidatal",
+				"Instructions/MISSFIT/DataList.txt"
+			],
+			[
+				"cmestate",
+				"src/pkgCMEF/CmeState.java"
+			],
+			[
+				"grane",
+				"Grant Experiment 2_A_SIDa_06012014.txt"
+			],
+			[
+				"missfitout",
+				"Instructions/MISSFIT/OutputFormat.txt"
+			],
+			[
+				"grantex",
+				"Grant Experiment 2_A_SIDa_06012014.txt"
+			],
+			[
+				"runsh",
+				"run.sh"
+			],
+			[
+				"cmepairf",
+				"src/pkgCMEF/CmePairFactory.java"
+			],
+			[
+				"f_recall",
+				"Instructions/MISSFIT/f_Recall.htm"
+			],
+			[
+				"recal",
+				"bin/EXP1/f_Recall.htm"
+			],
+			[
+				"misfitdatal",
+				"Instructions/MISSFIT/DataList.txt"
+			],
+			[
+				"missfitexper",
+				"Instructions/MISSFIT/Experiment.txt"
+			],
+			[
+				"singlewordexper",
+				"Instructions/SingleWord/Experiment.txt"
+			],
+			[
+				"outpu",
+				"Instructions/EXP2/OutputFormat.txt"
 			],
 			[
 				"interexp",
@@ -1206,10 +810,6 @@
 			[
 				"cmeiter",
 				"src/pkgCMEF/CmeIteratorFactory.java"
-			],
-			[
-				"cmestate",
-				"src/pkgCMEF/CmeState.java"
 			],
 			[
 				"exp2exper",
@@ -1598,54 +1198,6 @@
 			[
 				"_nav",
 				"app/views/layouts/_navigation.html.haml"
-			],
-			[
-				"abil",
-				"app/models/ability.rb"
-			],
-			[
-				"routes",
-				"config/routes.rb"
-			],
-			[
-				"appcontrollers/controllrb",
-				"app/controllers/application_controller.rb"
-			],
-			[
-				"homhal",
-				"app/views/application/home.html.haml"
-			],
-			[
-				"entshow",
-				"app/views/task_entries/show.html.haml"
-			],
-			[
-				"_comment.ht",
-				"app/views/partials/_comment.html.haml"
-			],
-			[
-				"commejs",
-				"app/assets/javascripts/comments.js"
-			],
-			[
-				"_comts",
-				"app/views/partials/_comments.html.haml"
-			],
-			[
-				"tasentinde",
-				"app/views/task_entries/index.html.haml"
-			],
-			[
-				"taskenscs",
-				"app/assets/stylesheets/task_entries.css.scss"
-			],
-			[
-				"taskenshow",
-				"app/views/task_entries/show.html.haml"
-			],
-			[
-				"orien",
-				"app/views/task_entries/_orientable_image.html.haml"
 			]
 		],
 		"width": 0.0
