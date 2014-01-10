@@ -524,7 +524,19 @@ public class CmeState {
 			String feedback = m_App.getFeedback(correct_name);
 			if (feedback == null) {
 				m_App.addFeedback(correct_name, "false");
-			}
+      }
+
+      String response_name = name + "Response_" + pair;
+      feedback = m_App.getFeedback(response_name);
+      if (feedback == null) {
+        m_App.addFeedback(response_name, "");
+      }
+
+      String order_name = name + "Order_" + pair;
+      feedback = m_App.getFeedback(order_name);
+      if (feedback == null) {
+        m_App.addFeedback(order_name, "");
+      }
 		}
 
 		return true;
