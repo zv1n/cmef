@@ -121,6 +121,7 @@ public class CmeClock extends JPanel implements CmeLimit
 	public void tick() {
 		m_iCurTime += m_iResolution;
 		if (isComplete() && m_cResponse != null) {
+      m_aApp.dmsg(CmeApp.DEBUG_RESPONSES, "tick(): Clock Response Triggering.");
 			m_cResponse.Respond();
 			paint(this.getGraphics());
 		} else if (m_iCurTime%(1000/m_iResolution) == 0)

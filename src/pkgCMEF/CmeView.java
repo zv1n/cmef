@@ -170,6 +170,7 @@ public class CmeView extends JPanel {
 	}
 
 	private void primaryClickEvent() {
+      m_App.dmsg(CmeApp.DEBUG_STATES, "Primary click event!");
 		if (m_bInStudyState) {
 			try {
 				clearStudyState();

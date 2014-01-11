@@ -77,6 +77,7 @@ public class CmeApp extends JFrame implements AncestorListener {
   public static final int DEBUG_TIMERS = 1;
   public static final int DEBUG_RESPONSES = 2;
   public static final int DEBUG_STATES = 4;
+  public static final int DEBUG_FILE_SEQUENCES = 8;
 	// ------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
 	// ------------------------------------------------------------------
@@ -193,7 +194,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 	 */
 	public void dmsg(int level, String msg) {
     if ((level & m_iDebugLevel) != 0) {
-			System.err.println("Dmsg: " + msg);
+			System.err.println("(" + String.valueOf(level) + "): " + msg);
 		}
 	}
 
@@ -529,7 +530,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (m_NextResponse == null)
 			m_NextResponse = new CmeEventResponse() {
 				public void Respond() {
-          dmsg(CmeApp.DEBUG_RESPONSES, "Next Response Triggered");
+          dmsg(CmeApp.DEBUG_RESPONSES | CmeApp.DEBUG_FILE_SEQUENCES, "Next Response Triggered");
 					try {
 						if (!m_ViewHandler.setNextInSequence()) {
 							thisApp.setNextState();
@@ -622,21 +623,25 @@ public class CmeApp extends JFrame implements AncestorListener {
 	}
 
 	/** Used to safely retrieve a string. */
-	public String getQuotedText(String line) {
-		int idx = line.indexOf("\"") + 1;
+	public String getQuotedText(String line) throws Exception {
+    try {
+  		int idx = line.indexOf("\"") + 1;
 
-		if (idx <= 0)
-			return "";
+  		if (idx <= 0)
+  			return "";
 
-		int idx1 = line.lastIndexOf("\"");
+  		int idx1 = line.lastIndexOf("\"");
 
-		if (idx1 < 0)
-			return line.substring(idx);
+  		if (idx1 < 0)
+  			return line.substring(idx);
 
-		if (idx == idx1)
-			return "";
+  		if (idx == idx1)
+  			return "";
 
-		return line.substring(idx, idx1);
+  		return line.substring(idx, idx1);
+    } catch (Exception ex) {
+      throw new Exception("Missing quotes!");
+    }
 	}
 
 	private void requirePair(String[] value, String text) throws Exception {

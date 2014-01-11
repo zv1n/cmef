@@ -52,9 +52,15 @@ public class CmeState {
   		return m_iSequence;
   	}
 
-  	public void Respond(int seq) {
-  		if (m_iSequence >= 0 & seq == m_iSequence)
+  	public boolean Respond(int seq) {
+  		if (m_iSequence >= 0 & seq == m_iSequence) {
+        m_App.dmsg(CmeApp.DEBUG_RESPONSES | CmeApp.DEBUG_FILE_SEQUENCES,
+          "stateEventHander::Respond(int:" + String.valueOf(seq) + "): Response Triggering.");
   			m_erResponse.Respond();
+        return true;
+      }
+
+      return false;
   	}
   	
   }
@@ -105,6 +111,7 @@ public class CmeState {
   }
   
   private Vector<CmeTimer> getSequenceTimers(Integer seq) {
+
     Vector<CmeTimer> timer = m_hvTimer.get(seq);
 
     if (timer == null) {
@@ -126,7 +133,7 @@ public class CmeState {
 	 * Init at a per sequence level.
 	 */
 	public void initSequence() {
-    m_App.dmsg(CmeApp.DEBUG_STATES, "Sequence State Init.");
+    m_App.dmsg(CmeApp.DEBUG_STATES | CmeApp.DEBUG_FILE_SEQUENCES, "Sequence State Init.");
 
 		Vector<CmeTimer> timers = getSequenceTimers();
     m_App.dmsg(CmeApp.DEBUG_TIMERS, "Init Sequence -- Timer Count: " + timers.size());
@@ -139,8 +146,16 @@ public class CmeState {
 	 */
 	public void clean() {
 		Vector<CmeTimer> timers = getSequenceTimers();
-		for(int x=0; x<timers.size(); x++)
+
+		for(int x=0; x<timers.size(); x++) {
+      CmeTimer timer = timers.get(x);
+
+      if (timer != null)
+        timer.stop();
+
 			timers.set(x, null);
+    }
+
 		timers.clear();
 		
 		m_Iterator = null;
@@ -294,19 +309,36 @@ public class CmeState {
      * Set the change by action 
      */
     public void TriggerEvent(int event) {
-        if (event < 0 || event >= EVENT_MAX || m_erEvent == null || 
-			m_erEvent.size() <= event || m_erEvent.get(event) == null) {
-            return;
-        }
+      String sEvent = "None";
+
+      if (CmeState.EVENT_CLICK_PRIMARY == event) {
+        sEvent = "Primary Click";
+      } else if (CmeState.EVENT_TIME == event) {
+        sEvent = "Timer";
+      }
+
+      m_App.dmsg(CmeApp.DEBUG_RESPONSES, "Trigger Event: " + sEvent);
+
+      if (event < 0 || event >= EVENT_MAX || m_erEvent == null || 
+        m_erEvent.size() <= event || m_erEvent.get(event) == null) {
+        m_App.dmsg(CmeApp.DEBUG_RESPONSES, "No event to trigger.");
+        return;
+      }
 		//System.out.print("Event: ");
 		//System.out.println(event);
 		//System.out.println(m_erEvent.get(event).size());
 		
-		for (int x=0; x<m_erEvent.get(event).size(); x++) {
-			stateEventHandler response = m_erEvent.get(event).get(x);
-			if (response != null)
-				response.Respond(m_iSequenceIndex);
-		}
+  		for (int x=0; x<m_erEvent.get(event).size(); x++) {
+  			stateEventHandler response = m_erEvent.get(event).get(x);
+  			if (response != null) {
+          m_App.dmsg(CmeApp.DEBUG_RESPONSES, "Attempting Trigger Seq (" + String.valueOf(m_iSequenceIndex) + "): " + sEvent);
+  				if (response.Respond(m_iSequenceIndex)) {
+            m_App.dmsg(CmeApp.DEBUG_RESPONSES, "Triggered Seq (" + String.valueOf(m_iSequenceIndex) + "): " + sEvent);
+            return;
+          }
+          m_App.dmsg(CmeApp.DEBUG_RESPONSES, "No Response Seq (" + String.valueOf(m_iSequenceIndex) + "): " + sEvent);
+        }
+  		}
     }
 
     /** 
@@ -797,7 +829,9 @@ public class CmeState {
     
     public boolean isSequenceValid() {
     	int seqLength = getSequenceLength();
-    	return (m_iSequenceIndex < seqLength && m_iSequenceIndex >= 0);
+    	boolean valid = (m_iSequenceIndex < seqLength && m_iSequenceIndex >= 0);
+      m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Sequence Valid? " + String.valueOf(valid));
+      return valid;
     }
     
     /**
@@ -805,9 +839,13 @@ public class CmeState {
      * @return true if there is a sequence to progress to. false if not.
      */
     public boolean nextSequencePosition() {
+      m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Next Sequence.");
+      m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Cur Seq: " + String.valueOf(m_iSequenceIndex));
     	m_iSequenceIndex++;
+      m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Next Seq: " + String.valueOf(m_iSequenceIndex));
 
     	boolean valid = isSequenceValid();
+
     	if (!valid)
     		return false;
 

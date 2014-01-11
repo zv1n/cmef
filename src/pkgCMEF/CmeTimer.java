@@ -99,7 +99,7 @@ public class CmeTimer {
 			CmeEventResponse response = m_Response;
 			@Override
 			public void run() {
-        m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Response Event!");
+        m_aApp.dmsg(CmeApp.DEBUG_RESPONSES | CmeApp.DEBUG_TIMERS, "Response Event!");
 				if (response != null)
 					response.Respond();
 			}
