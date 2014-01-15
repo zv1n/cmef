@@ -242,14 +242,15 @@ public class CmeView extends JPanel {
 
 			updateLinkColor(pairNum);
 
-      if (m_CurState.getBooleanProperty("ShuffleItems", false))
-        shuffleProperties();
-
-			updateHtmlContent();
-			updatePairSelection(trial, pair, elapsedTime);
+			updatePairSelection(trial, pair, pairNum, elapsedTime);
 			updatePairTotals(trial, pair, elapsedTime);
 			updatePairCount(trial, pair);
 			
+      if (m_CurState.getBooleanProperty("ShuffleItems", false))
+        shuffleProperties();
+
+      updateHtmlContent();
+
 			m_iStudyCount++;
 			ret = true;
 		}
@@ -260,7 +261,7 @@ public class CmeView extends JPanel {
 		return ret;
 	}
 	
-	private void updatePairSelection(String trial, String pair, double elapsedTime) throws Exception
+	private void updatePairSelection(String trial, String pair, String pairNum, double elapsedTime) throws Exception
 	{
 		String name = "Study" + trial + "_" + pair;
 		String value = Double.toString(elapsedTime);
@@ -270,8 +271,12 @@ public class CmeView extends JPanel {
 			fbval = "";
 		else
 			fbval += ",";
-		
+
+    if (m_CurState.getBooleanProperty("ShuffleItems", false))
+      fbval += pairNum + ",";
+
 		fbval += Integer.toString(m_iStudyCount) + "," + value;
+
 		m_App.addFeedback(name, fbval);
 	}
 	
@@ -445,7 +450,7 @@ public class CmeView extends JPanel {
 		Dimension newSz = this.getSize();
 
 		Dimension border = new Dimension(10, 10);
-		Dimension dimensions = new Dimension(64, 35);
+		Dimension dimensions = new Dimension(128, 35);
 		Point location = new Point(newSz.width/2-dimensions.width/2+border.width, newSz.height-1);
 
 		location.x -= border.width;

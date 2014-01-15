@@ -169,11 +169,11 @@ public class CmeClock extends JPanel implements CmeLimit
 		if (display > 0)
 			display += 999;
 		display /= 1000;
-		
-			// Draw the 10s if needed	
-		g.drawString(String.valueOf(display / 10), (int)(0.20*this.getWidth()), 26);
-			// Draw the 1s
-		g.drawString(String.valueOf(display % 10), (int)(0.55*this.getWidth()), 26);
+
+    String disp_str = String.valueOf(display);
+    float offset = disp_str.length() * 0.075f;
+
+    g.drawString(disp_str, (int)((0.50-offset)*this.getWidth()), 26);
 	}
 
 	public String getElement() {
