@@ -1,0 +1,388 @@
+  <EXPERIMENT CMEF_VERSION="3.2">
+	TITLE="SWELL - Experiment"
+	STUDY_NAME="SWELL"
+	CONDITIONS="A,B,C,D"
+	DATA_FILE="Instructions/SWELL/DataList.txt"
+	FORMAT_FILE="Instructions/SWELL/OutputFormat.txt"	
+	
+
+  LIST_ESET="LowToHigh:1"
+  LIST_ESET="LowToHigh:3"
+  LIST_ESET="LowToHigh:5"
+
+  LIST_ESET="HighToLow:5"
+  LIST_ESET="HighToLow:3"
+  LIST_ESET="HighToLow:1"
+
+
+
+
+<TRIAL ID="1" >
+
+#---Conditions---
+#A. EASY VALUED -RESTRICTED  (E-R) 20 S PER GRID
+#B. DIFFICULT VALUED - RESTRICTED (D-R) 20 S PER GRID
+#C. EASY VALUED - UNRESTRICTED (E-U) 120 S PER GRID
+#D. DIFFICULT VALUED - UNRESTRICTED (D-U) 120 S PER GRID
+
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/1_instruction_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/2_instruction_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/2_RESTRICTEDinstruction_T1.htm"
+			END= "Click:Continue"
+			CONDITIONS="A,B"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/2_UNRESTRICTEDinstruction_T1.htm"
+			END= "Click:Continue"
+			CONDITIONS="C,D"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/2b_instruction_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SWELL/2f_prestudy_T1.htm"
+			CONSTRAINTS="range:0-30"
+			END= "Click:Continue"
+		</STATE>
+		
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/3_RESTRICTED_T1.htm"
+			END= "Click:Continue"
+			CONDITIONS="A,B"
+		</STATE>
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/3_UNRESTRICTED_T1.htm"
+			END= "Click:Continue"
+			CONDITIONS="C,D"
+		</STATE>
+
+		<STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/4f_Study_Phase_T1_531.htm"
+        		SET="BorderWidth:1.5"
+        		SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+      			ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:20s"
+			DISPLAY_TIMER="yes"
+        		SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT1.htm"
+      			SET="LimitPromptButtons:yesno"
+      			POOL="ImageValues"
+      			ITEMS="6"
+        		SET="ShuffleItems:yes"
+      			SETS="5"
+     			SCALE="1.0"
+      			NEXT="Click:Continue"
+     			 CONDITIONS="A"
+   		 </STATE>
+
+
+		 <STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/4f_Study_Phase_T1_135.htm"
+       			SET="BorderWidth:1.5"
+       			SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+   		        ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:20s"
+      		        SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT1.htm"
+      			SET="LimitPromptButtons:yesno"
+      			DISPLAY_TIMER="yes"
+      			POOL="ImageValues"
+      			ITEMS="6"
+       			SET="ShuffleItems:yes"
+      			SETS="5"
+      			SCALE="1.0"
+      			NEXT="Click:Continue"
+      			CONDITIONS="B"
+    		</STATE>
+   
+		 <STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/4f_Study_Phase_T1_531.htm"
+        		SET="BorderWidth:1.5"
+        		SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+      			ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:120s"
+			DISPLAY_TIMER="yes"
+        		SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT1.htm"
+      			SET="LimitPromptButtons:yesno"
+      			POOL="ImageValues"
+      			ITEMS="6"
+        		SET="ShuffleItems:yes"
+      			SETS="5"
+     			SCALE="1.0"
+      			NEXT="Click:Continue"
+     			 CONDITIONS="C"
+   		 </STATE>
+
+
+
+		<STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/4f_Study_Phase_T1_135.htm"
+       			SET="BorderWidth:1.5"
+       			SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+   		        ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:120s"
+      		        SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT1.htm"
+      			SET="LimitPromptButtons:yesno"
+      			DISPLAY_TIMER="yes"
+      			POOL="ImageValues"
+      			ITEMS="6"
+       			SET="ShuffleItems:yes"
+      			SETS="5"
+      			SCALE="1.0"
+      			NEXT="Click:Continue"
+      			CONDITIONS="D"
+    		</STATE>
+   
+		
+ 
+		<STATE>
+			MODE="MULTIPLE"
+			FILE="INSTRUCTIONS/SWELL/4f_JOL_T1.htm"
+			CONSTRAINTS="range:0-100"
+			ITERATOR="Random:exclusive"
+			ITEMS="1"
+			SETS=30
+			NEXT="Click:Continue"
+		</STATE>
+
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SWELL/6f_poststudyprediction_T1.htm"
+			CONSTRAINTS="range:0-30"
+			END="Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/7_recall_T1.htm"
+			END="Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="MULTIPLE"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/SWELL/7f_Recall_T1.htm"
+			ITERATOR="random:exclusive"
+			CONSTRAINTS="match:$Pair1A"
+			ITEMS="1"
+			SETS="30"
+			SCALE="1.0"
+			SET="DisableSubmitOnEnter:yes"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SWELL/8f_Postdiction_T1.htm"
+			CONSTRAINTS="range:0-30"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2" >
+		
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/9_RESTRICTEDstudyphaseinstructions_T2.htm"
+			END= "Click:Continue"
+			CONDITIONS="A,B"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/9_UNRESTRICTEDstudyphaseinstructions_T2.htm"
+			END= "Click:Continue"
+			CONDITIONS="C,D"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SWELL/10f_prestudy_T2.htm"
+			CONSTRAINTS="range:0-30"
+			END= "Click:Continue"
+		</STATE>
+
+		
+		<STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/11f_Study_Phase_T2_531.htm"
+        		SET="BorderWidth:1.5"
+        		SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+      			ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:20s"
+			DISPLAY_TIMER="yes"
+        		SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT2.htm"
+      			SET="LimitPromptButtons:yesno"
+      			POOL="ImageValues"
+      			ITEMS="6"
+        		SET="ShuffleItems:yes"
+      			SETS="5"
+     			SCALE="1.0"
+      			NEXT="Click:Continue"
+     			 CONDITIONS="A"
+   		 </STATE>
+
+
+		 <STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/11f_Study_Phase_T2_135.htm"
+       			SET="BorderWidth:1.5"
+       			SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+   		        ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:20s"
+      		        SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT2.htm"
+      			SET="LimitPromptButtons:yesno"
+      			DISPLAY_TIMER="yes"
+      			POOL="ImageValues"
+      			ITEMS="6"
+       			SET="ShuffleItems:yes"
+      			SETS="5"
+      			SCALE="1.0"
+      			NEXT="Click:Continue"
+      			CONDITIONS="B"
+    		</STATE>
+   
+		 <STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/11f_Study_Phase_T2_531.htm"
+        		SET="BorderWidth:1.5"
+        		SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+      			ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:120s"
+			DISPLAY_TIMER="yes"
+        		SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT2.htm"
+      			SET="LimitPromptButtons:yesno"
+      			POOL="ImageValues"
+      			ITEMS="6"
+        		SET="ShuffleItems:yes"
+      			SETS="5"
+     			SCALE="1.0"
+      			NEXT="Click:Continue"
+     			 CONDITIONS="C"
+   		 </STATE>
+
+
+
+		<STATE>
+      			MODE="Study"
+      			FILE="Instructions/SWELL/11f_Study_Phase_T2_135.htm"
+       			SET="BorderWidth:1.5"
+       			SET="PreStudyColor:#00AA00"
+        		SET="PostStudyColor:#AA0000"
+   		        ITERATOR="difficulty:ascending"
+      			STUDY_LIMIT="time:120s"
+      		        SET="Resolution:100"
+      			STUDY_FILE="InstructIons/SWELL/Study_PhaseT2.htm"
+      			SET="LimitPromptButtons:yesno"
+      			DISPLAY_TIMER="yes"
+      			POOL="ImageValues"
+      			ITEMS="6"
+       			SET="ShuffleItems:yes"
+      			SETS="5"
+      			SCALE="1.0"
+      			NEXT="Click:Continue"
+      			CONDITIONS="D"
+    		</STATE>
+   
+		
+ 
+		<STATE>
+			MODE="MULTIPLE"
+			FILE="INSTRUCTIONS/SWELL/4f_JOL_T2.htm"
+			CONSTRAINTS="range:0-100"
+			ITERATOR="Random:exclusive"
+			ITEMS="1"
+			SETS=30
+			NEXT="Click:Continue"
+		</STATE>
+
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SWELL/12poststudyprediction_T2.htm"
+			CONSTRAINTS="range:0-30"
+			END="Click:Continue"
+		</STATE>
+				
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/13_Instructions_2.htm"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="MULTIPLE"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/SWELL/13f_Recall_T2.htm"
+			ITERATOR="random:exclusive"
+			CONSTRAINTS="match:$Pair1A"
+			ITEMS="1"
+			SETS="30"
+			SCALE="1.0"
+			SET="DisableSubmitOnEnter:yes"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SWELL/8f_Postdiction_T1.htm"
+			CONSTRAINTS="range:0-30"
+			END="Click:Continue"
+		</STATE>
+
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/SWELL/14f_Postdiction_T2.htm"
+			CONSTRAINTS="range:0-30"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/SWELL/15_Last_Screen.htm"
+			END= "Click:Continue"
+		</STATE>
+
+	</TRIAL>
+</EXPERIMENT>

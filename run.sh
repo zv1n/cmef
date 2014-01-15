@@ -8,7 +8,7 @@ function die() {
 if [[ $# -ge 1 ]]; then
   experiment=$*
 else
-  experiment=$(pwd)/bin/dev/Experiment.txt
+  experiment="-x $(pwd)/bin/dev/Experiment.txt"
 fi
 
 java -jar CMEF.jar $experiment

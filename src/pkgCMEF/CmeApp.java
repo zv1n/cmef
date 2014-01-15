@@ -78,6 +78,7 @@ public class CmeApp extends JFrame implements AncestorListener {
   public static final int DEBUG_RESPONSES = 2;
   public static final int DEBUG_STATES = 4;
   public static final int DEBUG_FILE_SEQUENCES = 8;
+  public static final int DEBUG_HTML_VIEW = 16;
 	// ------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
 	// ------------------------------------------------------------------

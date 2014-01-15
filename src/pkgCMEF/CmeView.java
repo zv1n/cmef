@@ -617,6 +617,7 @@ public class CmeView extends JPanel {
 
 		m_CurState.resetSeqState();
     m_CurState.initSequence();
+    clearColors();
 
 		updateInstructionFile(false);
 		return true;
@@ -658,6 +659,7 @@ public class CmeView extends JPanel {
 
     for (int x = 0; x < count; x++) {
       step = iter.getNext();
+      System.err.print("Step: ");
       System.err.println(step);
       vx = Integer.toString(x + 1);
       //System.out.println("Generating Pairs for " + vx);
@@ -674,7 +676,7 @@ public class CmeView extends JPanel {
       m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
       m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
       m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
-      
+
       if (m_CurState.canStudy() && preStudyColor != null) {
         String color = preStudyColor;
 
@@ -684,6 +686,17 @@ public class CmeView extends JPanel {
 
         m_CurState.setProperty("Pair" + vx + "Color", color);
       }
+    }
+  }
+
+  private void clearColors() throws Exception {
+    int count = m_CurState.getPerStepCount();
+    String preStudyColor = m_CurState.getStringProperty("PreStudyColor");
+    String vx = null;
+
+    for (int x = 0; x < count; x++) {
+      vx = Integer.toString(x + 1);
+      m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);
     }
   }
 

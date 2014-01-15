@@ -319,7 +319,7 @@ public class CmeHtmlView extends JEditorPane {
 				CmeComponent comp = new CmeComponent(name);
 				comp.addComponent(null, value);
 				m_Components.add(comp);
-				System.out.println("Hidden:" + name);
+				m_App.dmsg(CmeApp.DEBUG_HTML_VIEW, "Hidden:" + name);
 			} else { /*if (type.toLowerCase() == "text")*/
 				m_EditList.add(name);
 			}
