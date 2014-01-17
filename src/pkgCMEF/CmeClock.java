@@ -129,7 +129,9 @@ public class CmeClock extends JPanel implements CmeLimit
 	}
 	
 	public boolean reset() {
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Reset Clock.");
 		m_iCurTime = 0;
+    paint(this.getGraphics());
 		return false;
 	}
 	
@@ -148,6 +150,7 @@ public class CmeClock extends JPanel implements CmeLimit
 	//---------------------------------------------------
 	public void paint(Graphics g) {
 		if(!this.isVisible()) return; // Don't paint if we are not visible
+
 		// Paint the border
 		g.setColor(Color.DARK_GRAY);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight()); 
@@ -165,6 +168,8 @@ public class CmeClock extends JPanel implements CmeLimit
 			if (display <= 0)
 				g.setColor(Color.RED);
 		}
+
+    m_aApp.dmsg(CmeApp.DEBUG_TIMERS, "Paint Clock: " + String.valueOf(display));
 		
 		if (display > 0)
 			display += 999;

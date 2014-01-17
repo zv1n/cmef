@@ -79,6 +79,8 @@ public class CmeApp extends JFrame implements AncestorListener {
   public static final int DEBUG_STATES = 4;
   public static final int DEBUG_FILE_SEQUENCES = 8;
   public static final int DEBUG_HTML_VIEW = 16;
+  public static final int DEBUG_STUDY_PHASES = 32;
+  public static final int DEBUG_PROPERTIES = 64;
 	// ------------------------------------------------------------------
 	// State variables for storing state information loaded from file.
 	// ------------------------------------------------------------------
@@ -904,6 +906,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 				} else if (line.matches(variableQuery("SET"))) {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
+          dmsg(CmeApp.DEBUG_PROPERTIES, lhs + " set to " + rhs + " for sequence " + String.valueOf(stateSequence));
 					thisState.setProperty(lhs, rhs, stateSequence);
 
 				} else if (line.matches(variableQuery("STUDY_FILE"))) {

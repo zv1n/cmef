@@ -369,10 +369,15 @@ public class CmeState {
     public Object getProperty(String name) {
       if (m_sSequenceProperties.size() > m_iSequenceIndex) {
         Object prop = m_sSequenceProperties.get(m_iSequenceIndex).get(name);
-        if (prop != null)
+        if (prop != null) {
+          m_App.dmsg(CmeApp.DEBUG_PROPERTIES, name + ":" + prop + " property from sequence: " + String.valueOf(m_iSequenceIndex));
           return prop;
+        }
       }
-        return m_sProperties.get(name);
+
+      Object prop = m_sProperties.get(name);
+      m_App.dmsg(CmeApp.DEBUG_PROPERTIES, name + ":" + prop + " property from state global");
+      return prop;
     }
 
     /** 

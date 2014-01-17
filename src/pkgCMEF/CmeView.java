@@ -478,15 +478,7 @@ public class CmeView extends JPanel {
 	 * @return true if the current state has the property.
 	 */
 	private boolean isPerStepTimer() {
-		String pst = m_CurState.getStringProperty("ResetOnNext");
-		
-		if (pst == null)
-			return false;
-		
-		if (pst.equals("yes") || pst.equals("true"))
-			return true;
-		
-		return false;
+		return m_CurState.getBooleanProperty("ResetOnNext", false);
 	}
 
 	/** 
@@ -613,16 +605,16 @@ public class CmeView extends JPanel {
 		
 		m_App.displayPrompt("PrePromptText");
 		
-		setProperties();
-		
 		if (isPerStepTimer()) {
 			m_cClock.reset();
 			this.updateUI();
 		}
 
-		m_CurState.resetSeqState();
+    m_CurState.resetSeqState();
     m_CurState.initSequence();
+
     clearColors();
+    setProperties();
 
 		updateInstructionFile(false);
 		return true;
@@ -659,13 +651,13 @@ public class CmeView extends JPanel {
     int step;
     String vx;
 
+    m_App.dmsg(CmeApp.DEBUG_STUDY_PHASES, "Shuffling Properties");
+
     CmeRandomIter iter = new CmeRandomIter(CmeIterator.EXCLUSIVE);
     iter.initIterator(m_viCurrentItems);
 
     for (int x = 0; x < count; x++) {
       step = iter.getNext();
-      System.err.print("Step: ");
-      System.err.println(step);
       vx = Integer.toString(x + 1);
       //System.out.println("Generating Pairs for " + vx);
 
@@ -726,30 +718,40 @@ public class CmeView extends JPanel {
 		m_CurState.setProperty("CurrentSet", Integer.toString(currentStep));
     m_viCurrentItems.clear();
 
+    boolean shuffle = m_CurState.getBooleanProperty("ShuffleItems", false);
+
+    m_App.dmsg(CmeApp.DEBUG_STUDY_PHASES, "Configuring Set Properties");
+
 		for (int x = 0; x < count; x++) {
 			step = iter.getNext();
       m_viCurrentItems.add(step);
-			vx = Integer.toString(x + 1);
-			//System.out.println("Generating Pairs for " + vx);
 
-			m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
-			m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
-			m_CurState.setProperty("Pair" + vx + "AFile", m_PairFactory.getFileA(step));
-			m_CurState.setProperty("Pair" + vx + "BFile", m_PairFactory.getFileB(step));
-			m_CurState.setProperty("Pair" + vx, Integer.toString(step));
-			
-			m_CurState.setProperty("Pair" + vx + "Sequence", Integer.toString(m_CurState.getStep()));
-			m_CurState.setProperty("Pair" + vx + "Group", m_PairFactory.getPairGroup(step));	
-			m_CurState.setProperty("Pair" + vx + "Order", Integer.toString(x));	
-			m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
-			m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
-			m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
-			
-			if (m_CurState.canStudy() && preStudyColor != null) {
-				m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);
-			}
+      if (!shuffle) {
+  			vx = Integer.toString(x + 1);
+  			//System.out.println("Generating Pairs for " + vx);
+
+  			m_CurState.setProperty("Pair" + vx + "A", m_PairFactory.getFeedbackA(step, (int) (scale * 1000)));
+  			m_CurState.setProperty("Pair" + vx + "B", m_PairFactory.getFeedbackB(step, (int) (scale * 1000)));
+  			m_CurState.setProperty("Pair" + vx + "AFile", m_PairFactory.getFileA(step));
+  			m_CurState.setProperty("Pair" + vx + "BFile", m_PairFactory.getFileB(step));
+  			m_CurState.setProperty("Pair" + vx, Integer.toString(step));
+  			
+  			m_CurState.setProperty("Pair" + vx + "Sequence", Integer.toString(m_CurState.getStep()));
+  			m_CurState.setProperty("Pair" + vx + "Group", m_PairFactory.getPairGroup(step));	
+  			m_CurState.setProperty("Pair" + vx + "Order", Integer.toString(x));	
+  			m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
+  			m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
+  			m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
+  			
+  			if (m_CurState.canStudy() && preStudyColor != null) {
+  				m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);
+  			}
+      }
 		}
 		
+    if (shuffle)
+      shuffleProperties();
+
 		setSetPoolProperties();
 		setStatePoolProperties();
 		
