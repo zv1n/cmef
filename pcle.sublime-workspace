@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"m_iSeq",
+				"m_iSequenceIndex"
+			],
+			[
 				"shuffl",
 				"shuffleProperties"
 			],
@@ -44,26 +48,34 @@
 	"buffers":
 	[
 		{
-			"file": "Instructions/MISSFIT/DataList.txt",
+			"file": "bin/dev/4f_JOL_T1.htm",
 			"settings":
 			{
-				"buffer_size": 7078,
+				"buffer_size": 706,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "src/pkgCMEF/CmeApp.java",
+			"file": "Instructions/SWELL/4f_JOL_T1.htm",
 			"settings":
 			{
-				"buffer_size": 46134,
+				"buffer_size": 706,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Instructions/MISSFIT/Experiment.txt",
+			"file": "bin/dev/Experiment.txt",
 			"settings":
 			{
-				"buffer_size": 3713,
+				"buffer_size": 1597,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/pkgCMEF/CmeView.java",
+			"settings":
+			{
+				"buffer_size": 29158,
 				"line_ending": "Windows"
 			}
 		}
@@ -71,7 +83,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 187.0,
+		"height": 392.0,
 		"selected_items":
 		[
 			[
@@ -115,7 +127,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 548.0
+		"width": 575.0
 	},
 	"console":
 	{
@@ -132,19 +144,52 @@
 	},
 	"file_history":
 	[
+		"/Users/terrymeacham/projects/pcle/bin/CHIPS6/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/SWELL_A_SIDa_15012014.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeView.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeClock.java",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/Study_PhaseT1.htm",
+		"/Users/terrymeacham/projects/pcle/bin/dev/study_phaseT1.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/study_phaseT2.htm",
+		"/Users/terrymeacham/projects/pcle/bin/dev/study_phaseT2.htm",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeSelectiveIter.java",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeState.java",
+		"/Users/terrymeacham/projects/pcle/bin/dev/Swell_Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/bin/dev/4f_Study_Phase_T1_135.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/4f_Study_Phase_T1_531.htm",
+		"/Users/terrymeacham/projects/pcle/bin/dev/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/study_phaseT1.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/study_phase.htm",
+		"/Users/terrymeacham/projects/pcle/bin/EXP1/AllInstructions/5f_StudyPhase_T1.htm",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeHtmlView.java",
+		"/Users/terrymeacham/projects/pcle/bin/dev/Swahili_Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/Swahili_Study_Phase_T1.htm",
+		"/Users/terrymeacham/projects/pcle/bin/SOCS2/4f_Study_Phase_135.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/7_recall_T1.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/f_Recall.htm",
 		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/OutputFormat.txt",
+		"/Users/terrymeacham/projects/pcle/bin/dev/4f_Study_Phase_531.htm",
+		"/Users/terrymeacham/projects/pcle/bin/dev/IteratorExperiment.txt",
+		"/Users/terrymeacham/projects/pcle/bin/SOCS2/Experiment2.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeTimer.java",
+		"/Users/terrymeacham/projects/pcle/bin/dev/4f_Study_Phase_135.htm",
+		"/Users/terrymeacham/projects/pcle/bin/dev/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/bin/dev/MISSFIT-DataList.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/bin/dev/Experiment",
+		"/Users/terrymeacham/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/13_Instructions_2.htm",
+		"/Users/terrymeacham/projects/pcle/bin/dev/TestExperiment.txt",
 		"/Users/terrymeacham/projects/pcle/run.sh",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmePairFactory.java",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java",
-		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/f_Recall.htm",
-		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/DataList.txt",
-		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/Grant Experiment 2_A_SIDa_06012014.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP1/f_Recall.htm",
 		"/Users/terrymeacham/projects/pcle/Instructions/SingleWord/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/DataList.txt",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeView.java",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/4f_Study_Phase_135.htm",
 		"/Users/terrymeacham/projects/pcle/Instructions/SOCS2/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP1/study_phase.htm",
@@ -154,14 +199,11 @@
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIteratorFactory.java",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/IteratorExperiment.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/EXP2/OutputFormat.txt",
-		"/Users/terrymeacham/projects/pcle/bin/CHIPS6/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/4f_Study_Phase_2.htm",
 		"/Users/terrymeacham/projects/pcle/bin/EXP1/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeDifficultyIter.java",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeSelectiveIter.java",
 		"/Users/terrymeacham/projects/pcle/bin/EXP3/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/CHIPS6/Experiment.txt",
-		"/Users/terrymeacham/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/application.css.scss",
 		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/bootstrap_and_overrides.css.scss",
 		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_review_button.html.haml",
@@ -229,37 +271,7 @@
 		"/Users/terrymeacham/projects/tasker/app/views/layouts/application.html.haml",
 		"/Users/terrymeacham/projects/tasker/app/views/comments/show.html.haml",
 		"/Users/terrymeacham/projects/tasker/app/models/comment.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_form.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/comments/new.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/comments/create.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/comments/destroy.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/comments/edit.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/comments/update.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/comments/show.html.erb",
-		"/Users/terrymeacham/projects/tasker/app/assets/javascripts/application.js",
-		"/Users/terrymeacham/projects/tasker/app/assets/javascripts/tasker.js",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131224183652_add_payment_history_id_to_task_entry.rb",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131224183317_create_payment_history_task_entry_table.rb",
-		"/Users/terrymeacham/projects/tasker/db/migrate/20131224183233_payment_history_task_entries.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/show.json.jbuilder",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_response_summary.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/helpers/task_entries_helper.rb",
-		"/Users/terrymeacham/projects/tasker/Gemfile",
-		"/Users/terrymeacham/projects/tasker/config/initializers/datetime.rb",
-		"/Users/terrymeacham/projects/tasker/test/models/task_entry_test.rb",
-		"/Users/terrymeacham/projects/tasker/app/models/concerns/simple_form_helpers.rb",
-		"/Users/terrymeacham/projects/tasker/app/uploaders/image_uploader.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/new.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/devise/shared/_links.haml",
-		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/task_images.css.scss",
-		"/Users/terrymeacham/projects/tasker/app/controllers/task_images_controller.rb",
-		"/Users/terrymeacham/projects/tasker/app/assets/javascripts/task_images.js",
-		"/Users/terrymeacham/projects/tasker/app/views/layouts/_messages.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/models/task_image.rb",
-		"/Users/terrymeacham/projects/tasker/task.rb",
-		"/Users/terrymeacham/projects/tasker/app/models/task_application.rb",
-		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/task_applications.css.scss",
-		"/Users/terrymeacham/projects/tasker/app/controllers/task_applications_controller.rb"
+		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_form.html.haml"
 	],
 	"find":
 	{
@@ -285,6 +297,118 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"updatePairSelection",
+			"update",
+			"^",
+			"m_cClock",
+			"^",
+			"T2",
+			"Hidden:",
+			"for",
+			"clearColors",
+			"Iterator",
+			"2, Trial2",
+			"1, Trial2",
+			"0, Trial2",
+			"border=\"1px\" ",
+			"LowToHigh",
+			"\"Sequence",
+			"Sequence",
+			"HighToLow",
+			"EXP2",
+			", ([^,]*),,,",
+			",([^,]*),,,",
+			" - ",
+			"<[^>]*>([^<]*)</span>",
+			"^",
+			"EXP2",
+			"Shuffle",
+			"m_cClock",
+			"tick\\(\\)",
+			"Sequence",
+			"setNextState",
+			"m_cClock",
+			"Respond\\(",
+			"m_cClock",
+			"CmeClock",
+			"^#",
+			"Respond\\(",
+			"primaryClickEvent",
+			"stateEvent",
+			"stateHandler",
+			"\\.Respond\\(",
+			"stateEventHandler",
+			"\\.Respond\\(",
+			"\\.Response\\(",
+			"\\.Respond\\(",
+			"\\.Response\\(",
+			"Response\\(",
+			"\\.Respond\\(",
+			"Event",
+			"\\.Respond()",
+			"nextSequencePosition",
+			"setNextInSequence",
+			"nextSequencePosition",
+			"isSequenceValid",
+			"valid",
+			"initSequence",
+			"^#",
+			"Shuffle",
+			"Instructions/EXP2/",
+			"m_vrPools",
+			"SetPool",
+			"Sequence",
+			"study:6",
+			"Study:6",
+			"^",
+			"RecallResponse",
+			"RecallOrder",
+			"setNextState",
+			"setNextInSequence",
+			"m_Next",
+			"next",
+			"initSequence",
+			" m_iSequence",
+			"initSeque",
+			"initSequence",
+			"Step",
+			"\\.init\\(\\)",
+			"init\\(\\)",
+			"init()",
+			"setNextState",
+			"setNextInSequence",
+			"updateInstructionFile",
+			"\\.start",
+			"setStudyState",
+			"setNextState",
+			"init",
+			"initSequ",
+			"setNextSta",
+			"\\.start",
+			"m_NextResponse",
+			"NEXT",
+			"CmeClock",
+			"new CmeClock",
+			"CmeTimer",
+			"dmsg\\(in",
+			"dmsg\\(1",
+			"dmsg(",
+			"dmsg(int",
+			"dmsg",
+			"run",
+			"run()",
+			"main",
+			"ITEM_ORDER",
+			"'(.*)'",
+			"new CmeTimer",
+			"dmsg",
+			"dms",
+			"dmsg",
+			"main",
+			"dmsg",
+			"m_Response",
+			"NEXT=\"[Tt]",
+			"NEXT=",
 			"match_any",
 			",$",
 			"^#(.*)",
@@ -300,119 +424,7 @@
 			"<[^>,]+>([^<]+)<[^>,]+>",
 			"<[^>,]+>[^<]+<[^>,]+>",
 			"EXP2",
-			"match_any",
-			"140",
-			"2",
-			"6",
-			"setProperties\\(\\)",
-			"setProperties()",
-			"setPropert",
-			"lower",
-			"Hard, [a-z^]+,,[a-z^]+,",
-			"Medium, [a-z^]+,,[a-z^]+,",
-			"Easy, [a-z^]+,,[a-z^]+,",
-			"Trial1",
-			"shufflePropert",
-			"Item",
-			"bool",
-			"Bool",
-			"shuffleProperties",
-			"getProper",
-			"Color",
-			"getIntProperty",
-			"Color",
-			"ITEM_",
-			"Vector",
-			"new Vector",
-			"<[^,]*>([^,]*)<[^,]*>",
-			"<[^,]*>([^,]*) - <[^,]*>",
-			"ITEM_ORDER",
-			"Vector<>",
-			"compoundProperty",
-			"throw new Exception",
-			"Exception e",
-			"System.err",
-			"Vector[^<]",
-			"Vector<>",
-			"throw",
-			"getIterator",
-			"CmeSelectiveiter",
-			"getIterator",
-			"m_Iter",
-			"type",
-			"getIterator",
-			"m_iType",
-			"type",
-			"initIterator",
-			"setIterator",
-			"getIterator",
-			"setIterator",
-			"difficulty:ascending",
-			"dif",
-			"main",
-			"pretty_",
-			"Accept",
-			"accept",
-			"accepted",
-			"accept",
-			"accepted",
-			"accept",
-			"accept!",
-			"confirm_dele",
-			"confirm_date",
-			"Payment Method",
-			"header",
-			"javascript",
-			"entry_value",
-			"\\.filters",
-			"image-body",
-			"animate",
-			"entry-image",
-			"min-width",
-			"width",
-			"task_entries",
-			"task_entry",
-			"TaskEntry",
-			"not_authorized",
-			"animate",
-			"alert",
-			"add_image",
-			"\\.accept",
-			".accept",
-			"270",
-			"simple_date",
-			"bootstra",
-			"submit",
-			"submitt",
-			"csv_line",
-			"Sign up",
-			"Sign Up",
-			"link_params",
-			"accept",
-			"animate",
-			"pretty_date",
-			"error",
-			"set.description",
-			"pretty_date",
-			"DateTime",
-			"delete-image-btn",
-			"\\.entry-image",
-			"task_request_each",
-			"build_images",
-			"Basic",
-			"pretty_task",
-			"ProspectWise",
-			"carrierwave",
-			"task_entry_params",
-			"task",
-			"'",
-			"user_signed_in?",
-			"bootstrap",
-			"responsive",
-			"when",
-			"\\|ap\\|",
-			"|ap|",
-			"app_list"
+			"match_any"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -420,6 +432,26 @@
 		"regex": true,
 		"replace_history":
 		[
+			"#",
+			"2, Hard",
+			"1, Medium",
+			"0, Easy",
+			"",
+			"HighToLow",
+			"LowToHigh",
+			"dev",
+			",\\1,,b\\1,",
+			"",
+			"\\1",
+			"#",
+			"dev",
+			"",
+			"bin/dev/",
+			"#",
+			"Recall_Response",
+			"Recall_Order",
+			"\"\\1\"",
+			"// dmsg",
 			",,,",
 			"\\1",
 			"#\\1",
@@ -527,27 +559,7 @@
 			", ",
 			"",
 			"'",
-			"ë",
-			"é",
-			"",
-			"o",
-			"\\1\\2",
-			"*\\1*",
-			"\\1",
-			"\\1,",
-			"\\1,\\2,\\3",
-			"\\1 \\2 \\3 \\4",
-			"\\1 \\2 \\3",
-			"\\1 \\2",
-			"\\1,\\2",
-			"**\\1**",
-			"*\\1*",
-			"*\\2*",
-			"*\\1*",
-			"\"",
-			"*\\1*",
-			"\\1,\\2",
-			"\\1*\\2*\\3"
+			"ë"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -563,23 +575,23 @@
 			[
 				{
 					"buffer": 0,
-					"file": "Instructions/MISSFIT/DataList.txt",
+					"file": "bin/dev/4f_JOL_T1.htm",
 					"settings":
 					{
-						"buffer_size": 7078,
+						"buffer_size": 706,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								57,
-								57
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -589,44 +601,44 @@
 				},
 				{
 					"buffer": 1,
-					"file": "src/pkgCMEF/CmeApp.java",
+					"file": "Instructions/SWELL/4f_JOL_T1.htm",
 					"settings":
 					{
-						"buffer_size": 46134,
+						"buffer_size": 706,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								27801,
-								27801
+								606,
+								606
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Java/Java.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 13032.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "Instructions/MISSFIT/Experiment.txt",
+					"file": "bin/dev/Experiment.txt",
 					"settings":
 					{
-						"buffer_size": 3713,
+						"buffer_size": 1597,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								478,
-								478
+								849,
+								690
 							]
 						],
 						"settings":
@@ -639,6 +651,43 @@
 					},
 					"type": "text"
 				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 3,
+					"file": "src/pkgCMEF/CmeView.java",
+					"settings":
+					{
+						"buffer_size": 29158,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6552,
+								6552
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 237.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"sheets":
+			[
 			]
 		}
 	],
@@ -659,11 +708,25 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			],
+			[
+				2,
+				0,
+				3,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.33,
+			0.66,
 			1.0
 		],
 		"rows":
@@ -688,28 +751,200 @@
 		"selected_items":
 		[
 			[
-				"missfit/exp",
-				"Instructions/MISSFIT/Experiment.txt"
+				"bindevexper",
+				"bin/dev/Experiment.txt"
+			],
+			[
+				"experi",
+				"bin/CHIPS6/Experiment.txt"
+			],
+			[
+				"cmeview",
+				"src/pkgCMEF/CmeView.java"
+			],
+			[
+				"cmecloc",
+				"src/pkgCMEF/CmeClock.java"
+			],
+			[
+				"4f_jol_t1",
+				"Instructions/SWELL/4f_JOL_T1.htm"
+			],
+			[
+				"swellexper",
+				"Instructions/SWELL/Experiment.txt"
+			],
+			[
+				"swelldata",
+				"Instructions/SWELL/DataList.txt"
+			],
+			[
+				"swell/stud_",
+				"Instructions/SWELL/study_phase.htm"
+			],
+			[
+				"studpht1",
+				"Instructions/SWELL/study_phaseT1.htm"
+			],
+			[
+				"studphst1",
+				"bin/dev/study_phaseT1.htm"
+			],
+			[
+				"stupht2",
+				"Instructions/SWELL/study_phaseT2.htm"
+			],
+			[
+				"studpht2",
+				"bin/dev/study_phaseT2.htm"
+			],
+			[
+				"swellsudy_ph",
+				"Instructions/SWELL/study_phaseT1.htm"
+			],
+			[
+				"study_phaset1",
+				"bin/dev/study_phaseT1.htm"
+			],
+			[
+				"studyph",
+				"bin/EXP1/AllInstructions/5f_StudyPhase_T1.htm"
 			],
 			[
 				"cmeapp",
 				"src/pkgCMEF/CmeApp.java"
 			],
 			[
-				"inmissfidatal",
-				"Instructions/MISSFIT/DataList.txt"
+				"cmeselec",
+				"src/pkgCMEF/CmeSelectiveIter.java"
 			],
 			[
 				"cmestate",
 				"src/pkgCMEF/CmeState.java"
 			],
 			[
-				"grane",
-				"Grant Experiment 2_A_SIDa_06012014.txt"
+				"cmeviewjava",
+				"src/pkgCMEF/CmeView.java"
+			],
+			[
+				"swahili",
+				"Instructions/SWELL/Swahili_Study_Phase_T1.htm"
+			],
+			[
+				"4f135",
+				"bin/dev/4f_Study_Phase_T1_135.htm"
+			],
+			[
+				"4f_st13",
+				"bin/SOCS2/4f_Study_Phase_135.htm"
+			],
+			[
+				"swahiliexpertxt",
+				"bin/dev/Swahili_Experiment.txt"
+			],
+			[
+				"4fstuph531",
+				"Instructions/SWELL/4f_Study_Phase_T1_531.htm"
+			],
+			[
+				"",
+				"bin/dev/4f_Study_Phase_135.htm"
+			],
+			[
+				"exper",
+				"bin/dev/Experiment.txt"
+			],
+			[
+				"bindev4f_",
+				"bin/dev/4f_Study_Phase_135.htm"
+			],
+			[
+				"bindevdata",
+				"bin/dev/DataList.txt"
+			],
+			[
+				"datalist",
+				"bin/dev/DataList.txt"
+			],
+			[
+				"cmeclock",
+				"src/pkgCMEF/CmeClock.java"
+			],
+			[
+				"cmetimer",
+				"src/pkgCMEF/CmeTimer.java"
+			],
+			[
+				"bindeexper",
+				"bin/dev/Experiment.txt"
+			],
+			[
+				"cmevie",
+				"src/pkgCMEF/CmeView.java"
+			],
+			[
+				"experimen",
+				"bin/dev/Experiment"
+			],
+			[
+				"inmissfidatal",
+				"Instructions/MISSFIT/DataList.txt"
+			],
+			[
+				"missfitexp",
+				"Instructions/MISSFIT/Experiment.txt"
+			],
+			[
+				"missfit13",
+				"Instructions/MISSFIT/13_Instructions_2.htm"
+			],
+			[
+				"missfit7_",
+				"Instructions/MISSFIT/7_recall_T1.htm"
+			],
+			[
+				"bindevexperi",
+				"bin/dev/Experiment.txt"
+			],
+			[
+				"missfit/exp",
+				"Instructions/MISSFIT/Experiment.txt"
+			],
+			[
+				"devexper",
+				"bin/dev/Experiment.txt"
+			],
+			[
+				"chips6expe",
+				"bin/CHIPS6/Experiment.txt"
+			],
+			[
+				"missfdatalist",
+				"Instructions/MISSFIT/DataList.txt"
+			],
+			[
+				"f_rec",
+				"Instructions/MISSFIT/f_Recall.htm"
 			],
 			[
 				"missfitout",
 				"Instructions/MISSFIT/OutputFormat.txt"
+			],
+			[
+				"missfit/f_re",
+				"Instructions/MISSFIT/f_Recall.htm"
+			],
+			[
+				"missfitexper",
+				"Instructions/MISSFIT/Experiment.txt"
+			],
+			[
+				"cmestat",
+				"src/pkgCMEF/CmeState.java"
+			],
+			[
+				"grane",
+				"Grant Experiment 2_A_SIDa_06012014.txt"
 			],
 			[
 				"grantex",
@@ -734,10 +969,6 @@
 			[
 				"misfitdatal",
 				"Instructions/MISSFIT/DataList.txt"
-			],
-			[
-				"missfitexper",
-				"Instructions/MISSFIT/Experiment.txt"
 			],
 			[
 				"singlewordexper",
@@ -822,10 +1053,6 @@
 			[
 				"chiexper",
 				"Instructions/CHIPS6/Experiment.txt"
-			],
-			[
-				"exper",
-				"bin/EXP3/Experiment.txt"
 			],
 			[
 				"taskentry",
@@ -1034,170 +1261,6 @@
 			[
 				"reginew",
 				"app/views/devise/registrations/new.html.haml"
-			],
-			[
-				"dbsch",
-				"db/schema.rb"
-			],
-			[
-				"payment_method",
-				"db/migrate/20131230205206_add_payment_method_to_users.rb"
-			],
-			[
-				"usershow",
-				"app/views/users/show.html.haml"
-			],
-			[
-				"applicscs",
-				"app/assets/stylesheets/application.css.scss"
-			],
-			[
-				"downcsv",
-				"app/views/task_sets/download.csv.erb"
-			],
-			[
-				"rou",
-				"config/routes.rb"
-			],
-			[
-				"tassethelp",
-				"app/helpers/task_sets_helper.rb"
-			],
-			[
-				"dbschem",
-				"db/schema.rb"
-			],
-			[
-				"pplicon",
-				"app/controllers/application_controller.rb"
-			],
-			[
-				"appliscs",
-				"app/assets/stylesheets/application.css.scss"
-			],
-			[
-				"modeluser",
-				"app/models/user.rb"
-			],
-			[
-				"devisregnew",
-				"app/views/devise/registrations/new.html.haml"
-			],
-			[
-				"deviseedi",
-				"app/views/devise/registrations/edit.html.haml"
-			],
-			[
-				"devisenew",
-				"app/views/devise/confirmations/new.html.haml"
-			],
-			[
-				"payme",
-				"app/models/payment_history.rb"
-			],
-			[
-				"pay",
-				"app/models/payment_history.rb"
-			],
-			[
-				"userjs",
-				"app/assets/javascripts/users.js"
-			],
-			[
-				"tasksetcn",
-				"app/controllers/task_sets_controller.rb"
-			],
-			[
-				"usescss",
-				"app/assets/stylesheets/users.css.scss"
-			],
-			[
-				"payment",
-				"db/migrate/20131224182922_create_payment_histories.rb"
-			],
-			[
-				"tasken",
-				"app/models/task_entry.rb"
-			],
-			[
-				"user.js",
-				"app/assets/javascripts/users.js"
-			],
-			[
-				"taskencon",
-				"app/controllers/task_entries_controller.rb"
-			],
-			[
-				"dbmigpayhi",
-				"db/migrate/20131224182922_create_payment_histories.rb"
-			],
-			[
-				"paymehis",
-				"app/models/payment_history.rb"
-			],
-			[
-				"useshow",
-				"app/views/users/show.html.haml"
-			],
-			[
-				"userind",
-				"app/views/users/index.html.haml"
-			],
-			[
-				"user",
-				"app/models/user.rb"
-			],
-			[
-				"usercon",
-				"app/controllers/users_controller.rb"
-			],
-			[
-				"tasksetind",
-				"app/views/task_sets/index.html.haml"
-			],
-			[
-				"modtaskentr",
-				"app/models/task_entry.rb"
-			],
-			[
-				"taskentri",
-				"app/views/task_entries/index.html.haml"
-			],
-			[
-				"userr",
-				"app/models/user.rb"
-			],
-			[
-				"applcon",
-				"app/controllers/application_controller.rb"
-			],
-			[
-				"assetshow",
-				"app/views/task_sets/show.html.haml"
-			],
-			[
-				"homhaml",
-				"app/views/application/home.html.haml"
-			],
-			[
-				"dbschema",
-				"db/schema.rb"
-			],
-			[
-				"dbmiaddpayme",
-				"db/migrate/20131230205206_add_payment_method_to_users.rb"
-			],
-			[
-				"taskensho",
-				"app/views/task_entries/show.html.haml"
-			],
-			[
-				"user_con",
-				"app/controllers/users_controller.rb"
-			],
-			[
-				"_nav",
-				"app/views/layouts/_navigation.html.haml"
 			]
 		],
 		"width": 0.0
@@ -1209,7 +1272,27 @@
 		[
 			[
 				"",
+				"/Users/terrymeacham/projects/leadgen/leadgen.sublime-project"
+			],
+			[
+				"survl",
+				"/Users/terrymeacham/projects/survly/survly.sublime-project"
+			],
+			[
+				"taske",
 				"/Users/terrymeacham/projects/tasker/tasker.sublime-project"
+			],
+			[
+				"Task",
+				"/Users/terrymeacham/projects/tasker/tasker.sublime-project"
+			],
+			[
+				"tasker",
+				"/Users/terrymeacham/projects/tasker/tasker.sublime-project"
+			],
+			[
+				"lead",
+				"/Users/terrymeacham/projects/leadgen/leadgen.sublime-project"
 			],
 			[
 				"san",
@@ -1225,10 +1308,6 @@
 			],
 			[
 				"sur	",
-				"/Users/terrymeacham/projects/survly/survly.sublime-project"
-			],
-			[
-				"survl",
 				"/Users/terrymeacham/projects/survly/survly.sublime-project"
 			],
 			[
@@ -1269,7 +1348,7 @@
 	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 283.0,
 	"status_bar_visible": true
 }

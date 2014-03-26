@@ -26,60 +26,60 @@
 #D. DIFFICULT VALUED - UNRESTRICTED (D-U) 120 S PER GRID
 
 
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SWELL/1_instruction_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-		
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SWELL/2_instruction_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-
-
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SWELL/2_RESTRICTEDinstruction_T1.htm"
-			END= "Click:Continue"
-			CONDITIONS="A,B"
-		</STATE>
-
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SWELL/2_UNRESTRICTEDinstruction_T1.htm"
-			END= "Click:Continue"
-			CONDITIONS="C,D"
-		</STATE>
-
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SWELL/2b_instruction_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-
-		<STATE>
-			MODE="Feedback"
-			FILE="Instructions/SWELL/2f_prestudy_T1.htm"
-			CONSTRAINTS="range:0-30"
-			END= "Click:Continue"
-		</STATE>
-		
-		
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SWELL/3_RESTRICTED_T1.htm"
-			END= "Click:Continue"
-			CONDITIONS="A,B"
-		</STATE>
-		
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/SWELL/3_UNRESTRICTED_T1.htm"
-			END= "Click:Continue"
-			CONDITIONS="C,D"
-		</STATE>
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/SWELL/1_instruction_T1.htm"
+#			END= "Click:Continue"
+#		</STATE>
+#		
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/SWELL/2_instruction_T1.htm"
+#			END= "Click:Continue"
+#		</STATE>
+#
+#
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/SWELL/2_RESTRICTEDinstruction_T1.htm"
+#			END= "Click:Continue"
+#			CONDITIONS="A,B"
+#		</STATE>
+#
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/SWELL/2_UNRESTRICTEDinstruction_T1.htm"
+#			END= "Click:Continue"
+#			CONDITIONS="C,D"
+#		</STATE>
+#
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/SWELL/2b_instruction_T1.htm"
+#			END= "Click:Continue"
+#		</STATE>
+#
+#		<STATE>
+#			MODE="Feedback"
+#			FILE="Instructions/SWELL/2f_prestudy_T1.htm"
+#			CONSTRAINTS="range:0-30"
+#			END= "Click:Continue"
+#		</STATE>
+#		
+#		
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/SWELL/3_RESTRICTED_T1.htm"
+#			END= "Click:Continue"
+#			CONDITIONS="A,B"
+#		</STATE>
+#		
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/SWELL/3_UNRESTRICTED_T1.htm"
+#			END= "Click:Continue"
+#			CONDITIONS="C,D"
+#		</STATE>
 
 		<STATE>
       			MODE="Study"
@@ -92,6 +92,7 @@
 			DISPLAY_TIMER="yes"
         		SET="Resolution:100"
       			STUDY_FILE="InstructIons/SWELL/Study_PhaseT1.htm"
+            SET="LimitPromptText:There is still time left on the clock. Are you sure you want to end this study session?"      
       			SET="LimitPromptButtons:yesno"
       			POOL="ImageValues"
       			ITEMS="6"
