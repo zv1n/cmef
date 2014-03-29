@@ -70,6 +70,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 	/** The minimum version this API is compatible with. */
 	final static private double m_MinVer = 2.1;
+	final static private double m_Version = 2.5;
 
 	public static final int CME_ENABLE_REFRESH = 0x1;
 	public static final int CME_TEXT_ONLY = 0x2;
@@ -736,6 +737,13 @@ public class CmeApp extends JFrame implements AncestorListener {
 											+ "Please selected an experiment file which is written for CMEF v"
 											+ m_MinVer
 											+ " or greater, or view documentation for format changes between this version"
+											+ " and version " + value + ".");
+						if (vdub > m_Version)
+							throw new Exception(
+									"The selected Experiment file cannot be used with this version of CMEF.\n"
+											+ "Please selected an experiment file which is written for CMEF v"
+											+ m_Version
+											+ " or earlier, or view documentation for format changes between this version"
 											+ " and version " + value + ".");
 					} else
 						throw new Exception(

@@ -3,6 +3,21 @@ CMEF - Cognitive Memory Experimentation Framework
 
 CME Framework is used to conduct simple Cognitive Memory experiments.
 
+Version 2.5 - Formatting Changes
+
+Trials can now specify multiple datasets, comma separated, in the DATASET= field.
+
+```
+<TRIAL ID="1" DATASET="Study1,Test1">
+```
+
+The DATASET labels are the value set in the second field in the DataList entry:
+
+```
+Value, Set, TextA, ImagePathA, TextB, ImagePathB, ExtraInfo[0], ExtraInfo[1]...
+1, Study1, O,, 244,,,
+```
+The first 6 fields MUST be specified (',,,,,' for an empty entry).
 
 Version 2.0 - 2.1 Formatting Changes
 
