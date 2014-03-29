@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import com.sun.tools.javac.util.List;
+// import com.sun.tools.javac.util.List;
 
 //=============================================================================
 /**
@@ -316,6 +316,10 @@ public class CmePairFactory
 		return String.valueOf(((CmePair)m_vPairs.elementAt(idx)).getPairGroup());
 	}
 	
+	public void setDataSets(String[] name) {
+		m_vPairs.setActiveGroups(name);
+	}
+
 	public void setDataSet(String name) {
 		m_vPairs.setActiveGroup(name);
 	}

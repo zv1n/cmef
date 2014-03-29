@@ -1,0 +1,171 @@
+  <EXPERIMENT CMEF_VERSION="2.5">
+	TITLE="NUMBERS - Experiment"
+	STUDY_NAME="NUMBERS"
+	CONDITIONS="A"
+	DATA_FILE="Instructions/NUMBERS/DataList.txt"
+	FORMAT_FILE="Instructions/NUMBERS/OutputFormat.txt"	
+	<TRIAL ID="1" DATASET="Study1">
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/NUMBERS/1_instruction_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/NUMBERS/2_instruction_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/NUMBERS/2f_prestudy_T1.htm"
+			CONSTRAINTS="range:0-32"
+			END= "Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/NUMBERS/3_studyphaseinstructions_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="32"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/NUMBERS/study_phase.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/NUMBERS/4f_JOL_T1.htm"
+				NEXT="Click:Continue"
+		</STATE>
+		
+
+
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/NUMBERS/6f_poststudyprediction_T1.htm"
+			CONSTRAINTS="range:0-32"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="1" DATASET="Test1,Study1">	
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/NUMBERS/7_recall_T1.htm"
+			END="Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/NUMBERS/f_Recall.htm"
+			ITEMS="1"
+			SETS="64"
+			SCALE="1.0"
+			CONSTRAINTS="match:$Pair1A"
+			#SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/NUMBERS/8f_Postdiction_T1.htm"
+			CONSTRAINTS="range:0-32"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2" DATASET="Study2">
+		
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/NUMBERS/9_studyphaseinstructions_T2.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/NUMBERS/10f_prestudy_T2.htm"
+			CONSTRAINTS="range:0-32"
+			END= "Click:Continue"
+		</STATE>
+
+		
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:1.5"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			SET="LimitPromptButtons:yesno"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="32"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/NUMBERS/study_phase.htm"
+				STUDY_LIMIT="time:5s"
+				DISPLAY_TIMER="down"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/NUMBERS/4f_JOL_T2.htm"
+				NEXT="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/NUMBERS/12fpoststudyprediction_T2.htm"
+			CONSTRAINTS="range:0-32"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2" DATASET="Test2,Study2">			
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/NUMBERS/13_Instructions_2.htm"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/NUMBERS/f_Recall.htm"
+			ITEMS="1"
+			SETS="64"
+			SCALE="1.0"
+			CONSTRAINTS="match:$Pair1A"
+			#SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/NUMBERS/14f_Postdiction_T2.htm"
+			CONSTRAINTS="range:0-32"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/NUMBERS/15_Last_Screen.htm"
+			END= "Click:Continue"
+		</STATE>
+
+	</TRIAL>
+</EXPERIMENT>

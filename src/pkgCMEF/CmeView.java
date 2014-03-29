@@ -989,8 +989,10 @@ public class CmeView extends JPanel {
 		String group = m_CurState.getStringProperty("CurrentDataset");
 		if (group == null)
 			m_PairFactory.clearDataSet();
-		else
-			m_PairFactory.setDataSet(group);
+		else {
+			String[] groups = group.split(",");
+			m_PairFactory.setDataSets(groups);
+		}
 	}
 	
 	/**

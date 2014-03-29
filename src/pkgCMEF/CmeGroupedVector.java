@@ -9,45 +9,68 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 	 * 
 	 */
 	private static final long serialVersionUID = 2890690044723023023L;
-	private String m_activeGroup = null;
+	private String[] m_activeGroups = null;
 	private HashMap<String, Integer> m_cGroups;
 	
 	public CmeGroupedVector() {
 		m_cGroups = new HashMap<String,Integer>();
 	}
 	
+	public void setActiveGroups(String[] groups) {
+		m_activeGroups = groups;
+	}
+	
 	public void setActiveGroup(String group) {
-		m_activeGroup = group;
+		m_activeGroups = new String[] { group };
 	}
 	
 	public void clearActiveGroup() {
-		m_activeGroup = null;
+		m_activeGroups = null;
 	}
 	
 	public int groupSize() {
-		if (m_activeGroup == null)
+		if (m_activeGroups == null || m_cGroups == null)
 			return super.size();
 
-		Integer gcount = m_cGroups.get(m_activeGroup);
-		if (gcount == null)
-			return 0;
-
-		return gcount;
+		return getTotalCount();
 	}
-	
-	public boolean add(CmePair pair) {
-		String group = pair.getPairGroup();
 
+	private int getTotalCount() {
+		Integer tcount = 0;
+
+		for (String grp : m_activeGroups) {
+			tcount += m_cGroups.get(grp);
+		}
+
+		return tcount;
+	}
+
+	private void incrementGroupCount(String group) {
 		Integer val = m_cGroups.get(group);
+
 		if (val == null)
-			val = 0;
-		val++;
+			val = 1;
+		else
+			val++;
 
 		m_cGroups.put(group, val);
-
-		return super.add(pair);
 	}
 	
+	private boolean isActiveGroup(String group) {
+		for (String grp : m_activeGroups) {
+			if (grp.equals(group))
+				return true;
+		}
+
+		return false;
+	}
+
+	public boolean add(CmePair pair) {
+		String group = pair.getPairGroup();
+		incrementGroupCount(group);
+		return super.add(pair);
+	}
+
 	public CmePair elementAt(int index) {
 
 		Iterator<CmePair> iter = this.iterator();
@@ -56,21 +79,21 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 			return null;
 		}
 		
-		if (m_activeGroup == null) {
+		if (m_activeGroups == null) {
 			if (this.size() <= index) {
 				return null;
 			}
 			return super.elementAt(index);
 		}
 		
-		Integer gcount = m_cGroups.get(m_activeGroup);
+		Integer gcount = getTotalCount();
 		if (gcount == null || gcount <= index) {
 			return null;
 		}
 
 		while (iter.hasNext()) {
 			CmePair pair = iter.next();
-			if (m_activeGroup.equals(pair.getPairGroup())) {
+			if (isActiveGroup(pair.getPairGroup())) {
 				if (index == 0) {
 					return pair;
 				}

@@ -966,8 +966,10 @@ public class CmeApp extends JFrame implements AncestorListener {
 
           if (group == null)
             m_PairFactory.clearDataSet();
-          else
-            m_PairFactory.setDataSet(group);
+          else {
+	          String[] groups = group.split(",");
+            m_PairFactory.setDataSets(groups);
+          }
 
           iter.initIterator(0, m_PairFactory.getCount() - 1);
 
