@@ -48,26 +48,10 @@
 	"buffers":
 	[
 		{
-			"file": "bin/dev/4f_JOL_T1.htm",
+			"file": "Instructions/NUMBERS/Experiment.txt",
 			"settings":
 			{
-				"buffer_size": 706,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "Instructions/SWELL/4f_JOL_T1.htm",
-			"settings":
-			{
-				"buffer_size": 706,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "bin/dev/Experiment.txt",
-			"settings":
-			{
-				"buffer_size": 1597,
+				"buffer_size": 3848,
 				"line_ending": "Windows"
 			}
 		},
@@ -75,8 +59,40 @@
 			"file": "src/pkgCMEF/CmeView.java",
 			"settings":
 			{
-				"buffer_size": 29158,
+				"buffer_size": 29350,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "src/pkgCMEF/CmeHtmlView.java",
+			"settings":
+			{
+				"buffer_size": 13034,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Instructions/NUMBERS/DataList.txt",
+			"settings":
+			{
+				"buffer_size": 7231,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Instructions/NUMBERS/OutputFormat.txt",
+			"settings":
+			{
+				"buffer_size": 17791,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Instructions/NUMBERS/f_Recall.htm",
+			"settings":
+			{
+				"buffer_size": 343,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -131,7 +147,12 @@
 	},
 	"console":
 	{
-		"height": 0.0
+		"height": 0.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)",
+			"rename"
+		]
 	},
 	"distraction_free":
 	{
@@ -144,23 +165,39 @@
 	},
 	"file_history":
 	[
+		"/Users/terrymeacham/projects/pcle/Instructions/NUMBERS/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/Instructions/NUMBERS/f_Recall.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/NUMBERS/12fpoststudyprediction_T2.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/NUMBERS/15_Last_Screen.htm",
+		"/Users/terrymeacham/projects/pcle/NUMBERS_A_SIDnum1_29032014.txt",
+		"/Users/terrymeacham/projects/pcle/NUMBERS_A_SIDnum9_29032014.txt",
+		"/Users/terrymeacham/projects/pcle/NUMBERS_A_SIDnum10_29032014.txt",
+		"/Users/terrymeacham/projects/pcle/NUMBERS_A_SIDnum11_29032014.txt",
+		"/Users/terrymeacham/projects/pcle/NUMBERS_A_SIDnum13_29032014.txt",
+		"/Users/terrymeacham/projects/pcle/NUMBERS_A_SIDnum15_29032014.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java",
+		"/Users/terrymeacham/projects/pcle/bin/EXP1/f_Recall.htm",
+		"/Users/terrymeacham/projects/pcle/run.sh",
+		"/Users/terrymeacham/projects/pcle/Instructions/EXP2/OutputFormat.txt",
+		"/Users/terrymeacham/projects/pcle/bin/dev/DataList.txt",
+		"/Users/terrymeacham/projects/pcle/bin/dev/Experiment.txt",
+		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeView.java",
+		"/Users/terrymeacham/projects/pcle/bin/dev/4f_JOL_T1.htm",
+		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/4f_JOL_T1.htm",
 		"/Users/terrymeacham/projects/pcle/bin/CHIPS6/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/SWELL_A_SIDa_15012014.txt",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeView.java",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeClock.java",
 		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/DataList.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/Study_PhaseT1.htm",
 		"/Users/terrymeacham/projects/pcle/bin/dev/study_phaseT1.htm",
 		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/study_phaseT2.htm",
 		"/Users/terrymeacham/projects/pcle/bin/dev/study_phaseT2.htm",
-		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeApp.java",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeSelectiveIter.java",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeState.java",
 		"/Users/terrymeacham/projects/pcle/bin/dev/Swell_Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/bin/dev/4f_Study_Phase_T1_135.htm",
 		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/4f_Study_Phase_T1_531.htm",
-		"/Users/terrymeacham/projects/pcle/bin/dev/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/study_phaseT1.htm",
 		"/Users/terrymeacham/projects/pcle/Instructions/SWELL/study_phase.htm",
 		"/Users/terrymeacham/projects/pcle/bin/EXP1/AllInstructions/5f_StudyPhase_T1.htm",
@@ -176,7 +213,6 @@
 		"/Users/terrymeacham/projects/pcle/bin/SOCS2/Experiment2.txt",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeTimer.java",
 		"/Users/terrymeacham/projects/pcle/bin/dev/4f_Study_Phase_135.htm",
-		"/Users/terrymeacham/projects/pcle/bin/dev/DataList.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/DataList.txt",
 		"/Users/terrymeacham/projects/pcle/bin/dev/MISSFIT-DataList.txt",
 		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/Experiment.txt",
@@ -184,10 +220,8 @@
 		"/Users/terrymeacham/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"/Users/terrymeacham/projects/pcle/Instructions/MISSFIT/13_Instructions_2.htm",
 		"/Users/terrymeacham/projects/pcle/bin/dev/TestExperiment.txt",
-		"/Users/terrymeacham/projects/pcle/run.sh",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmePairFactory.java",
 		"/Users/terrymeacham/projects/pcle/Grant Experiment 2_A_SIDa_06012014.txt",
-		"/Users/terrymeacham/projects/pcle/bin/EXP1/f_Recall.htm",
 		"/Users/terrymeacham/projects/pcle/Instructions/SingleWord/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/DataList.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/4f_Study_Phase_135.htm",
@@ -198,7 +232,6 @@
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIterator.java",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeIteratorFactory.java",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/IteratorExperiment.txt",
-		"/Users/terrymeacham/projects/pcle/Instructions/EXP2/OutputFormat.txt",
 		"/Users/terrymeacham/projects/pcle/bin/EXP2/4f_Study_Phase_2.htm",
 		"/Users/terrymeacham/projects/pcle/bin/EXP1/Experiment.txt",
 		"/Users/terrymeacham/projects/pcle/src/pkgCMEF/CmeDifficultyIter.java",
@@ -259,19 +292,7 @@
 		"/Users/terrymeacham/projects/tasker/app/views/task_entries/show.html.haml",
 		"/Users/terrymeacham/projects/tasker/app/models/ability.rb",
 		"/Users/terrymeacham/projects/tasker/app/views/layouts/_navigation.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/assets/javascripts/comments.js",
-		"/Users/terrymeacham/projects/tasker/app/views/partials/_comments.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/partials/_comment.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/assets/stylesheets/task_entries.css.scss",
-		"/Users/terrymeacham/projects/tasker/app/assets/javascripts/image_orientation.js",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_orientable_image.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/task_images/index.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/task_images/show.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/controllers/comments_controller.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/layouts/application.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/views/comments/show.html.haml",
-		"/Users/terrymeacham/projects/tasker/app/models/comment.rb",
-		"/Users/terrymeacham/projects/tasker/app/views/task_entries/_form.html.haml"
+		"/Users/terrymeacham/projects/tasker/app/assets/javascripts/comments.js"
 	],
 	"find":
 	{
@@ -297,6 +318,14 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"T2",
+			"text",
+			"^",
+			"Pair\" \\+",
+			"^",
+			"119",
+			"120",
+			"119",
 			"updatePairSelection",
 			"update",
 			"^",
@@ -416,22 +445,24 @@
 			"RecallOrder",
 			"MatchAny",
 			"Failed to parse",
-			"Failed to process",
-			",,,",
-			"(.*)",
-			"([^,]*,[^,]*,[^,]*),,[^,]*,",
-			" - ",
-			"<[^>,]+>([^<]+)<[^>,]+>",
-			"<[^>,]+>[^<]+<[^>,]+>",
-			"EXP2",
-			"match_any"
+			"Failed to process"
 		],
 		"highlight": true,
-		"in_selection": false,
+		"in_selection": true,
 		"preserve_case": false,
 		"regex": true,
 		"replace_history":
 		[
+			"T1",
+			"#",
+			"127",
+			"126",
+			"125",
+			"124",
+			"123",
+			"122",
+			"121",
+			"120",
 			"#",
 			"2, Hard",
 			"1, Medium",
@@ -549,17 +580,7 @@
 			"",
 			"--",
 			"",
-			"'",
-			"a",
-			"Å",
-			"ā",
-			"É",
-			"è",
-			"'\\1'",
-			", ",
-			"",
-			"'",
-			"ë"
+			"'"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -570,75 +591,146 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "bin/dev/4f_JOL_T1.htm",
+					"file": "Instructions/NUMBERS/Experiment.txt",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 706,
+						"buffer_size": 3848,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								249,
+								249
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "Instructions/SWELL/4f_JOL_T1.htm",
+					"file": "src/pkgCMEF/CmeView.java",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 706,
+						"buffer_size": 29350,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								606,
-								606
+								16812,
+								16812
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/Java/Java.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 9404.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "bin/dev/Experiment.txt",
+					"file": "src/pkgCMEF/CmeHtmlView.java",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1597,
+						"buffer_size": 13034,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								849,
-								690
+								2390,
+								2394
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4062.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 3,
+					"file": "Instructions/NUMBERS/DataList.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7231,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3672,
+								3672
+							]
+						],
+						"settings":
+						{
+							"history_list_is_closing": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 799.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Instructions/NUMBERS/OutputFormat.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17791,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14387,
+								14387
 							]
 						],
 						"settings":
@@ -646,41 +738,39 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2854.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 2,
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
+				},
 				{
-					"buffer": 3,
-					"file": "src/pkgCMEF/CmeView.java",
+					"buffer": 5,
+					"file": "Instructions/NUMBERS/f_Recall.htm",
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 29158,
+						"buffer_size": 343,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6552,
-								6552
+								343,
+								343
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Java/Java.tmLanguage"
+							"history_list_is_closing": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 237.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -740,6 +830,11 @@
 	{
 		"height": 461.0
 	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "pcle.sublime-project",
 	"replace":
 	{
 		"height": 64.0
@@ -750,6 +845,54 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"num",
+				"NUMBERS_A_SIDnum15_29032014.txt"
+			],
+			[
+				"num1",
+				"NUMBERS_A_SIDnum13_29032014.txt"
+			],
+			[
+				"cmeht",
+				"src/pkgCMEF/CmeHtmlView.java"
+			],
+			[
+				"num11",
+				"NUMBERS_A_SIDnum11_29032014.txt"
+			],
+			[
+				"cmevi",
+				"src/pkgCMEF/CmeView.java"
+			],
+			[
+				"num10",
+				"NUMBERS_A_SIDnum10_29032014.txt"
+			],
+			[
+				"numr",
+				"Instructions/NUMBERS/f_Recall.htm"
+			],
+			[
+				"recall",
+				"bin/EXP1/f_Recall.htm"
+			],
+			[
+				"numoutp",
+				"Instructions/NUMBERS/OutputFormat.txt"
+			],
+			[
+				"num9",
+				"NUMBERS_A_SIDnum9_29032014.txt"
+			],
+			[
+				"numbdata",
+				"Instructions/NUMBERS/DataList.txt"
+			],
+			[
+				"numbexper",
+				"Instructions/NUMBERS/Experiment.txt"
+			],
 			[
 				"bindevexper",
 				"bin/dev/Experiment.txt"
@@ -1213,54 +1356,6 @@
 			[
 				"crecomm",
 				"db/migrate/20131220064534_create_comments.rb"
-			],
-			[
-				"migrcreentcl",
-				"db/migrate/20140102162837_create_entry_classes.rb"
-			],
-			[
-				"creacom",
-				"db/migrate/20131220064534_create_comments.rb"
-			],
-			[
-				"migracreat",
-				"db/migrate/20131220064534_create_comments.rb"
-			],
-			[
-				"_images",
-				"app/views/task_entries/_images.html.haml"
-			],
-			[
-				"taskentedi",
-				"app/views/task_entries/edit.html.haml"
-			],
-			[
-				"taskeninde",
-				"app/views/task_entries/index.html.haml"
-			],
-			[
-				"tasksethelp",
-				"app/helpers/task_sets_helper.rb"
-			],
-			[
-				"tasksescss",
-				"app/assets/stylesheets/task_sets.css.scss"
-			],
-			[
-				"tasksetinde",
-				"app/views/task_sets/index.html.haml"
-			],
-			[
-				"userscs",
-				"app/assets/stylesheets/users.css.scss"
-			],
-			[
-				"regedi",
-				"app/views/devise/registrations/edit.html.haml"
-			],
-			[
-				"reginew",
-				"app/views/devise/registrations/new.html.haml"
 			]
 		],
 		"width": 0.0
@@ -1272,7 +1367,7 @@
 		[
 			[
 				"",
-				"/Users/terrymeacham/projects/leadgen/leadgen.sublime-project"
+				"~/projects/mtdb/qurious.sublime-project"
 			],
 			[
 				"survl",
@@ -1345,10 +1440,24 @@
 		],
 		"width": 380.0
 	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"settings":
+	{
+	},
 	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": false,
 	"side_bar_width": 283.0,
-	"status_bar_visible": true
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
 }

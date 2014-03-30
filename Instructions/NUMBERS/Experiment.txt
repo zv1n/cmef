@@ -6,62 +6,62 @@
 	FORMAT_FILE="Instructions/NUMBERS/OutputFormat.txt"	
 	<TRIAL ID="1" DATASET="Study1">
 
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/NUMBERS/1_instruction_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/NUMBERS/2_instruction_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-
-		<STATE>
-			MODE="Feedback"
-			FILE="Instructions/NUMBERS/2f_prestudy_T1.htm"
-			CONSTRAINTS="range:0-32"
-			END= "Click:Continue"
-		</STATE>
-		
-		<STATE>
-			MODE="Instruction"
-			FILE="Instructions/NUMBERS/3_studyphaseinstructions_T1.htm"
-			END= "Click:Continue"
-		</STATE>
-
-		<STATE>
-			MODE="Study"
-			ITERATOR="random:exclusive"
-			SET="BorderWidth:1.5"
-			SET="PreStudyColor:#0000A0"
-			SET="PostStudyColor:#FF0000"
-			SET="Resolution:100"
-			SET="ContinuousTimer:yes"
-			SET="ContinuousAfterFirstSelection:no"
-			SET="ResetOnNext:yes"
-			CONSTRAINTS="range:0-100"
-			ITEMS="1"
-			SETS="32"
-			SCALE="1.0"
-			FILE_SEQUENCE="Instructions/NUMBERS/study_phase.htm"
-				DISPLAY_TIMER="down"
-				STUDY_LIMIT="time:5s"
-				NEXT="Time:5s"
-			FILE_SEQUENCE="Instructions/NUMBERS/4f_JOL_T1.htm"
-				NEXT="Click:Continue"
-		</STATE>
-		
-
-
-
-		<STATE>
-			MODE="Feedback"
-			FILE="Instructions/NUMBERS/6f_poststudyprediction_T1.htm"
-			CONSTRAINTS="range:0-32"
-			END="Click:Continue"
-		</STATE>
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/NUMBERS/1_instruction_T1.htm"
+#			END= "Click:Continue"
+#		</STATE>
+#
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/NUMBERS/2_instruction_T1.htm"
+#			END= "Click:Continue"
+#		</STATE>
+#
+#		<STATE>
+#			MODE="Feedback"
+#			FILE="Instructions/NUMBERS/2f_prestudy_T1.htm"
+#			CONSTRAINTS="range:0-32"
+#			END= "Click:Continue"
+#		</STATE>
+#		
+#		<STATE>
+#			MODE="Instruction"
+#			FILE="Instructions/NUMBERS/3_studyphaseinstructions_T1.htm"
+#			END= "Click:Continue"
+#		</STATE>
+#
+#		<STATE>
+#			MODE="Study"
+#			ITERATOR="random:exclusive"
+#			SET="BorderWidth:1.5"
+#			SET="PreStudyColor:#0000A0"
+#			SET="PostStudyColor:#FF0000"
+#			SET="Resolution:100"
+#			SET="ContinuousTimer:yes"
+#			SET="ContinuousAfterFirstSelection:no"
+#			SET="ResetOnNext:yes"
+#			CONSTRAINTS="range:0-100"
+#			ITEMS="1"
+#			SETS="32"
+#			SCALE="1.0"
+#			FILE_SEQUENCE="Instructions/NUMBERS/study_phase.htm"
+#				DISPLAY_TIMER="down"
+#				STUDY_LIMIT="time:5s"
+#				NEXT="Time:5s"
+#			FILE_SEQUENCE="Instructions/NUMBERS/4f_JOL_T1.htm"
+#				NEXT="Click:Continue"
+#		</STATE>
+#		
+#
+#
+#
+#		<STATE>
+#			MODE="Feedback"
+#			FILE="Instructions/NUMBERS/6f_poststudyprediction_T1.htm"
+#			CONSTRAINTS="range:0-32"
+#			END="Click:Continue"
+#		</STATE>
 	</TRIAL>
 	<TRIAL ID="1" DATASET="Test1,Study1">	
 		<STATE>
