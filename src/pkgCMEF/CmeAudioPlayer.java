@@ -22,6 +22,7 @@ class CmeAudioPlayer {
         m_Clip = AudioSystem.getClip();
       AudioInputStream audioStream =
         AudioSystem.getAudioInputStream(file);
+      System.err.println("Opening!");
       m_Clip.open(audioStream);
     } catch (IOException e) {
       e.printStackTrace();

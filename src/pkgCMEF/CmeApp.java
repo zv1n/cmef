@@ -32,6 +32,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 
+import javax.sound.sampled.*;
+
+
 //====================================================================
 /**
  * Custom Memory Experiment Framework
@@ -70,7 +73,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 	/** The minimum version this API is compatible with. */
 	final static private double m_MinVer = 2.1;
-	final static private double m_Version = 2.5;
+	final static private double m_Version = 3.0;
 
 	public static final int CME_ENABLE_REFRESH = 0x1;
 	public static final int CME_TEXT_ONLY = 0x2;

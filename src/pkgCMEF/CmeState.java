@@ -905,5 +905,6 @@ public class CmeState {
         return;
 
       m_AudioHandler = new CmeAudioHandler(this);
+      m_AudioHandler.playAudio();
     }
 }

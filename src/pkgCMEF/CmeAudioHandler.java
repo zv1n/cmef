@@ -18,12 +18,16 @@ class CmeAudioHandler {
   public String m_BiasVolume;
   public String m_AudioVolume;
   public String m_AudioPath;
+  public CmeAudioPlayer m_AudioPlayer = new CmeAudioPlayer();
   
   public CmeAudioHandler(CmeState state) throws Exception {
     m_CurState = state;
     
+    String play = m_CurState.getStringProperty("PlayAudio");
+    if (play == null)
+      return;
+
     String stop = m_CurState.getStringProperty("StopAudio");
-    
     
     m_BiasVolume = m_CurState.getStringProperty("BiasVolume");
     if (m_BiasVolume == null)
@@ -36,6 +40,18 @@ class CmeAudioHandler {
     m_AudioPath = m_CurState.getStringProperty("AudioPath");
     if (m_AudioPath == null)
       m_AudioPath = "$Pair1B";
+  }
+
+  public void playAudio() throws Exception {
+    System.err.println("Load file");
+    m_AudioPlayer.loadFile(getAudioPath());
+
+    if (!m_AudioPlayer.canPlay())
+      throw new Exception("Invalid file played: " + getAudioPath().toString());
+
+    m_AudioPlayer.setVolume(getBiasVolume() + getAudioVolume());
+
+    m_AudioPlayer.play();
   }
 
   private float getBiasVolume() throws Exception {

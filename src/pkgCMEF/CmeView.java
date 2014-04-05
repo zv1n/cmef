@@ -1025,7 +1025,8 @@ public class CmeView extends JPanel {
 
 				case CmeState.STATE_AUDIO_CAL:
 				  System.err.println("Audio Calibration State...");
-				  m_App.setNextState();
+          m_CurState.configureAudioPlayback();
+				  //m_App.setNextState();
 					break;
 
 				case CmeState.STATE_PROMPT:
