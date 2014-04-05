@@ -504,7 +504,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 		return false;
 	}
-
+	
 	private boolean setEvent(String action, String lhs, String rhs,
 			CmeState state, int seq) throws Exception {
 		final CmeApp thisApp = this;
@@ -917,6 +917,12 @@ public class CmeApp extends JFrame implements AncestorListener {
           dmsg(CmeApp.DEBUG_PROPERTIES, lhs + " set to " + rhs + " for sequence " + String.valueOf(stateSequence));
 					thisState.setProperty(lhs, rhs, stateSequence);
 
+				} else if (line.matches(variableQuery("PLAY_AUDIO"))) {
+					thisState.setProperty("PlayAudio", value, stateSequence);
+					
+				} else if (line.matches(variableQuery("STOP_AUDIO"))) {
+					thisState.setProperty("StopAudio", value, stateSequence);
+
 				} else if (line.matches(variableQuery("STUDY_FILE"))) {
 					thisState.setProperty("StudyFile", value, stateSequence);
 					thisState.setStudyInstruction(true);
@@ -931,6 +937,8 @@ public class CmeApp extends JFrame implements AncestorListener {
 						thisState.setState(CmeState.STATE_INSTRUCTION);
 					} else if (item.contains("FEEDBACK")) {
 						thisState.setState(CmeState.STATE_INPUT);
+					} else if (item.contains("AUDIOCALIBRATION")) {
+						thisState.setState(CmeState.STATE_AUDIO_CAL);
 					} else if (item.contains("INPUT")) {
 						thisState.setState(CmeState.STATE_INPUT);
 					} else if (item.contains("PROMPT")) {

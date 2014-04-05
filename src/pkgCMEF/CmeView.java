@@ -26,7 +26,7 @@ import java.util.Iterator;
  */
 // ===================================================================
 @SuppressWarnings("serial")
-public class CmeView extends JPanel {
+public class CmeView extends JFXPanel {
 
 	/** Parent frame */
 	private CmeApp m_App;
@@ -542,6 +542,7 @@ public class CmeView extends JPanel {
 		updateClock();
 		updateButtonText();
 		
+		
 		if (instructionFile != null) {
 			try {
 				this.showProcessedInstructions((String) instructionFile);
@@ -1018,7 +1019,13 @@ public class CmeView extends JPanel {
 					break;
 
 				case CmeState.STATE_MULTIPLE:
+				  m_CurState.configureAudioPlayback();
 					updateInstructionFile(true);
+					break;
+
+				case CmeState.STATE_AUDIO_CAL:
+				  System.err.println("Audio Calibration State...");
+				  m_App.setNextState();
 					break;
 
 				case CmeState.STATE_PROMPT:

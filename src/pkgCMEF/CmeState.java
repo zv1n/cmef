@@ -80,6 +80,8 @@ public class CmeState {
   public static final int STATE_PROMPT = 3;
   /** Display rating mode */
   public static final int STATE_MULTIPLE = 4;
+  /** Display Audio Calibration panel */
+  public static final int STATE_AUDIO_CAL = 5;
   // ---------- Events -------
   /** Event for Clicking a Continue Button */
   public static final int EVENT_CLICK_PRIMARY = 0;
@@ -885,5 +887,27 @@ public class CmeState {
     	for (int x=0; x<m_sSequence.size(); x++) {
     		System.out.println(m_sSequence.get(x));
     	}
+    }
+    
+    private float getFloat(String vol, float df) {
+      if (vol != null) {
+        try {
+          df = Float.parseFloat(vol);
+        } catch(Exception ex) {
+          throw new Exception("Invalid Decimal provided!"+
+            "Must be a decimal 0.0 to 1.0.");
+        }
+      }
+      
+      return df;
+    }
+    }
+    
+    public void configureAudioPlayback() throws Exception {
+      String play = m_CurState.getStringProperty("PlayAudio");
+      if (play == null)
+        return;
+
+      m_AudioHandler = new CmeAudioHandler(this);
     }
 }

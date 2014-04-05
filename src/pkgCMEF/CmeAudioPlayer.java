@@ -1,0 +1,5 @@
+package pkgCMEF;
+
+class CmeAudioPlayer {
+  
+}
