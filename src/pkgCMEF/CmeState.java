@@ -28,6 +28,9 @@ public class CmeState {
   /** Number of items to show simultaneously. */
   private int m_iCount;
   
+  /** AudioHandler for handling audio components for audio enabled states. **/
+  private CmeAudioHandler m_AudioHandler;
+  
   /** The string list storing file locations. */
   private Vector<String> m_sSequence = new Vector<String>();
   /** Current position in sequence. */
@@ -809,8 +812,15 @@ public class CmeState {
     public String translateString(String text) {
         return CmeApp.translateString(m_sProperties, text, true);
     }
-    
-    
+
+    /**
+     * Translate the string in the standard order -- State then App
+     */
+    public String translate(String text) {
+      text = translateString(text);
+      return m_App.translateString(text).trim();
+    }
+
     /** State Display Sequence Interface
      * Enables the CmeState class to handle multiple instruction display files in a single "State".
      * The primary reason for this is so that one can collect information on a Per Item basis form "Multiple" views.
@@ -889,22 +899,8 @@ public class CmeState {
     	}
     }
     
-    private float getFloat(String vol, float df) {
-      if (vol != null) {
-        try {
-          df = Float.parseFloat(vol);
-        } catch(Exception ex) {
-          throw new Exception("Invalid Decimal provided!"+
-            "Must be a decimal 0.0 to 1.0.");
-        }
-      }
-      
-      return df;
-    }
-    }
-    
     public void configureAudioPlayback() throws Exception {
-      String play = m_CurState.getStringProperty("PlayAudio");
+      String play = this.getStringProperty("PlayAudio");
       if (play == null)
         return;
 

@@ -12,24 +12,55 @@ package pkgCMEF;
 class CmeAudioHandler {
   private CmeState m_CurState;
   
-  public CmeAudioHandler(CmeState app) {
-    m_CurState = app;
+  // The only reason these are here and not in the AudioPlay is that they
+  // may change per sequence and per item.  So every time play is called,
+  // these should be reprocessed.
+  public String m_BiasVolume;
+  public String m_AudioVolume;
+  public String m_AudioPath;
+  
+  public CmeAudioHandler(CmeState state) throws Exception {
+    m_CurState = state;
     
     String stop = m_CurState.getStringProperty("StopAudio");
-    String volume = m_CurState.getStringProperty("BiasVolume");
-    if (volume == null)
-      volume = "0";
+    
+    
+    m_BiasVolume = m_CurState.getStringProperty("BiasVolume");
+    if (m_BiasVolume == null)
+      m_BiasVolume = "0";
 
-    String bvolume = m_CurState.getStringProperty("AudioVolume");
-    if (bvolume == null)
-      bvolume = "0";
+    m_AudioVolume = m_CurState.getStringProperty("AudioVolume");
+    if (m_AudioVolume == null)
+      m_AudioVolume = "0";
 
     m_AudioPath = m_CurState.getStringProperty("AudioPath");
     if (m_AudioPath == null)
       m_AudioPath = "$Pair1B";
+  }
 
-    String bvolf = getBiasVolume();
-    float volf = getAudioVolume();
+  private float getBiasVolume() throws Exception {
+    return getFloat(m_BiasVolume, 0.5f);
+  }
 
+  private float getAudioVolume() throws Exception {
+    return getFloat(m_AudioVolume, 0.0f);
+  }
+  
+  private float getFloat(String vol, float df) throws Exception {
+    vol = m_CurState.translate(vol);
+    if (vol != null) {
+      try {
+        df = Float.parseFloat(vol);
+      } catch(Exception ex) {
+        throw new Exception("Invalid Decimal provided!" +
+          "Must be a decimal 0.0 to 1.0.");
+      }
+    }
+    
+    return df;
+  }
+
+  private String getAudioPath() {
+    return m_CurState.translate(m_AudioPath);
   }
 }

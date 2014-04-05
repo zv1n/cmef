@@ -26,7 +26,7 @@ import java.util.Iterator;
  */
 // ===================================================================
 @SuppressWarnings("serial")
-public class CmeView extends JFXPanel {
+public class CmeView extends JPanel {
 
 	/** Parent frame */
 	private CmeApp m_App;
