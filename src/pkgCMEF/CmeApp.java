@@ -944,6 +944,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 						thisState.setState(CmeState.STATE_INPUT);
 					} else if (item.contains("AUDIOCALIBRATION")) {
 						thisState.setState(CmeState.STATE_AUDIO_CAL);
+				    thisState.setProperty("AudioSupport", "true");
 					} else if (item.contains("INPUT")) {
 						thisState.setState(CmeState.STATE_INPUT);
 					} else if (item.contains("PROMPT")) {

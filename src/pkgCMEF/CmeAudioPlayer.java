@@ -25,8 +25,8 @@ class CmeAudioPlayer {
       AudioInputStream audioStream =
         AudioSystem.getAudioInputStream(file);
 
+      m_Clip.close();
       m_Clip.open(audioStream);
-
     }
     
     catch (IOException e) {

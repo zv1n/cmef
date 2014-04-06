@@ -11,35 +11,16 @@ package pkgCMEF;
 // ===================================================================
 class CmeAudioHandler {
   private CmeState m_CurState;
+  private CmeApp m_App;
   
   // The only reason these are here and not in the AudioPlay is that they
   // may change per sequence and per item.  So every time play is called,
   // these should be reprocessed.
-  public String m_BiasVolume;
-  public String m_AudioVolume;
-  public String m_AudioPath;
   public CmeAudioPlayer m_AudioPlayer = new CmeAudioPlayer();
   
-  public CmeAudioHandler(CmeState state) throws Exception {
+  public CmeAudioHandler(CmeState state, CmeApp app) throws Exception {
     m_CurState = state;
-    
-    String play = m_CurState.getStringProperty("PlayAudio");
-    if (play == null)
-      return;
-
-    String stop = m_CurState.getStringProperty("StopAudio");
-    
-    m_BiasVolume = m_CurState.getStringProperty("BiasVolume");
-    if (m_BiasVolume == null)
-      m_BiasVolume = "0";
-
-    m_AudioVolume = m_CurState.getStringProperty("AudioVolume");
-    if (m_AudioVolume == null)
-      m_AudioVolume = "0";
-
-    m_AudioPath = m_CurState.getStringProperty("AudioPath");
-    if (m_AudioPath == null)
-      m_AudioPath = "$Pair1B";
+    m_App = app;
   }
 
   public void playAudio() throws Exception {
@@ -50,19 +31,27 @@ class CmeAudioHandler {
       throw new Exception("Invalid file played: " + getAudioPath().toString());
 
     m_AudioPlayer.setVolume(getBiasVolume() + getAudioVolume());
-
     m_AudioPlayer.play();
   }
 
   private float getBiasVolume() throws Exception {
-    return getFloat(m_BiasVolume, 0.5f);
+    return getFloat("BiasVolume", 0.0f);
   }
 
   private float getAudioVolume() throws Exception {
-    return getFloat(m_AudioVolume, 0.0f);
+    return getFloat("AudioVolume", 0.0f);
   }
-  
-  private float getFloat(String vol, float df) throws Exception {
+
+  private String getAudioPath() throws Exception {
+    return m_CurState.translate(getString("AudioPath", "$Pair1B"));
+  }
+
+  private float getFloat(String prop, float df) throws Exception {
+    String vol = getStringProperty(prop);
+
+    if (vol == null)
+      return df;
+
     vol = m_CurState.translate(vol);
     if (vol != null) {
       try {
@@ -75,8 +64,22 @@ class CmeAudioHandler {
     
     return df;
   }
+  
+  
+  private String getString(String prop, String df) throws Exception {
+    String vol = getStringProperty(prop);
+    if (vol == null)
+      vol = df;
+    vol = m_CurState.translate(vol);
+    return vol;
+  }
 
-  private String getAudioPath() {
-    return m_CurState.translate(m_AudioPath);
+  private String getStringProperty(String prop) {
+    String ret = m_CurState.getStringProperty(prop);
+
+    if (ret == null)
+      ret = (String) m_App.getProperty(prop);
+
+    return ret;
   }
 }

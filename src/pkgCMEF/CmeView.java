@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -45,6 +47,20 @@ public class CmeView extends JPanel {
 	/** Submit Action Response */
 	private ActionListener m_SubmitListener;
 	
+	
+	/*****************************************************************************
+	/** Calibration Controls
+	/****************************************************************************/
+	
+	/** Controls */
+	private Vector<JButton> m_vjbCalibrationControl = new Vector<JButton>();
+	/** Text */
+	private JLabel m_lblCalText = null;
+	private JLabel m_lblSliderText = null;
+	/** Slider */
+	private JSlider m_CalSlider = null;
+	
+	/** Clock to display the timer countdown to the user. */
 	private CmeClock m_cClock;
 	
 	private CmeEventResponse m_LimitResponse;
@@ -379,6 +395,7 @@ public class CmeView extends JPanel {
 		if (m_bRefresh != null)
 			adjustRefreshButton();
 		adjustClock();
+		adjustCalControls();
 	}
 	
 	public void refreshView() throws Exception {
@@ -554,6 +571,7 @@ public class CmeView extends JPanel {
 		m_HtmlView.requestFirstFocus();
 		
     updateInterface();
+		m_CurState.startAudioPlayback();
 	}
 	
 	private void updateInterface() {
@@ -564,7 +582,7 @@ public class CmeView extends JPanel {
 		if (isContinuousTimer() && !isContinuousAfterFirstSelection())
 			m_cClock.start("");
 
-    m_ScrollPane.setVisible(m_CurState.getState() != CmeState.STATE_AUDIO_CAL);
+    showCalibrationControls(m_CurState.getState() == CmeState.STATE_AUDIO_CAL);
 	}
 	
 	/**
@@ -1015,6 +1033,7 @@ public class CmeView extends JPanel {
 		updateDataset();
 
 		updateStudyContent();
+	  m_CurState.configureAudioPlayback();
 		
 		// Begin!
 		try {
@@ -1025,14 +1044,11 @@ public class CmeView extends JPanel {
 					break;
 
 				case CmeState.STATE_MULTIPLE:
-				  m_CurState.configureAudioPlayback();
 					updateInstructionFile(true);
 					break;
 
 				case CmeState.STATE_AUDIO_CAL:
-          m_CurState.configureAudioPlayback();
 					updateInterface();
-					//showAudioCalibrationInterface();
 					break;
 
 				case CmeState.STATE_PROMPT:
@@ -1089,5 +1105,160 @@ public class CmeView extends JPanel {
 			m_App.addFeedback(iter.next());
 		}
 		return true;
+	}
+
+  private String getCalLabel() {
+    String lbl = m_CurState.getStringProperty("CalibrationText");
+
+    if (lbl == null)
+      lbl = "Adjust the volume till all audio is at comfortable volume.";
+
+    return lbl;
+  }
+
+
+
+	/**
+	 * Adjust the Next Button for the current window size.
+	 */
+	private void adjustCalControls() {
+	  if (m_lblCalText == null || m_CalSlider == null || m_lblSliderText == null)
+  	  return;
+
+  	if (m_CurState == null || m_CurState.getState() != CmeState.STATE_AUDIO_CAL)
+  	  return;
+
+    Dimension newSz = this.getSize();
+
+    Dimension border = new Dimension(10, 10);
+    Dimension dimensions = new Dimension(128, 24);
+
+    int center = newSz.width/2;
+    int count = m_vjbCalibrationControl.size();
+    int boffset = count * (5+64) - 10;
+    int top = newSz.height/2 - 12;
+
+    Point location = new Point(center - boffset, top);
+
+    for (JButton btn : m_vjbCalibrationControl) {
+      btn.setSize(dimensions);
+      btn.setLocation(location);
+      location.x += dimensions.width + border.width;
+    }
+
+    location.x = newSz.width/4;
+    location.y -= 100;
+
+    m_lblCalText.setSize(newSz.width/2, 32);
+    m_lblCalText.setLocation(location);
+    m_lblCalText.setHorizontalAlignment(SwingConstants.CENTER);
+
+    location.y += 200;
+    location.x = newSz.width/4;
+
+    m_CalSlider.setSize(newSz.width/2, 40);
+    m_CalSlider.setLocation(location);
+    m_CalSlider.setMajorTickSpacing(20);
+    m_CalSlider.setPaintLabels(true);
+    m_CalSlider.setPaintTicks(true);
+    
+    location.y -= 40;
+    location.x = newSz.width/4;
+    
+    m_lblSliderText.setSize(newSz.width/2, 32);
+    m_lblSliderText.setLocation(location);
+    m_lblSliderText.setHorizontalAlignment(SwingConstants.CENTER);
+    
+	}
+	
+	// Vector<JButton> m_vjbCalibrationControl
+	// JLabel m_lblCalText
+	// JSlider m_CalSlider
+	
+	private void showCalibrationControls(boolean show) {
+    m_ScrollPane.setVisible(!show);
+
+    if (show) {
+      if (m_lblCalText == null) {
+        m_lblCalText = new JLabel();
+        this.add(m_lblCalText);
+      }
+      
+      m_lblCalText.setText(getCalLabel());
+
+      if (m_lblSliderText == null) {
+        m_lblSliderText = new JLabel("Volume");
+        this.add(m_lblSliderText);
+      }
+
+      if (m_CalSlider == null) {
+        m_CalSlider = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 50);
+        final CmeState changeState = m_CurState;
+        m_CalSlider.addChangeListener(new ChangeListener() {
+
+          @Override
+          public void stateChanged(ChangeEvent e) {
+            JSlider sld = (JSlider)e.getSource();
+            float volume = (sld.getValue() - 50);
+            volume /= 5.0;
+            m_App.setProperty("AudioVolume", String.valueOf(volume));
+          }
+
+        });
+        this.add(m_CalSlider);
+      }
+
+      recreateCalibrationControls();
+      adjustCalControls();
+
+      m_CalSlider.setVisible(true);
+      m_lblCalText.setVisible(true);
+    } else {
+      if (m_lblCalText != null)
+        m_lblCalText.setVisible(false);
+
+      if (m_CalSlider != null)
+        m_CalSlider.setVisible(false);
+
+      if (m_lblSliderText != null)
+        m_lblSliderText.setVisible(false);
+
+      for (JButton btn : m_vjbCalibrationControl) {
+        btn.setVisible(false);
+      }
+    }
+	}
+
+	private void recreateCalibrationControls() {
+    final CmeState actionState = m_CurState;
+    int count = m_CurState.getSequenceLength();
+    Vector<String> calFiles = m_CurState.getSequenceFiles();
+
+    for (JButton btn : m_vjbCalibrationControl)
+      this.remove(btn);
+    m_vjbCalibrationControl.clear();
+
+    int index = 0;
+    for (String cal : calFiles) {
+      index++;
+      JButton btn = new JButton(String .format("Sound %d", index));
+      m_vjbCalibrationControl.add(btn);
+      this.add(btn);
+      final String audioFile = cal;
+      btn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          actionState.setProperty("AudioPath", audioFile);
+          actionState.setProperty("PlayAudio", "immediate");
+          try {
+            actionState.startAudioPlayback();
+          } catch (Exception ex) {
+            System.err.println("Failed to play file:");
+            System.err.println(audioFile);
+
+            ex.printStackTrace();
+          }
+        }
+      });
+    }
 	}
 }

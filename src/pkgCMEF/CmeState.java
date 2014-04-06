@@ -51,7 +51,7 @@ public class CmeState {
   		return m_erResponse;
   	}
 
-  	public int getSequence() {
+  	public int getSequenceLength() {
   		return m_iSequence;
   	}
 
@@ -100,6 +100,8 @@ public class CmeState {
 	
 	private boolean m_bStudy;
 	
+	private CmeTimer m_AudioPlayTimer = null;
+	private CmeTimer m_AudioStopTimer = null;
 
   /** 
    * Default constructor 
@@ -110,6 +112,10 @@ public class CmeState {
 		for (int x=0; x<EVENT_MAX; x++)
 			m_erEvent.add(new Vector<stateEventHandler>());
   }
+
+	public Vector<String> getSequenceFiles() {
+		return m_sSequence;
+	}
 
   private Vector<CmeTimer> getSequenceTimers() {
     return getSequenceTimers(m_iSequenceIndex);
@@ -221,7 +227,7 @@ public class CmeState {
 			return 0;
 		int count = 0;
 		for (int x=0; x < m_erEvent.get(eventId).size(); x++) {
-			if (m_erEvent.get(eventId).get(x).getSequence() == m_iSequenceIndex)
+			if (m_erEvent.get(eventId).get(x).getSequenceLength() == m_iSequenceIndex)
 				count++;
 		}
 		return count;
@@ -404,6 +410,13 @@ public class CmeState {
      */
     public String getStringProperty(String name) {
         return (String) this.getProperty(name);
+    }
+
+    public String getStringProperty(String name, String df) {
+      String prop = getStringProperty(name);
+      if (prop == null)
+        return df;
+      return prop;
     }
 
     /** 
@@ -873,7 +886,7 @@ public class CmeState {
     public String getSequenceFile() {
     	if (!isSequenceValid())
     		return null;
-    	return m_sSequence.get(m_iSequenceIndex);
+    	return m_sSequence.get(m_iSequenceIndex); 
     }
 
     /**
@@ -900,16 +913,49 @@ public class CmeState {
     }
 
     /* Configures the AudioHandler for audio playback. */
-    public void configureAudioPlayback() throws Exception {
+    public boolean configureAudioPlayback() throws Exception {
       boolean audio_supported = getBooleanProperty("AudioSupport", false);
 
       if (!audio_supported)
-        return;
+        return false;
 
-      m_AudioHandler = new CmeAudioHandler(this);
+      m_AudioHandler = new CmeAudioHandler(this, m_App);
+      return true;
     }
 
     public void startAudioPlayback() throws Exception {
-      m_AudioHandler.playAudio();
+      String play_when = getStringProperty("PlayAudio", "immediate");
+
+      if (play_when.equals("immediate")) {
+        m_AudioHandler.playAudio();
+        return;
+      } else {
+        String[] opts = play_when.split(":");
+        String action = opts[0].toLowerCase();
+        if (action.equals("time")) {
+          startAudioPlaybackAt(opts[1]);
+          return;
+        }
+      }
+    }
+
+    public void startAudioPlaybackAt(String time) {
+      m_AudioPlayTimer = new CmeTimer(m_App);
+
+      final CmeAudioHandler handler = m_AudioHandler;
+
+      m_AudioPlayTimer.setDelayByString(time);
+      m_AudioPlayTimer.setResponse(new CmeEventResponse() {
+        @Override
+        public void Respond() {
+          try {
+            handler.playAudio();
+          } catch(Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+      m_AudioPlayTimer.start();
+      
     }
 }
