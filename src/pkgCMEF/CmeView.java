@@ -170,7 +170,7 @@ public class CmeView extends JPanel {
 	}
 
 	private void primaryClickEvent() {
-      m_App.dmsg(CmeApp.DEBUG_STATES, "Primary click event!");
+    m_App.dmsg(CmeApp.DEBUG_STATES, "Primary click event!");
 		if (m_bInStudyState) {
 			try {
 				clearStudyState();
@@ -518,6 +518,7 @@ public class CmeView extends JPanel {
 		
 		return false;
 	}
+
 	
 	private void updateInstructionFile(boolean reconfigure) throws Exception {
 		// TODO: move stateful information into the STATE (is too much in this class?)
@@ -539,10 +540,6 @@ public class CmeView extends JPanel {
 			setProperties();
 		}
 
-		updateClock();
-		updateButtonText();
-		
-		
 		if (instructionFile != null) {
 			try {
 				this.showProcessedInstructions((String) instructionFile);
@@ -556,11 +553,19 @@ public class CmeView extends JPanel {
 		
 		m_HtmlView.requestFirstFocus();
 		
+    updateInterface();
+	}
+	
+	private void updateInterface() {
+	  updateClock();
+		updateButtonText();
+
 		/* The clock is continuous and is NOT only after first Study */
 		if (isContinuousTimer() && !isContinuousAfterFirstSelection())
 			m_cClock.start("");
+
+    m_ScrollPane.setVisible(m_CurState.getState() != CmeState.STATE_AUDIO_CAL);
 	}
-	
 	
 	/**
 	 * Used to set the next rating environment.
@@ -910,6 +915,7 @@ public class CmeView extends JPanel {
 				m_bRefresh.setVisible(false);
 		} else {
 			String bString = (String)m_CurState.getProperty("PrimaryButtonText");
+
 			if (bString != null) {
 				m_bString = bString;
 				m_bNext.setText(m_bString);
@@ -1024,9 +1030,9 @@ public class CmeView extends JPanel {
 					break;
 
 				case CmeState.STATE_AUDIO_CAL:
-				  System.err.println("Audio Calibration State...");
           m_CurState.configureAudioPlayback();
-				  //m_App.setNextState();
+					updateInterface();
+					//showAudioCalibrationInterface();
 					break;
 
 				case CmeState.STATE_PROMPT:

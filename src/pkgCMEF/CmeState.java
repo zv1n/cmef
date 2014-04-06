@@ -357,12 +357,11 @@ public class CmeState {
      * Set a PropertyValue
      */
     public boolean setProperty(String name, Object prop, int seq) {
-    	if (seq == -1) {
+    	if (seq == -1 || m_sSequenceProperties.size() <= seq) {
     		setProperty(name, prop);
     		return true;
     	}
-    	if (m_sSequenceProperties.size() <= seq)
-    		return false;
+
     	m_sSequenceProperties.get(seq).put(name, prop);
     	return true;
     }
@@ -372,6 +371,7 @@ public class CmeState {
      * Set event response 
      */
     public Object getProperty(String name) {
+
       if (m_sSequenceProperties.size() > m_iSequenceIndex) {
         Object prop = m_sSequenceProperties.get(m_iSequenceIndex).get(name);
         if (prop != null) {
@@ -898,13 +898,18 @@ public class CmeState {
     		System.out.println(m_sSequence.get(x));
     	}
     }
-    
+
+    /* Configures the AudioHandler for audio playback. */
     public void configureAudioPlayback() throws Exception {
-      String play = this.getStringProperty("PlayAudio");
-      if (play == null)
+      boolean audio_supported = getBooleanProperty("AudioSupport", false);
+
+      if (!audio_supported)
         return;
 
       m_AudioHandler = new CmeAudioHandler(this);
+    }
+
+    public void startAudioPlayback() throws Exception {
       m_AudioHandler.playAudio();
     }
 }

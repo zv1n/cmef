@@ -18,13 +18,18 @@ class CmeAudioPlayer {
     }
     
     try {
+
       if (m_Clip == null)
         m_Clip = AudioSystem.getClip();
+
       AudioInputStream audioStream =
         AudioSystem.getAudioInputStream(file);
-      System.err.println("Opening!");
+
       m_Clip.open(audioStream);
-    } catch (IOException e) {
+
+    }
+    
+    catch (IOException e) {
       e.printStackTrace();
       System.err.println("IO Error for audio file.");
       return false;

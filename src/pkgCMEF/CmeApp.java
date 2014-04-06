@@ -575,7 +575,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 			type = CmeState.EVENT_CLICK_PRIMARY;
 
 			if (rhs != null && rhs.length() > 0) {
-				state.setProperty("PrimaryButtonText", rhs, seq);
+				state.setProperty("PrimaryButtonText", rhs, seq);       
 			}
 		} else if (lhs.equals("TIME")) {
 			type = CmeState.EVENT_TIME;
@@ -872,7 +872,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 					requirePair(splitValue, event
 							+ " must contain a name:value pair!");
 
-					if (!setEvent(event, lhs, rhs, thisState, stateSequence))
+          int seq = (stateSequence < 0) ? 0 : stateSequence;
+
+					if (!setEvent(event, lhs, rhs, thisState, seq))
 						throw new Exception("Invalid State Interaction: "
 								+ line);
 
