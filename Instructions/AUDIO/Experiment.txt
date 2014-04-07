@@ -1,0 +1,113 @@
+<EXPERIMENT CMEF_VERSION="2.2">
+	TITLE="AUDIO - Experiment"
+	STUDY_NAME="Audio Experiment 2"
+	CONDITIONS="A,B,C"
+	DATA_FILE="Instructions/AUDIO/DataList.txt"
+	FORMAT_FILE="Instructions/AUDIO/OutputFormat.txt"	
+	<TRIAL ID="1" DATASET="Male Trial 1">
+
+		<STATE>
+			MODE="AudioCalibration"
+			END="Click:Continue"
+      SET="CalibrationText:Set your cal text here."
+
+      FILE="Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Windmill M L.wav"
+      FILE="Instructions/AUDIO/wav_files/Extra/Neutral/Loud/Wrench M L.wav"
+      FILE="Instructions/AUDIO/wav_files/Extra/Loud/Loud/Bangles M L.wav"
+      CONDITIONS="B,C"
+		</STATE>
+
+   <STATE>
+     MODE="Study"
+
+     ITERATOR="random:exclusive"
+
+     SET="BorderWidth:0"
+     SET="PreStudyColor:#0000A0"
+     SET="PostStudyColor:#FF0000"
+     SET="Resolution:100"
+     SET="ContinuousTimer:yes"
+     SET="ContinuousAfterFirstSelection:no"
+     SET="ResetOnNext:yes"
+     ITEMS="1"
+     SETS="32"
+     SCALE="1.0"
+
+     FILE_SEQUENCE="Instructions/AUDIO/study_phase_visual.htm"
+       DISPLAY_TIMER="down"
+       STUDY_LIMIT="time:5s"
+       NEXT="Time:5s"
+
+     FILE_SEQUENCE="Instructions/AUDIO/4f_JOL_T1.htm"
+       NEXT="Click:Continue"
+
+     CONDITIONS="A"
+   </STATE>
+   
+   <STATE>
+     MODE="Study"
+     ITERATOR="random:exclusive"
+     SET="BorderWidth:0"
+     SET="PreStudyColor:#0000A0"
+     SET="PostStudyColor:#FF0000"
+     SET="Resolution:100"
+     SET="ContinuousTimer:yes"
+     SET="ContinuousAfterFirstSelection:no"
+     SET="ResetOnNext:yes"
+     ITEMS="1"
+     SETS="32"
+     SCALE="1.0"
+
+     # Configure audio variables     
+     SET="AudioSupport:yes"
+     SET="BiasVolume:${Pair1ExtraInfo}[0]"
+     SET="AudioPath:$Pair1B"
+
+     FILE_SEQUENCE="Instructions/AUDIO/study_phase_novisual.htm"
+       PLAY_AUDIO="time:1s"
+       DISPLAY_TIMER="down"
+       STUDY_LIMIT="time:5s"
+       NEXT="Time:5s"
+
+     FILE_SEQUENCE="Instructions/AUDIO/4f_JOL_T1.htm"
+       PLAY_AUDIO="never"
+       NEXT="Click:Continue"
+
+     CONDITIONS="B"
+   </STATE>
+   
+   <STATE>
+     MODE="Study"
+     ITERATOR="random:exclusive"
+     SET="BorderWidth:0"
+     SET="PreStudyColor:#0000A0"
+     SET="PostStudyColor:#FF0000"
+     SET="Resolution:100"
+     SET="ContinuousTimer:yes"
+     SET="ContinuousAfterFirstSelection:no"
+     SET="ResetOnNext:yes"
+     ITEMS="1"
+     SETS="32"
+     SCALE="1.0"
+
+     # Configure audio variables     
+     SET="AudioSupport:yes"
+     SET="BiasVolume:${Pair1ExtraInfo}[0]"
+     SET="AudioPath:$Pair1B"
+
+     FILE_SEQUENCE="Instructions/AUDIO/study_phase_visual.htm"  
+       PLAY_AUDIO="time:1s"
+       DISPLAY_TIMER="down"
+       STUDY_LIMIT="time:5s"
+       NEXT="Time:5s"
+
+     FILE_SEQUENCE="Instructions/AUDIO/4f_JOL_T1.htm"
+       PLAY_AUDIO="never"
+       NEXT="Click:Continue"
+
+     CONDITIONS="C"
+   </STATE>
+   
+
+	</TRIAL>
+</EXPERIMENT>

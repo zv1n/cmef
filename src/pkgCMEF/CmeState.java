@@ -924,6 +924,9 @@ public class CmeState {
     }
 
     public void startAudioPlayback() throws Exception {
+      if (m_AudioHandler == null)
+        return;
+
       String play_when = getStringProperty("PlayAudio", "immediate");
 
       if (play_when.equals("immediate")) {
