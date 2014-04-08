@@ -1,4 +1,4 @@
-<EXPERIMENT CMEF_VERSION="2.2">
+<EXPERIMENT CMEF_VERSION="3.0">
 	TITLE="AUDIO - Experiment"
 	STUDY_NAME="Audio Experiment 2"
 	CONDITIONS="A,B,C"
@@ -10,10 +10,9 @@
 			MODE="AudioCalibration"
 			END="Click:Continue"
       SET="CalibrationText:Set your cal text here."
-
-      FILE="Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Windmill M L.wav"
-      FILE="Instructions/AUDIO/wav_files/Extra/Neutral/Loud/Wrench M L.wav"
-      FILE="Instructions/AUDIO/wav_files/Extra/Loud/Loud/Bangles M L.wav"
+      SET="CalibrationGroup:Calibration"
+      SET="MaxAudioBias:20.0"
+      FILE="Instructions/AUDIO/wav_files/Extra/Loud/Loud/ATV M L.wav"
       CONDITIONS="B,C"
 		</STATE>
 
@@ -30,7 +29,7 @@
      SET="ContinuousAfterFirstSelection:no"
      SET="ResetOnNext:yes"
      ITEMS="1"
-     SETS="32"
+     SETS="3"
      SCALE="1.0"
 
      FILE_SEQUENCE="Instructions/AUDIO/study_phase_visual.htm"
@@ -55,7 +54,7 @@
      SET="ContinuousAfterFirstSelection:no"
      SET="ResetOnNext:yes"
      ITEMS="1"
-     SETS="32"
+     SETS="3"
      SCALE="1.0"
 
      # Configure audio variables     
@@ -87,7 +86,7 @@
      SET="ContinuousAfterFirstSelection:no"
      SET="ResetOnNext:yes"
      ITEMS="1"
-     SETS="32"
+     SETS="3"
      SCALE="1.0"
 
      # Configure audio variables     
@@ -108,6 +107,17 @@
      CONDITIONS="C"
    </STATE>
    
+   <STATE>
+     MODE="Study"
+     ITERATOR="random:exclusive"
+     FILE="Instructions/AUDIO/f_Recall.htm"
+     ITEMS="1"
+     SETS="60"
+     SCALE="1.0"
+     CONSTRAINTS="match_any:Male Trial 1:paira"
+     #SET="DisableSubmitHook:yes"
+     NEXT="Click:Continue"
+   </STATE>
 
 	</TRIAL>
 </EXPERIMENT>

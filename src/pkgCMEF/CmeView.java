@@ -356,7 +356,8 @@ public class CmeView extends JPanel {
 		m_CurState.setProperty("CurrentOrder", m_CurState.getProperty("Pair" + set + "Order"));
 		m_CurState.setProperty("CurrentDataOrder", m_CurState.getProperty("Pair" + set + "DataOrder"));
 		m_CurState.setProperty("CurrentExtraInfo", m_CurState.getProperty("Pair" + set + "ExtraInfo"));
-		
+		m_CurState.setAudioVolumeProperty("CurrentVolume");
+
 		String translation = m_CurState.translateString(m_sStudyContent);
 		translation = m_App.translateString(translation);
 		
@@ -697,6 +698,7 @@ public class CmeView extends JPanel {
       m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
       m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
       m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
+      m_CurState.setAudioVolumeProperty("Pair" + vx + "Volume");
 
       if (m_CurState.canStudy() && preStudyColor != null) {
         String color = preStudyColor;
@@ -766,7 +768,8 @@ public class CmeView extends JPanel {
   			m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
   			m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
   			m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
-  			
+  			m_CurState.setAudioVolumeProperty("Pair" + vx + "Volume");
+
   			if (m_CurState.canStudy() && preStudyColor != null) {
   				m_CurState.setProperty("Pair" + vx + "Color", preStudyColor);
   			}
@@ -942,6 +945,8 @@ public class CmeView extends JPanel {
 			}
 			m_bNext.setVisible(true);
 		}
+
+		adjustLayout();
 	}
 	
 	private void updateStudyContent() throws IOException {
@@ -1116,8 +1121,6 @@ public class CmeView extends JPanel {
     return lbl;
   }
 
-
-
 	/**
 	 * Adjust the Next Button for the current window size.
 	 */
@@ -1199,8 +1202,11 @@ public class CmeView extends JPanel {
           @Override
           public void stateChanged(ChangeEvent e) {
             JSlider sld = (JSlider)e.getSource();
-            float volume = (sld.getValue() - 50);
-            volume /= 5.0;
+		        String maxbias = changeState.getStringProperty("MaxAudioBias");
+		        float maxb = 0.0f;
+		        if (maxbias != null)
+		        	maxb = Float.valueOf(maxbias);
+            float volume = CmeAudioPlayer.getGainFromPercent(sld.getValue(), maxb);
             m_App.setProperty("AudioVolume", String.valueOf(volume));
           }
 
@@ -1231,24 +1237,32 @@ public class CmeView extends JPanel {
 
 	private void recreateCalibrationControls() {
     final CmeState actionState = m_CurState;
-    int count = m_CurState.getSequenceLength();
-    Vector<String> calFiles = m_CurState.getSequenceFiles();
+
+    String calGroup = m_CurState.getStringProperty("CalibrationGroup");
+    String[] groups = m_PairFactory.getDataSets();
+
+    m_PairFactory.setDataSet(calGroup);
+    int count = m_PairFactory.getCount();
 
     for (JButton btn : m_vjbCalibrationControl)
       this.remove(btn);
+
     m_vjbCalibrationControl.clear();
 
-    int index = 0;
-    for (String cal : calFiles) {
-      index++;
-      JButton btn = new JButton(String .format("Sound %d", index));
+    for (int index = 0; index < count; index++) {
+      JButton btn = new JButton(String.format("Sound %d", index+1));
       m_vjbCalibrationControl.add(btn);
       this.add(btn);
-      final String audioFile = cal;
+
+      final String audioFile = m_PairFactory.getNameB(index);
+      final String audioBias = m_PairFactory.getExtraInfo(index, 0);
+
       btn.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           actionState.setProperty("AudioPath", audioFile);
+          actionState.setProperty("BiasVolume", audioBias);
           actionState.setProperty("PlayAudio", "immediate");
+
           try {
             actionState.startAudioPlayback();
           } catch (Exception ex) {
@@ -1260,5 +1274,7 @@ public class CmeView extends JPanel {
         }
       });
     }
+
+    m_PairFactory.setDataSets(groups);
 	}
 }

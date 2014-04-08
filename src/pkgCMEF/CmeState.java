@@ -923,6 +923,13 @@ public class CmeState {
       return true;
     }
 
+    public void setAudioVolumeProperty(String prop) throws Exception {
+      if (m_AudioHandler != null)
+        m_AudioHandler.setActualAudioProperty(prop);
+      else
+        setProperty(prop, "unset");
+    }
+
     public void startAudioPlayback() throws Exception {
       if (m_AudioHandler == null)
         return;

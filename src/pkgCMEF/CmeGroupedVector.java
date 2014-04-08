@@ -19,7 +19,11 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 	public void setActiveGroups(String[] groups) {
 		m_activeGroups = groups;
 	}
-	
+
+	public String[] getActiveGroups() {
+		return m_activeGroups;
+	}
+
 	public void setActiveGroup(String group) {
 		m_activeGroups = new String[] { group };
 	}

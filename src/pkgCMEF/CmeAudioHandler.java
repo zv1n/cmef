@@ -12,7 +12,7 @@ package pkgCMEF;
 class CmeAudioHandler {
   private CmeState m_CurState;
   private CmeApp m_App;
-  
+
   // The only reason these are here and not in the AudioPlay is that they
   // may change per sequence and per item.  So every time play is called,
   // these should be reprocessed.
@@ -24,13 +24,16 @@ class CmeAudioHandler {
   }
 
   public void playAudio() throws Exception {
-    System.err.println("Load file");
     m_AudioPlayer.loadFile(getAudioPath());
 
     if (!m_AudioPlayer.canPlay())
       throw new Exception("Invalid file played: " + getAudioPath().toString());
 
     m_AudioPlayer.setVolume(getBiasVolume() + getAudioVolume());
+
+    System.err.println("Volume:");
+    System.err.println(m_AudioPlayer.getVolume());
+
     m_AudioPlayer.play();
   }
 
@@ -44,6 +47,12 @@ class CmeAudioHandler {
 
   private String getAudioPath() throws Exception {
     return m_CurState.translate(getString("AudioPath", "$Pair1B"));
+  }
+
+  public void setActualAudioProperty(String property) throws Exception {
+    float vol = m_AudioPlayer.getNormalizedVolume(getBiasVolume() + getAudioVolume());
+    System.err.println("Setting volume");
+    m_CurState.setProperty(property, String.valueOf(vol));
   }
 
   private float getFloat(String prop, float df) throws Exception {

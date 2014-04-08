@@ -199,6 +199,8 @@ public class CmePairFactory
 			
 			// Do we match this one?
 			if (value instanceof String) {
+				value = value.toLowerCase();
+
 				if (value.trim().startsWith("<")) {
 					value = value.trim().replaceAll("<[^>]*>", "");
 				}
@@ -322,6 +324,10 @@ public class CmePairFactory
 
 	public void setDataSet(String name) {
 		m_vPairs.setActiveGroup(name);
+	}
+
+	public String[] getDataSets() {
+		return m_vPairs.getActiveGroups();
 	}
 	
 	public void clearDataSet() {
