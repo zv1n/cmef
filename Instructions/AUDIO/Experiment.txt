@@ -29,8 +29,9 @@
      SET="ContinuousAfterFirstSelection:no"
      SET="ResetOnNext:yes"
      ITEMS="1"
-     SETS="3"
+     SETS="30"
      SCALE="1.0"
+     CONSTRAINTS="range:0-100"
 
      FILE_SEQUENCE="Instructions/AUDIO/study_phase_visual.htm"
        DISPLAY_TIMER="down"
@@ -54,13 +55,14 @@
      SET="ContinuousAfterFirstSelection:no"
      SET="ResetOnNext:yes"
      ITEMS="1"
-     SETS="3"
+     SETS="30"
      SCALE="1.0"
 
      # Configure audio variables     
      SET="AudioSupport:yes"
      SET="BiasVolume:${Pair1ExtraInfo}[0]"
      SET="AudioPath:$Pair1B"
+     CONSTRAINTS="range:0-100"
 
      FILE_SEQUENCE="Instructions/AUDIO/study_phase_novisual.htm"
        PLAY_AUDIO="time:1s"
@@ -86,8 +88,9 @@
      SET="ContinuousAfterFirstSelection:no"
      SET="ResetOnNext:yes"
      ITEMS="1"
-     SETS="3"
+     SETS="30"
      SCALE="1.0"
+     CONSTRAINTS="range:0-100"
 
      # Configure audio variables     
      SET="AudioSupport:yes"

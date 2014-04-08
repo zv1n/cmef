@@ -11,8 +11,8 @@ File.open("DataList.txt", "w") do |file|
       count[m[1]] ||= {}
       count[m[1]][m[2]] ||= 0
       count[m[1]][m[2]] += 1
-      next if count[m[1]][m[2]] > 1
-      file.write("0, #{m[1]}, #{m[4]},,Instructions/AUDIO/#{name},,10.0\n")
+      # next if count[m[1]][m[2]] > 1
+      file.write("0, #{m[1]}, #{m[4]},,Instructions/AUDIO/#{name},,0.0\n")
     end
   end
 end

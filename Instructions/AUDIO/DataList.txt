@@ -1,10 +1,74 @@
-
-0, Male Trial 1, Alarm,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Alarm M L.wav,,20.0
+0, Male Trial 1, Alarm,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Alarm M L.wav,,0.0
+0, Male Trial 1, Blender,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Blender M L.wav,,0.0
+0, Male Trial 1, Chainsaw,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Chainsaw M L.wav,,0.0
+0, Male Trial 1, Club,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Club M L.wav,,0.0
+0, Male Trial 1, Coyote,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Coyote M L.wav,,0.0
+0, Male Trial 1, Drums,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Drums M L.wav,,0.0
+0, Male Trial 1, Fireworks,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Fireworks M L.wav,,0.0
+0, Male Trial 1, Gun,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Gun M L.wav,,0.0
+0, Male Trial 1, Helicopter,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Helicopter M L.wav,,0.0
+0, Male Trial 1, Highway,,Instructions/AUDIO/wav_files/Male Trial 1/Loud/Loud/Highway M L.wav,,0.0
 0, Male Trial 1, Book,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Book M L.wav,,0.0
-0, Male Trial 1, Breeze,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Breeze M L.wav,,-20.0
-0, Male Trial 2, Airport,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Airport M L.wav,,10.0
-0, Male Trial 2, Bill,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Bill M L.wav,,10.0
-0, Male Trial 2, Aquarium,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Aquarium M L.wav,,10.0
+0, Male Trial 1, Cable,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Cable M L.wav,,0.0
+0, Male Trial 1, Cotton,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Cotton M L.wav,,0.0
+0, Male Trial 1, Cup,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Cup M L.wav,,0.0
+0, Male Trial 1, Disc,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Disc M L.wav,,0.0
+0, Male Trial 1, Lightbulb,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Lightbulb M L.wav,,0.0
+0, Male Trial 1, Oven,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Oven M L.wav,,0.0
+0, Male Trial 1, Pillow,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Pillow M L.wav,,0.0
+0, Male Trial 1, Poster,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Poster M L.wav,,0.0
+0, Male Trial 1, Sign,,Instructions/AUDIO/wav_files/Male Trial 1/Neutral/Loud/Sign M L.wav,,0.0
+0, Male Trial 1, Breeze,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Breeze M L.wav,,0.0
+0, Male Trial 1, Cat,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Cat M L.wav,,0.0
+0, Male Trial 1, Humidifier,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Humidifier M L.wav,,0.0
+0, Male Trial 1, Jacuzzi,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Jacuzzi M L.wav,,0.0
+0, Male Trial 1, Lullaby,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Lullaby M L.wav,,0.0
+0, Male Trial 1, Modem,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Modem M L.wav,,0.0
+0, Male Trial 1, Pompoms,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Pompoms M L.wav,,0.0
+0, Male Trial 1, Stapler,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Stapler M L.wav,,0.0
+0, Male Trial 1, Thief,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Thief M L.wav,,0.0
+0, Male Trial 1, Wasp,,Instructions/AUDIO/wav_files/Male Trial 1/Quiet/Loud/Wasp M L.wav,,0.0
+0, Male Trial 2, Airport,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Airport M L.wav,,0.0
+0, Male Trial 2, Crow,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Crow M L.wav,,0.0
+0, Male Trial 2, Factory,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Factory M L.wav,,0.0
+0, Male Trial 2, Mob,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Mob M L.wav,,0.0
+0, Male Trial 2, Muffler,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Muffler M L.wav,,0.0
+0, Male Trial 2, Sirens,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Sirens M L.wav,,0.0
+0, Male Trial 2, Stereo,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Stereo M L.wav,,0.0
+0, Male Trial 2, Thunder,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Thunder M L.wav,,0.0
+0, Male Trial 2, Tractor,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Tractor M L.wav,,0.0
+0, Male Trial 2, Train,,Instructions/AUDIO/wav_files/Male Trial 2/Loud/Loud/Train M L.wav,,0.0
+0, Male Trial 2, Bill,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Bill M L.wav,,0.0
+0, Male Trial 2, Bottle,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Bottle M L.wav,,0.0
+0, Male Trial 2, Calender,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Calender M L.wav,,0.0
+0, Male Trial 2, Coat,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Coat M L.wav,,0.0
+0, Male Trial 2, Deodorant,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Deodorant M L.wav,,0.0
+0, Male Trial 2, Eraser,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Eraser M L.wav,,0.0
+0, Male Trial 2, Fork,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Fork M L.wav,,0.0
+0, Male Trial 2, Pad,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Pad M L.wav,,0.0
+0, Male Trial 2, Soda,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Soda M L.wav,,0.0
+0, Male Trial 2, Wool,,Instructions/AUDIO/wav_files/Male Trial 2/Neutral/Loud/Wool M L.wav,,0.0
+0, Male Trial 2, Aquarium,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Aquarium M L.wav,,0.0
+0, Male Trial 2, Bumblebee,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Bumblebee M L.wav,,0.0
+0, Male Trial 2, Chimes,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Chimes M L.wav,,0.0
+0, Male Trial 2, Fan,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Fan M L.wav,,0.0
+0, Male Trial 2, Lamb,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Lamb M L.wav,,0.0
+0, Male Trial 2, Meadow,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Meadow M L.wav,,0.0
+0, Male Trial 2, Microwave,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Microwave M L.wav,,0.0
+0, Male Trial 2, Monk,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Monk M L.wav,,0.0
+0, Male Trial 2, Steam,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Steam M L.wav,,0.0
+0, Male Trial 2, Zipper,,Instructions/AUDIO/wav_files/Male Trial 2/Quiet/Loud/Zipper M L.wav,,0.0
 0, Calibration, ATV,,Instructions/AUDIO/wav_files/Extra/Loud/Loud/ATV M L.wav,,0.0
+0, Extra, Bangles,,Instructions/AUDIO/wav_files/Extra/Loud/Loud/Bangles M L.wav,,0.0
+0, Extra, Shredder,,Instructions/AUDIO/wav_files/Extra/Loud/Loud/Shredder M L.wav,,0.0
+0, Extra, Speedway,,Instructions/AUDIO/wav_files/Extra/Loud/Loud/Speedway M L.wav,,0.0
+0, Extra, Zoo,,Instructions/AUDIO/wav_files/Extra/Loud/Loud/Zoo M L.wav,,0.0
 0, Calibration, Compass,,Instructions/AUDIO/wav_files/Extra/Neutral/Loud/Compass M L.wav,,0.0
-0, Calibration, Brook,,Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Brook M L.wav,,20.0
+0, Extra, Goggles,,Instructions/AUDIO/wav_files/Extra/Neutral/Loud/Goggles M L.wav,,0.0
+0, Extra, Thermometer,,Instructions/AUDIO/wav_files/Extra/Neutral/Loud/Thermometer M L.wav,,0.0
+0, Extra, Wrench,,Instructions/AUDIO/wav_files/Extra/Neutral/Loud/Wrench M L.wav,,0.0
+0, Extra, Brook,,Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Brook M L.wav,,0.0
+0, Extra, Elevator,,Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Elevator M L.wav,,0.0
+0, Calibration, Museum,,Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Musuem M L.wav,,0.0
+0, Extra, Studyhall,,Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Studyhall M L.wav,,0.0
+0, Extra, Windmill,,Instructions/AUDIO/wav_files/Extra/Quiet/Loud/Windmill M L.wav,,0.0
