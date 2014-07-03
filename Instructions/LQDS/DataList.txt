@@ -1,0 +1,123 @@
+0, Male Trial 1, alarm,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Alarm M L.wav,,0.0 
+0, Male Trial 1, blender,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Blender M L.wav,,0.0 
+0, Male Trial 1, chainsaw,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Chainsaw M L.wav,,0.0 
+0, Male Trial 1, club,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Club M L.wav,,0.0 
+0, Male Trial 1, coyote,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Coyote M L.wav,,0.0 
+0, Male Trial 1, drums,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Drums M L.wav,,0.0 
+0, Male Trial 1, fireworks,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Fireworks M L.wav,,0.0 
+0, Male Trial 1, gun,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Gun M L.wav,,0.0 
+0, Male Trial 1, helicopter,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Helicopter M L.wav,,0.0 
+0, Male Trial 1, highway,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Loud/Highway M L.wav,,0.0 
+0, Male Trial 1, jet,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Jet M.wav,,0.0 
+0, Male Trial 1, trumpet,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Trumpet M.wav,,0.0 
+0, Male Trial 1, earthquake,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Earthquake M.wav,,0.0 
+0, Male Trial 1, subway,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Subway M.wav,,0.0 
+0, Male Trial 1, carnival,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Carnival M.wav,,0.0 
+0, Male Trial 1, motorcycle,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Motorcycle M.wav,,0.0 
+0, Male Trial 1, playground,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Playground M.wav,,0.0 
+0, Male Trial 1, lawnmower,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Lawnmower M.wav,,0.0 
+0, Male Trial 1, construction,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Construction M.wav,,0.0 
+0, Male Trial 1, traffic,,Instructions/LQDS/wav_files/Male Trial 1/Loud/Quiet/Traffic M.wav,,0.0 
+0, Male Trial 1, book,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Book M L.wav,,0.0 
+0, Male Trial 1, cable,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Cable M L.wav,,0.0 
+0, Male Trial 1, cotton,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Cotton M L.wav,,0.0 
+0, Male Trial 1, cup,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Cup M L.wav,,0.0 
+0, Male Trial 1, disc,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Disc M L.wav,,0.0 
+0, Male Trial 1, lightbulb,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Lightbulb M L.wav,,0.0 
+0, Male Trial 1, oven,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Oven M L.wav,,0.0 
+0, Male Trial 1, pillow,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Pillow M L.wav,,0.0 
+0, Male Trial 1, poster,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Poster M L.wav,,0.0 
+0, Male Trial 1, sign,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Loud/Sign M L.wav,,0.0 
+0, Male Trial 1, bone,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Bone M.wav,,0.0 
+0, Male Trial 1, nail,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Nail M.wav,,0.0 
+0, Male Trial 1, flour,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Flour M.wav,,0.0 
+0, Male Trial 1, dirt,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Dirt M.wav,,0.0 
+0, Male Trial 1, dress,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Dress M.wav,,0.0 
+0, Male Trial 1, carpet,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Carpet M.wav,,0.0 
+0, Male Trial 1, highlighter,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Highlighter M.wav,,0.0 
+0, Male Trial 1, banana,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Banana M.wav,,0.0 
+0, Male Trial 1, mustache,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Mustache M.wav,,0.0 
+0, Male Trial 1, marshmallow,,Instructions/LQDS/wav_files/Male Trial 1/Neutral/Quiet/Marshmallow M.wav,,0.0 
+0, Male Trial 1, breeze,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Breeze M L.wav,,0.0 
+0, Male Trial 1, cat,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Cat M L.wav,,0.0 
+0, Male Trial 1, humidifier,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Humidifier M L.wav,,0.0 
+0, Male Trial 1, jacuzzi,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Jacuzzi M L.wav,,0.0 
+0, Male Trial 1, lullaby,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Lullaby M L.wav,,0.0 
+0, Male Trial 1, modem,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Modem M L.wav,,0.0 
+0, Male Trial 1, pompoms,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Pompoms M L.wav,,0.0 
+0, Male Trial 1, stapler,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Stapler M L.wav,,0.0 
+0, Male Trial 1, thief,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Thief M L.wav,,0.0 
+0, Male Trial 1, wasp,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Loud/Wasp M L.wav,,0.0 
+0, Male Trial 1, dove,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Dove M.wav,,0.0 
+0, Male Trial 1, scissors,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Scissors M.wav,,0.0 
+0, Male Trial 1, cane,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Cane M.wav,,0.0 
+0, Male Trial 1, graveyard,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Graveyard M.wav,,0.0 
+0, Male Trial 1, refrigerator,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Refrigerator M.wav,,0.0 
+0, Male Trial 1, escalator,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Escalator M.wav,,0.0
+0, Male Trial 1, fountain,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Fountain M.wav,,0.0 
+0, Male Trial 1, keys,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Keys M.wav,,0.0 
+0, Male Trial 1, leaves,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Leaves M.wav,,0.0 
+0, Male Trial 1, keyboard,,Instructions/LQDS/wav_files/Male Trial 1/Quiet/Quiet/Keyboard M.wav,,0.0 
+0, Male Trial 2, airport,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Airport M L.wav,,0.0 
+0, Male Trial 2, crow,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Crow M L.wav,,0.0 
+0, Male Trial 2, factory,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Factory M L.wav,,0.0 
+0, Male Trial 2, mob,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Mob M L.wav,,0.0 
+0, Male Trial 2, muffler,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Muffler M L.wav,,0.0 
+0, Male Trial 2, sirens,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Sirens M L.wav,,0.0 
+0, Male Trial 2, stereo,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Stereo M L.wav,,0.0 
+0, Male Trial 2, thunder,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Thunder M L.wav,,0.0 
+0, Male Trial 2, tractor,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Tractor M L.wav,,0.0 
+0, Male Trial 2, train,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Loud/Train M L.wav,,0.0 
+0, Male Trial 2, volcano,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/volcano M.wav,,0.0 
+0, Male Trial 2, cymbals,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Cymbals M.wav,,0.0 
+0, Male Trial 2, cannon,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Cannon M.wav,,0.0 
+0, Male Trial 2, rooster,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Rooster M.wav,,0.0 
+0, Male Trial 2, rocket,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Rocket M.wav,,0.0 
+0, Male Trial 2, bomb,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Bomb M.wav,,0.0 
+0, Male Trial 2, racecar,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Racecar M.wav,,0.0 
+0, Male Trial 2, jackhammer,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Jackhammer M.wav,,0.0 
+0, Male Trial 2, stadium,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Stadium M.wav,,0.0 
+0, Male Trial 2, concert,,Instructions/LQDS/wav_files/Male Trial 2/Loud/Quiet/Concert M.wav,,0.0 
+0, Male Trial 2, bill,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Bill M L.wav,,0.0 
+0, Male Trial 2, bottle,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Bottle M L.wav,,0.0 
+0, Male Trial 2, calendar,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Calendar M L.wav,,0.0 
+0, Male Trial 2, coat,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Coat M L.wav,,0.0 
+0, Male Trial 2, deodorant,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Deodorant M L.wav,,0.0 
+0, Male Trial 2, eraser,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Eraser M L.wav,,0.0 
+0, Male Trial 2, compass,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Compass M L.wav,,0.0 
+0, Male Trial 2, pad,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Pad M L.wav,,0.0 
+0, Male Trial 2, soda,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Soda M L.wav,,0.0 
+0, Male Trial 2, wool,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Loud/Wool M L.wav,,0.0 
+0, Male Trial 2, sticker,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Sticker M.wav,,0.0 
+0, Male Trial 2, powder,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Powder M.wav,,0.0 
+0, Male Trial 2, castle,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Castle M.wav,,0.0 
+0, Male Trial 2, beaker,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Beaker M.wav,,0.0 
+0, Male Trial 2, marker,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Marker M.wav,,0.0 
+0, Male Trial 2, towel,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Towel M.wav,,0.0 
+0, Male Trial 2, paint,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Paint M.wav,,0.0 
+0, Male Trial 2, ink,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Ink M.wav,,0.0 
+0, Male Trial 2, shell,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Shell M.wav,,0.0 
+0, Male Trial 2, essay,,Instructions/LQDS/wav_files/Male Trial 2/Neutral/Quiet/Essay M.wav,,0.0 
+0, Male Trial 2, aquarium,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Aquarium M L.wav,,0.0 
+0, Male Trial 2, bumblebee,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Bumblebee M L.wav,,0.0 
+0, Male Trial 2, chimes,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Chimes M L.wav,,0.0 
+0, Male Trial 2, fan,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Fan M L.wav,,0.0 
+0, Male Trial 2, lamb,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Lamb M L.wav,,0.0 
+0, Male Trial 2, meadow,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Meadow M L.wav,,0.0 
+0, Male Trial 2, microwave,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Microwave M L.wav,,0.0 
+0, Male Trial 2, monk,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Monk M L.wav,,0.0 
+0, Male Trial 2, steam,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Steam M L.wav,,0.0 
+0, Male Trial 2, zipper,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Loud/Zipper M L.wav,,0.0 
+0, Male Trial 2, mouse,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Mouse M.wav,,0.0 
+0, Male Trial 2, shower,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Shower M.wav,,0.0 
+0, Male Trial 2, flute,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Flute M.wav,,0.0 
+0, Male Trial 2, funeral,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Funeral M.wav,,0.0 
+0, Male Trial 2, rain,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Library M.wav,,0.0 
+0, Male Trial 2, gazelle,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Gazelle M.wav,,0.0 
+0, Male Trial 2, stairs,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Stairs M.wav,,0.0 
+0, Male Trial 2, creek,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Creek M.wav,,0.0 
+0, Male Trial 2, church,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Church M.wav,,0.0 
+0, Male Trial 2, library,,Instructions/LQDS/wav_files/Male Trial 2/Quiet/Quiet/Library M.wav,,0.0 
+0, Extra, weedeater,,Instructions/LQDS/wav_files/Extra/Loud/Quiet/weedeater M.wav,,0.0 
+0, Extra, thermometer,,Instructions/LQDS/wav_files/Extra/Neutral/Loud/thermometer M L.wav,,0.0
+0, Extra, slippers,,Instructions/LQDS/wav_files/Extra/Quiet/Quiet/Slippers M.wav,,0.0 

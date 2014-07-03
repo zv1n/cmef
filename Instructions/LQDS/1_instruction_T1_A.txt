@@ -1,0 +1,37 @@
+<html>
+<body align="center">
+<br><br>
+<table cellspace="0" border="0">
+<td><tr>
+<font size="+2">
+
+In this task you will be asked to try to remember 60 different words presented in<br>
+each of 2 study-test trials. All words will be presented auditorially via headphones.<br>
+Some of the words will be presented at a softer volume while other words will be presented<br>
+at a higher volume. You will be given an opportunity to determine a comfortable volume<br>
+level before the actual task begins.<br><br>
+ 
+Some of the words you will hear represent items typically thought of as loud (e.g., weedeater),<br>
+while other words represent items typically thought of as quiet (e.g., slippers). Other items<br>
+are neutral with regard to sound. That is they do not have any sound qualities associated <br>
+with them (e.g., thermometer).<br> <br>
+
+Each word will be played once and you will have 5 seconds to try memorize it. After you study <br>
+each word you will be asked to predict how likely you think it is that you will be able to <br>
+remember that word on the upcoming recall test. You will provide these judgments using any <br>
+number between 0-100, where 0 = no confidence and 100 = complete confidence you'll be able to<br>
+recall a particular word.<br><br>
+
+Once you have studied and provided judgments for each of the 60 items, you will be asked<br>
+to type all the words you can remember during the recall test. You will then complete a<br>
+second study-test trial in which you will study a second set of 60 words.<br> <br>
+
+To advance to the next screen, please click on the word "continue" at the bottom of the<br> 
+screen; however, be sure to read the instruction screens thoroughly before continuing<br>
+because you will be unable to go back. <br>
+
+</font>
+</td></tr>
+</table>
+</body>
+</html>

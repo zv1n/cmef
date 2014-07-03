@@ -1,0 +1,329 @@
+  <EXPERIMENT CMEF_VERSION="3.0">
+	TITLE="LQDS - Experiment"
+	STUDY_NAME="LQDS"
+	CONDITIONS="A,B,C"
+	DATA_FILE="Instructions/LQDS/DataList.txt"
+	FORMAT_FILE="Instructions/LQDS/OutputFormat.txt"	
+	<TRIAL ID="1" DATASET="Male Trial 1">
+    		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/1_instruction_T1_V.htm"
+			END= "Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/1_instruction_T1_A.htm"
+			END= "Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/1_instruction_T1_C.htm"
+			END= "Click:Continue"
+			CONDITIONS="C"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/2_instruction_T1.htm"
+			END= "Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/2_instruction_T1_audio.htm"
+			END= "Click:Continue"
+			CONDITIONS="B,C"
+		</STATE>
+
+		<STATE>
+ 			MODE="AudioCalibration"
+			END="Click:Continue"
+			SET="CalibrationText:<html>Press each button to hear each sound.  Adjust the sound so <br>that all three sounds are at a comfortable volume.</html>"
+		 	SET="CalibrationGroup:Extra"
+			SET="MaxAudioBias:10.0"
+			CONDITIONS="B,C"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/LQDS/2f_prestudy_T1.htm"
+			CONSTRAINTS="range:0-60"
+			END= "Click:Continue"
+		</STATE>
+
+	
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/3_studyphaseinstructions_T1.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:0"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/LQDS/study_phase_visual.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/LQDS/4f_JOL_T1.htm"
+				NEXT="Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:0"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+
+			# CONFIGURE AUDIO VARIABLES
+			SET="AudioSupport:yes"
+			SET="BiasVolume:${Pair1ExtraInfo}[0]"
+			SET="AudioPath:$Pair1B"
+			CONSTRAINTS="range:0-100"
+
+			FILE_SEQUENCE="Instructions/LQDS/study_phase_novisual.htm"
+				PLAY_AUDIO="TIME:1S"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/LQDS/4f_JOL_T1.htm"
+				PLAY_AUDIO="never"
+				NEXT="Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:0"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+
+			# CONFIGURE AUDIO VARIABLES
+			SET="AudioSupport:yes"
+			SET="BiasVolume:${Pair1ExtraInfo}[0]"
+			SET="AudioPath:$Pair1B"
+
+			FILE_SEQUENCE="Instructions/LQDS/study_phase_visual.htm"
+				PLAY_AUDIO="TIME:1S"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/LQDS/4f_JOL_T1.htm"
+				PLAY_AUDIO="never"
+				NEXT="Click:Continue"
+			CONDITIONS="C"
+		</STATE>
+
+
+
+
+<STATE>
+			MODE="Feedback"
+			FILE="Instructions/LQDS/6f_poststudyprediction_T1.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/7_recall_T1.htm"
+			END="Click:Continue"
+		</STATE>
+		
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/LQDS/f_Recall.htm"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			CONSTRAINTS="match_any:Male Trial 1:paira"
+			#SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/LQDS/8f_Postdiction_T1.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+	</TRIAL>
+	<TRIAL ID="2" DATASET="Male Trial 2">
+		
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/9_studyphaseinstructions_T2.htm"
+			END= "Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/LQDS/10f_prestudy_T2.htm"
+			CONSTRAINTS="range:0-60"
+			END= "Click:Continue"
+		</STATE>
+
+		
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:0"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			FILE_SEQUENCE="Instructions/LQDS/study_phase_visual.htm"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/LQDS/4f_JOL_T2.htm"
+				NEXT="Click:Continue"
+			CONDITIONS="A"
+		</STATE>
+
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:0"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+
+			# CONFIGURE AUDIO VARIABLES
+			SET="AudioSupport:yes"
+			SET="BiasVolume:${Pair1ExtraInfo}[0]"
+			SET="AudioPath:$Pair1B"
+
+			FILE_SEQUENCE="Instructions/LQDS/study_phase_novisual.htm"
+				PLAY_AUDIO="TIME:1S"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/LQDS/4f_JOL_T2.htm"
+				PLAY_AUDIO="never"
+				NEXT="Click:Continue"
+			CONDITIONS="B"
+		</STATE>
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			SET="BorderWidth:0"
+			SET="PreStudyColor:#0000A0"
+			SET="PostStudyColor:#FF0000"
+			SET="Resolution:100"
+			SET="ContinuousTimer:yes"
+			SET="ContinuousAfterFirstSelection:no"
+			SET="ResetOnNext:yes"
+			CONSTRAINTS="range:0-100"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+
+			# CONFIGURE AUDIO VARIABLES
+			SET="AudioSupport:yes"
+			SET="BiasVolume:${Pair1ExtraInfo}[0]"
+			SET="AudioPath:$Pair1B"
+
+			FILE_SEQUENCE="Instructions/LQDS/study_phase_visual.htm"
+				PLAY_AUDIO="TIME:1S"
+				DISPLAY_TIMER="down"
+				STUDY_LIMIT="time:5s"
+				NEXT="Time:5s"
+			FILE_SEQUENCE="Instructions/LQDS/4f_JOL_T2.htm"
+				PLAY_AUDIO="never"
+				NEXT="Click:Continue"
+			CONDITIONS="C"
+		</STATE>
+
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/LQDS/12poststudyprediction_T2.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+				
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/13_Instructions_2.htm"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Study"
+			ITERATOR="random:exclusive"
+			FILE="Instructions/LQDS/f_Recall.htm"
+			ITEMS="1"
+			SETS="60"
+			SCALE="1.0"
+			CONSTRAINTS="match_any:Male Trial 2:paira"
+			#SET="DisableSubmitHook:yes"
+			NEXT="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Feedback"
+			FILE="Instructions/LQDS/14f_Postdiction_T2.htm"
+			CONSTRAINTS="range:0-60"
+			END="Click:Continue"
+		</STATE>
+
+		<STATE>
+			MODE="Instruction"
+			FILE="Instructions/LQDS/15_Last_Screen.htm"
+			END= "Click:Continue"
+		</STATE>
+
+	</TRIAL>
+</EXPERIMENT>

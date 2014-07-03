@@ -17,4 +17,5 @@ File.open("DataList.txt", "w") do |file|
   end
 end
 
+
 puts count

@@ -12,12 +12,17 @@ class CmeAudioPlayer {
   static float getGainFromPercent(int perc, float maxbias) {
     
     try {
-      Clip clp = AudioSystem.getClip();
-      FloatControl gc = (FloatControl) clp.getControl(
+      AudioFormat audioFormat = new AudioFormat(44100.0f, 16, 1, true, false);
+      DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
+      SourceDataLine dataLine = (SourceDataLine) AudioSystem.getLine(info);
+      dataLine.open();
+
+      FloatControl gc = (FloatControl) dataLine.getControl(
         FloatControl.Type.MASTER_GAIN);
 
       float max = gc.getMaximum() - maxbias;
-      float min = Math.max(-40.0f, gc.getMinimum());
+      float min = Math.max(-30.0f, gc.getMinimum());
+      dataLine.close();
 
       float mag = max - min;
       mag *= ((float)perc)/100.0f;
@@ -93,6 +98,11 @@ class CmeAudioPlayer {
   }
 
   public void setVolume(float vol) {
+    if (!m_bCanPlay) {
+      System.err.println("Tried to set volume before a line was open.");
+      return;
+    }
+
     vol = getNormalizedVolume(vol);
 
     FloatControl gc = (FloatControl) m_Clip.getControl(
@@ -112,16 +122,23 @@ class CmeAudioPlayer {
   }
 
   public float getNormalizedVolume(float vol) {
-
     try {
-      ensureClipExists();
+      AudioFormat audioFormat = new AudioFormat(44100.0f, 16, 1, true, false);
+      DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
+      SourceDataLine dataLine = (SourceDataLine) AudioSystem.getLine(info);
+      dataLine.open();
+
+      FloatControl gc = (FloatControl) dataLine.getControl(
+        FloatControl.Type.MASTER_GAIN);
+
+      vol = Math.min(vol, gc.getMaximum());
+      vol = Math.max(vol, gc.getMinimum());
+
+      dataLine.close();
+      return vol;
     }
     
-    catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("IO Error for audio file.");
-      return 0.0f;
-    } catch (LineUnavailableException e) {
+    catch (LineUnavailableException e) {
       e.printStackTrace();
       System.err.println("Line Unavailable for audio file.");
       return 0.0f;
@@ -130,15 +147,6 @@ class CmeAudioPlayer {
       System.err.println("Exception while loading audio file.");
       return 0.0f;
     }
-
-
-    FloatControl gc = (FloatControl) m_Clip.getControl(
-      FloatControl.Type.MASTER_GAIN);
-
-    vol = Math.min(vol, gc.getMaximum());
-    vol = Math.max(vol, gc.getMinimum());
-
-    return vol;
   }
 
   public void stop() {
