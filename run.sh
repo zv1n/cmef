@@ -11,4 +11,4 @@ else
   experiment="-x $(pwd)/bin/dev/Experiment.txt"
 fi
 
-java -jar CMEF.jar $experiment
+java -Xms512m -Xmx512m -jar CMEF.jar $experiment 

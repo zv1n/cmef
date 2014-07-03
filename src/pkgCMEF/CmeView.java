@@ -698,7 +698,6 @@ public class CmeView extends JPanel {
       m_CurState.setProperty("Pair" + vx + "Value", m_PairFactory.getPairValue(step));
       m_CurState.setProperty("Pair" + vx + "DataOrder", Integer.toString(m_PairFactory.getTrueIndex(step)));
       m_CurState.setProperty("Pair" + vx + "ExtraInfo", m_PairFactory.getPairExtraInfoVector(step));
-      m_CurState.setAudioVolumeProperty("Pair" + vx + "Volume");
 
       if (m_CurState.canStudy() && preStudyColor != null) {
         String color = preStudyColor;
@@ -786,7 +785,6 @@ public class CmeView extends JPanel {
 	}
 	
 	private boolean setSetPoolProperties() {
-		final int count = m_CurState.getPerStepCount();
 		return m_App.handleCompoundProperty(m_CurState, "SetPool", new CmeStringHandler() {
 				public boolean handleString(String handle) {	
 					
@@ -800,6 +798,7 @@ public class CmeView extends JPanel {
 						return false;
 					
 					sel.reset();
+					int count = sel.base_count();
 		
 					for (int x=0; x<count; x++) {
 						int next = sel.getNext();
@@ -849,6 +848,10 @@ public class CmeView extends JPanel {
 	 * @throws IOException
 	 */
 	private void showProcessedInstructions(String fileName) throws Exception {
+		/* Let the current state properties override the local properties. */
+		fileName = m_CurState.translateString(fileName);
+		fileName = m_App.translateString(fileName);
+
 		m_sContent = CmeApp.readFile(fileName);
 
 		this.adjustLayout();

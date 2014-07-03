@@ -120,4 +120,8 @@ public class CmeSelectiveIter implements CmeIterator {
 	public int count() {
 		return m_iExclusiveList.size();
 	}
+
+	public int base_count() {
+		return m_iExclusiveBase.size();
+	}
 }

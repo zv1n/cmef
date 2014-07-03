@@ -25,7 +25,10 @@ public class CmeGroupedVector<T> extends Vector<CmePair> {
 	}
 
 	public void setActiveGroup(String group) {
-		m_activeGroups = new String[] { group };
+		if (group == null)
+			m_activeGroups = null;
+		else
+			m_activeGroups = new String[] { group };
 	}
 	
 	public void clearActiveGroup() {

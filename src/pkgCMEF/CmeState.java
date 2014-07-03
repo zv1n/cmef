@@ -549,7 +549,7 @@ public class CmeState {
 			String group = pairc.getPairGroup();
 
 			System.out.println("Correct!");
-			setProperty("Match", "correct");
+      setProperty("Match", "Correct");
 
 			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
 			m_App.addFeedback(name + "Response_" + pair, matchstring);
@@ -568,7 +568,7 @@ public class CmeState {
 			incrementValue("ExpTotalPoints", points);
 		} else {	
 			System.out.println("Incorrect!");
-			setProperty("Match", "incorrect");
+			setProperty("Match", "Incorrect");
 		}
 		
 		// Ensure that the spot we're currently modifying is set to false,
@@ -651,7 +651,7 @@ public class CmeState {
 		
 		if (in.startsWith(match)) {
 			System.out.println("Correct!");
-			setProperty("Match", "correct");
+			setProperty("Match", "Correct");
 			
 			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
 			
@@ -668,7 +668,7 @@ public class CmeState {
 			incrementValue("ExpTotalPoints", points);
 		} else {	
 			System.out.println("Incorrect!");
-			setProperty("Match", "incorrect");
+			setProperty("Match", "Incorrect");
 			
 			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "false");
 		}

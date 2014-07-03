@@ -1029,6 +1029,9 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 	private void validateFile(String insFile) throws Exception {
 		// Open the file
+		if (insFile.contains("$"))
+			return;
+
 		try {
 			FileReader file = new FileReader(insFile);
 		} catch (FileNotFoundException e1) {
