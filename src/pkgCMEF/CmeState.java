@@ -778,7 +778,7 @@ public class CmeState {
         String constraint = (String) this.getProperty("Constraint");
         String param1 = (String) this.getProperty("ConstraintParam");
 
-		if (constraintType == null || constraint == null) {
+        if (constraintType == null || constraint == null) {
             return true;
         }
 		

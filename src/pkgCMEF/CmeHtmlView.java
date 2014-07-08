@@ -293,6 +293,11 @@ public class CmeHtmlView extends JEditorPane {
       String name = (String) attr.getAttribute(HTML.Attribute.NAME);
       String value = (String) attr.getAttribute(HTML.Attribute.VALUE);
 
+      if (name == null) {
+        System.out.println("All inputs must have a name!");
+        System.exit(1);
+      }
+
       m_EditList.add(name);
     } else if (node.getName() == "input") {
 			AttributeSet attr = node.getAttributes();
@@ -305,7 +310,6 @@ public class CmeHtmlView extends JEditorPane {
 				System.out.println("All inputs must have a name!");
 				System.exit(1);
 			}
-
 
 			if (type.toLowerCase().equals("radio")) {
 				if (value == null) {
@@ -404,10 +408,12 @@ public class CmeHtmlView extends JEditorPane {
 				if (m_RadioIter.hasNext() && m_RadioValueIter.hasNext()) {
 					String name = m_RadioIter.next();
 					CmeComponent comp = getComponentByGroup(name);
+
 					if (comp == null) {
 						comp = new CmeComponent(name);
 						m_Components.add(comp);
 					}
+
 					comp.addComponent(components[x], m_RadioValueIter.next());
 					
 					if (m_FirstComponent == null)
