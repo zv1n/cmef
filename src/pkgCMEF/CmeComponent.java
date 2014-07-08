@@ -6,6 +6,7 @@ import java.awt.Component;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 public class CmeComponent implements CmeResponse {
 
@@ -24,11 +25,15 @@ public class CmeComponent implements CmeResponse {
 	
 	/** Component Types */
 	public static final int EDIT_FIELD 		= 0;
-	public static final int CHECK_BOX 		= 1;
-	public static final int RADIO_BUTTON 	= 2;
-	public static final int HIDDEN			= 3;
+  public static final int TEXT_FIELD    = 1;
+	public static final int CHECK_BOX 		= 2;
+	public static final int RADIO_BUTTON 	= 3;
+	public static final int HIDDEN			  = 4;
 	
 	public CmeComponent(String name) {
+    if (name == null)
+      System.err.println("No name specified for this component!");
+
 		m_Components = new Vector<Component>();
 		m_Values = new Vector<String>();
 		m_Name = name.toString();
@@ -59,8 +64,10 @@ public class CmeComponent implements CmeResponse {
 		if (comp == null) {
 			m_Type = CmeComponent.HIDDEN;
 			return;
-		} else if (comp instanceof JTextField) {
-			m_Type = CmeComponent.EDIT_FIELD;
+    } else if (comp instanceof JTextField) {
+      m_Type = CmeComponent.EDIT_FIELD;
+    } else if (comp instanceof JTextArea) {
+      m_Type = CmeComponent.TEXT_FIELD;
 		} else if (comp instanceof JCheckBox) {
 			m_Type = CmeComponent.CHECK_BOX;
 		} else if (comp instanceof JRadioButton) {
@@ -78,8 +85,11 @@ public class CmeComponent implements CmeResponse {
 		switch (m_Type) {
 		case CmeComponent.HIDDEN:
 			return m_Values.get(0);
-		case CmeComponent.EDIT_FIELD:
-			return ((JTextField)m_Components.get(0)).getText();
+    case CmeComponent.EDIT_FIELD:
+      return ((JTextField)m_Components.get(0)).getText();
+
+    case CmeComponent.TEXT_FIELD:
+      return ((JTextArea)m_Components.get(0)).getText();
 			
 		case CmeComponent.CHECK_BOX:
 			if (((JCheckBox)m_Components.get(0)).isSelected())

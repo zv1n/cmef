@@ -61,8 +61,8 @@ public class CmeHtmlView extends JEditorPane {
 	private Component m_FirstComponent = null;
 	
 	/** Vector store for the names of each editable component */
-	private Vector<String> m_EditList;
-	private Iterator<String> m_EditIter;
+  private Vector<String> m_EditList;
+  private Iterator<String> m_EditIter;
 	private Vector<String> m_CheckValueList;
 	private Iterator<String> m_CheckValueIter;
 	private Vector<String> m_RadioList;
@@ -116,7 +116,7 @@ public class CmeHtmlView extends JEditorPane {
 		this.setDoubleBuffered(true);
 		this.addHyperlinkListener(hListener);
 
-		m_EditList = new Vector<String>();
+    m_EditList = new Vector<String>();
 		m_RadioList = new Vector<String>();
 		m_CheckValueList = new Vector<String>();
 		m_Components = new Vector<CmeResponse>();
@@ -127,10 +127,10 @@ public class CmeHtmlView extends JEditorPane {
 	 * Clear the sequence data from m_RadioIter, m_RadioValIter, etc.
 	 */
 	private void clearSequenceInfo() {
-		if (m_EditList != null) {
-			m_EditList.clear();
-		}
-		m_EditIter = null;
+    if (m_EditList != null) {
+      m_EditList.clear();
+    }
+    m_EditIter = null;
 
 		if (m_RadioList != null) {
 			m_RadioList.clear();
@@ -286,7 +286,15 @@ public class CmeHtmlView extends JEditorPane {
 	 */
 	private void recurseAttributeList(Element node, int depth) {
 
-		if (node.getName() == "input") {
+    if (node.getName() == "textarea") {
+      AttributeSet attr = node.getAttributes();
+
+      String type = (String) attr.getAttribute(HTML.Attribute.TYPE);
+      String name = (String) attr.getAttribute(HTML.Attribute.NAME);
+      String value = (String) attr.getAttribute(HTML.Attribute.VALUE);
+
+      m_EditList.add(name);
+    } else if (node.getName() == "input") {
 			AttributeSet attr = node.getAttributes();
 
 			String type = (String) attr.getAttribute(HTML.Attribute.TYPE);
@@ -356,6 +364,18 @@ public class CmeHtmlView extends JEditorPane {
 				} else {
 					throw new Exception("Invalid number of components! (tf)");
 				}
+      } else if (components[x] instanceof JTextArea) {
+        if (m_EditIter.hasNext()) {
+          CmeComponent comp = new CmeComponent(m_EditIter.next());
+          comp.addComponent(components[x]);
+          m_Components.add(comp);
+          // handleSubmitEvent((JTextArea)components[x]);
+          
+          if (m_FirstComponent == null)
+            m_FirstComponent = components[x];
+        } else {
+          throw new Exception("Invalid number of components! (tf)");
+        }
 
 			} else if (components[x] instanceof JCheckBox) {
 
