@@ -550,8 +550,9 @@ public class CmeView extends JPanel {
 				isets = 1;
 			if (icount < 1)
 				icount = 1;
-			
+
 			m_CurState.setStep(1);
+			m_CurState.resetTimeElapsed();
 			m_CurState.setStepMax(isets);
 			m_CurState.setPerStepCount(icount);
 			
@@ -585,6 +586,15 @@ public class CmeView extends JPanel {
 
     showCalibrationControls(m_CurState.getState() == CmeState.STATE_AUDIO_CAL);
 	}
+
+	private void recordElapsedTime() throws Exception {
+		long elapsed = m_CurState.getTimeElapsed();
+
+		for (Integer item : m_viCurrentItems) {
+			String currentIndex = Integer.toString(m_PairFactory.getTrueIndex(item));
+			m_App.addFeedback("TimeElapsed" + currentIndex, Long.toString(elapsed));	
+		}
+	}
 	
 	/**
 	 * Used to set the next rating environment.
@@ -606,13 +616,18 @@ public class CmeView extends JPanel {
 			return true;
 		}
  
+		recordElapsedTime();
+
 		int cstep = m_CurState.getStep();
 		if (cstep > 0) {
 			m_HtmlView.setVisible(false);
 			m_App.displayPrompt("PostPromptText");
-			
+
+			m_CurState.resetTimeElapsed();
+
 			if (m_CurState.isDone()) {
 				m_HtmlView.clearContent();
+
 				if (m_cClock != null)
 					m_cClock.complete();
 				return false;
@@ -923,6 +938,10 @@ public class CmeView extends JPanel {
 			m_cClock.start("");
 	}
 
+	/**
+	 * Update the button to the appropriate text according to the current
+	 * sequence and state.
+	 */
 	private void updateButtonText() {
 		if (m_bNext == null || m_CurState == null)
 			return;
@@ -952,6 +971,9 @@ public class CmeView extends JPanel {
 		adjustLayout();
 	}
 	
+	/**
+	 * Load the STUDY_FILE into the main view.
+	 */
 	private void updateStudyContent() throws IOException {
 		m_iStudyCount = 1;
 		Object pbStudyFile = m_CurState.getProperty("StudyFile");
@@ -963,6 +985,7 @@ public class CmeView extends JPanel {
 			//System.out.println("No Study File Set!");
 		}
 	}
+
 	/** 
 	 * Blank the instruction screen.
 	 */

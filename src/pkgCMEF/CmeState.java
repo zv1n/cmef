@@ -27,7 +27,9 @@ public class CmeState {
   private int m_iStepMax;
   /** Number of items to show simultaneously. */
   private int m_iCount;
-  
+  /** Init time in milliseconds (used to set time elapsed) */
+  private long m_lElapsedStart = 0;
+
   /** AudioHandler for handling audio components for audio enabled states. **/
   private CmeAudioHandler m_AudioHandler;
   
@@ -967,5 +969,15 @@ public class CmeState {
       });
       m_AudioPlayTimer.start();
       
+    }
+
+    /* Reset the Time Elapsed */
+    public void resetTimeElapsed() {
+      m_lElapsedStart = System.currentTimeMillis();
+    }
+
+    /* Fetch the current time elapsed. */
+    public long getTimeElapsed() {
+      return System.currentTimeMillis() - m_lElapsedStart;
     }
 }
