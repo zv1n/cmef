@@ -2,3 +2,4 @@ bin/**
 *.jar
 **/*.wav
 Instructions/CTI/**
+*.sublime-workspace
