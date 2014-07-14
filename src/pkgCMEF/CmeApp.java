@@ -73,7 +73,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 
 	/** The minimum version this API is compatible with. */
 	final static private double m_MinVer = 2.1;
-	final static private double m_Version = 3.0;
+	final static private double m_Version = 3.1;
 
 	public static final int CME_ENABLE_REFRESH = 0x1;
 	public static final int CME_TEXT_ONLY = 0x2;
@@ -601,7 +601,11 @@ public class CmeApp extends JFrame implements AncestorListener {
 		return true;
 	}
 
-	private void compoundProperty(CmeState state, String name, String value) {
+  private void compoundProperty(CmeState state, String name, String value) {
+    compoundProperty(state, name, value, -1);
+  }
+
+  private void compoundProperty(CmeState state, String name, String value, int seq) {
 		if (name == null || value == null)
 			return;
 
@@ -626,7 +630,7 @@ public class CmeApp extends JFrame implements AncestorListener {
 		if (state == null)
 			m_eProperties.put(name, newProp);
 		else
-			state.setProperty(name, newProp);
+			state.setProperty(name, newProp, seq);
 	}
 
 	/** Used to safely retrieve a string. */
@@ -998,17 +1002,23 @@ public class CmeApp extends JFrame implements AncestorListener {
           if (thisState.setIterator(iter) != 0)
             throw new Exception("Invalid Iterate: " + lhs + ":" + rhs);
 
-				} else if (line.matches(variableQuery("CONSTRAINTS"))) {
-					requirePair(splitValue, event
-							+ " must contain a name:value pair!");
+        } else if (line.matches(variableQuery("ITEMIZED_CONSTRAINT"))) {
 
-					if (validConstraints.contains(lhs.toUpperCase())) {
-						thisState.setProperty("ConstraintType", lhs, stateSequence);
-						thisState.setProperty("Constraint", rhs, stateSequence);
-						if (splitValue.length > 2)
-							thisState.setProperty("ConstraintParam", splitValue[2], stateSequence);
-					} else
-						throw new Exception("Invalid constraint type: " + lhs);
+          if (validConstraints.contains(rhs.toUpperCase())) {
+            compoundProperty(thisState, "ItemizedConstraints", value, stateSequence);
+          } else
+            throw new Exception("Invalid constraint type: " + rhs);
+        } else if (line.matches(variableQuery("CONSTRAINTS"))) {
+          requirePair(splitValue, event
+              + " must contain a name:value pair!");
+
+          if (validConstraints.contains(lhs.toUpperCase())) {
+            thisState.setProperty("ConstraintType", lhs, stateSequence);
+            thisState.setProperty("Constraint", rhs, stateSequence);
+            if (splitValue.length > 2)
+              thisState.setProperty("ConstraintParam", splitValue[2], stateSequence);
+          } else
+            throw new Exception("Invalid constraint type: " + lhs);
 				} else if (line.contains("</EXPERIMENT>")) {
 					break;
 				} else {

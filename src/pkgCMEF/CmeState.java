@@ -735,20 +735,25 @@ public class CmeState {
         while (responses.hasNext()) {
             CmeResponse rsp = responses.next();
 
-            if (rsp.getType() != CmeComponent.HIDDEN && !validateInput(rsp)) {
+            if (rsp.getType() != CmeComponent.HIDDEN)
+              if (!validateInput(rsp)) {
                 System.out.println("Validate Input: Response Value Invalid!");
                 return false;
-            }
+              }
+
             //System.out.println(rsp.getName() + ":" + rsp.getValue());
             if (rsp.getName().matches("^Select[0-9]*$") && !rsp.getValue().equals("")) {
                 selCount++;
             }
         }
 
-        if (selCount != selReq && selReq != -1) {
-            //System.out.println("Selection Count Invalid: " + Integer.toString(selCount) + " of " + Integer.toString(selReq));
-            return false;
+        if (selReq != -1) {
+          if (selCount != selReq) {
+              //System.out.println("Selection Count Invalid: " + Integer.toString(selCount) + " of " + Integer.toString(selReq));
+              return false;
+          }
         }
+
         return true;
     }
 
@@ -758,15 +763,47 @@ public class CmeState {
      * @return boolean - true if valid string; false else
      */
     public boolean validateInput(CmeResponse response) throws Exception {
-        return validateInput(response.getValue());
+        return validateInput(response.getName(), response.getValue());
+    }
+
+    public String[] getConstraint(String property_name) {
+      Object prop = getProperty("ItemizedConstraints");
+      Vector<String> props = null;
+
+      if (prop == null) {
+        return null;
+      } else if (prop instanceof String) {
+        props = new Vector<String>();
+        props.add((String) prop);
+      } else {
+        props = (Vector<String>) prop;
+      }
+
+      String[] info = null;
+
+      for (String constraint : props) {
+        info = constraint.split(":");
+        String name = info[0];
+
+        name = translateString(name);
+        name = m_App.translateString(name).trim();
+
+        if (name.equals(property_name)) {
+          info[0] = name;
+          return info;
+        }
+      }
+
+      return null;
     }
 
     /**
      * Validate input string conforms to the State input specifications
+     * @param name - the name of the input string to be validated
      * @param text - the input string to be validated
      * @return boolean - true if valid string or no constraint; false else
      */
-    public boolean validateInput(String text) throws Exception {
+    public boolean validateInput(String name, String text) throws Exception {
         if (text == null) {
             return false;
         }
@@ -774,14 +811,35 @@ public class CmeState {
         text = translateString(text);
         text = m_App.translateString(text).trim();
 
-        String constraintType = (String) this.getProperty("ConstraintType");
-        String constraint = (String) this.getProperty("Constraint");
-        String param1 = (String) this.getProperty("ConstraintParam");
+        String constraintType = null;
+        String constraint = null;
+        String param1 = null;
 
+        if (name != null) {
+          String[] cinfo = getConstraint(name);
+
+          if (cinfo != null) {
+            constraintType = cinfo[1];
+            constraint = cinfo[2];
+            if (cinfo.length > 3)
+              param1 = cinfo[3];
+          }
+        }
+
+        if (constraintType == null || constraint == null) {
+          constraintType = (String) this.getProperty("ConstraintType");
+          constraint = (String) this.getProperty("Constraint");
+          param1 = (String) this.getProperty("ConstraintParam");
+        }
+
+        System.err.println(constraintType);
+        System.err.println(constraint);
+        
         if (constraintType == null || constraint == null) {
             return true;
         }
-		
+
+
         constraintType = constraintType.toLowerCase();
 
         constraint = translateString(constraint);

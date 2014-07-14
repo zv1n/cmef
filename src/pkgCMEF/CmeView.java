@@ -1016,7 +1016,7 @@ public class CmeView extends JPanel {
 			if (input == null) {
 				return false;
 			}
-		} while (!m_CurState.validateInput(input));
+		} while (!m_CurState.validateInput(null, input));
 
 		String name = (String) m_CurState.getProperty("FeedbackName");
 		if (name == null) {
