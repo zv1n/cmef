@@ -60,7 +60,7 @@ public class CmeSelectiveIter implements CmeIterator {
 		int idx = getRange(0, m_iExclusiveList.size()-1);
 		int rand = m_iExclusiveList.get(idx);
 		
-		System.out.println(m_iExclusiveList.size());
+		// System.out.println(m_iExclusiveList.size());
 
 		m_iExclusiveList.remove(idx);
 		

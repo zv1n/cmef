@@ -1,8 +1,10 @@
 package pkgCMEF;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.io.File;
+import java.awt.image.BufferedImage;
+import java.awt.Dimension;
 import java.util.Vector;
+import javax.imageio.ImageIO;
 
 import javax.swing.JOptionPane;
 
@@ -21,7 +23,7 @@ public class CmePair
 	CmePairFactory m_pFactory;
 	
     /** Reference to the image icon */
-	private Image[]		m_Image;
+	private Dimension[] m_ImageSize;
 
     /** Word name associated with this image */
     private String[]	m_sName;
@@ -47,7 +49,7 @@ public class CmePair
 	public CmePair(CmeApp app) {
 		m_App = app;
 		
-		m_Image = new Image[2];
+		m_ImageSize = new Dimension[2];
 		m_sName = new String[2];
 		m_sFile = new String[2];
 	}
@@ -56,8 +58,8 @@ public class CmePair
 		if (m_sFile[idx] == null || m_sFile[idx].length() == 0)
 			return m_sName[idx];
 		
-		int xsize = m_Image[idx].getWidth(null)*scale/1000;
-		int ysize = m_Image[idx].getHeight(null)*scale/1000;
+		int xsize = m_ImageSize[idx].width*scale/1000;
+		int ysize = m_ImageSize[idx].height*scale/1000;
 		CmeState state = m_App.getCurrentState();
 		
 		String border = (String) state.getProperty("BorderWidth");
@@ -105,25 +107,30 @@ public class CmePair
 	private boolean setImage(int ind, String file) {
 		if (ind > m_sFile.length)
 			return false;
-		
+
 		m_sFile[ind] = file;
-		
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        try
-        {
-	        m_Image[ind] = tk.createImage(m_sFile[ind]);
-	        // Wait for it to load
-	        while(m_Image[ind].getWidth(null) == 0);
-        }
-        catch(Exception e)
-        {
+
+		try
+		{
+			File image = new File(file);
+			if (image.exists() && !image.isDirectory()) {
+				BufferedImage img = ImageIO.read(image);
+
+				if (m_ImageSize[ind] == null)
+					m_ImageSize[ind] = new Dimension();
+
+				m_ImageSize[ind].setSize(img.getWidth(), img.getHeight());
+			}
+		}
+		catch(Exception e)
+		{
 			JOptionPane.showMessageDialog(null, 
-					"Error: Unable to read image file" + m_sFile[ind], 
-					"Error Reading File", JOptionPane.ERROR_MESSAGE);
-        	return false;
-        }
-        return true;
-   	}
+			"Error: Unable to read image file: " + m_sFile[ind], 
+			"Error Reading File", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
 
 	//-------------------------------------------------
 	/** Get the image reference name */
@@ -139,22 +146,6 @@ public class CmePair
 	public String getNameB()
 	{
 		return m_sName[1];
-	}
-
-	//-------------------------------------------------
-	/** Get the image*/
-	//-------------------------------------------------
-	public Image getImageA()
-	{
-		return m_Image[0];
-	}
-	
-	//-------------------------------------------------
-	/** Get the image*/
-	//-------------------------------------------------
-	public Image getImageB()
-	{
-		return m_Image[1];
 	}
 	
 	//-------------------------------------------------

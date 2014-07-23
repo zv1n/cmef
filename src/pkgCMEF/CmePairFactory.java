@@ -1,6 +1,5 @@
 package pkgCMEF;
 
-import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -212,24 +211,6 @@ public class CmePairFactory
 		}
 		
 		return null;
-	}
-	
-	//-------------------------------------------------------------
-	/** Get an image from the factory by vector index */
-	//-------------------------------------------------------------
-	public Image getImageA(int idx)
-	{
-		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
-		return ((CmePair)m_vPairs.elementAt(idx)).getImageA();
-	}
-	
-	//-------------------------------------------------------------
-	/** Get an image from the factory by vector index */
-	//-------------------------------------------------------------
-	public Image getImageB(int idx)
-	{
-		if((idx < 0) || (idx >= m_vPairs.groupSize())) return null;
-		return ((CmePair)m_vPairs.elementAt(idx)).getImageB();
 	}
 	
 	//-------------------------------------------------------------

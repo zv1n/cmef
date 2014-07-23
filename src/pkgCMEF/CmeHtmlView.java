@@ -253,7 +253,18 @@ public class CmeHtmlView extends JEditorPane {
 		 * in an asynchronous way.  Therefore, we have to continuously
 		 * rebuild the list until its of the proper length.
 		 */
-		while (this.getComponentCount() < (m_EditList.size() + m_RadioList.size()));
+		int count = 0;
+		while (this.getComponentCount() < (m_EditList.size() + m_RadioList.size()))
+		{	
+			count++;
+			if (count % 10000 == 0) {
+				System.out.print("Component Count:");
+				System.out.println(count);
+			}
+		}
+
+		System.out.print("Component Count Last:");
+		System.out.println(count);
 
 		m_EditIter = m_EditList.iterator();
 		m_RadioIter = m_RadioList.iterator();
