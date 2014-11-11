@@ -626,7 +626,7 @@ public class CmeView extends JPanel {
 			m_CurState.resetTimeElapsed();
 
 			if (m_CurState.isDone()) {
-				m_HtmlView.clearContent();
+					m_HtmlView.clearContent();
 
 				if (m_cClock != null)
 					m_cClock.complete();

@@ -41,35 +41,35 @@ public class CmeState {
   private CmeState m_sPrevState;
   
   private class stateEventHandler {
-  	private CmeEventResponse m_erResponse;
-  	private int m_iSequence;
-  	
-  	public stateEventHandler(CmeEventResponse handler, int index) {
-  		m_erResponse = handler;
-  		m_iSequence = index;
-  	}
-  	
-  	public CmeEventResponse getEvent() {
-  		return m_erResponse;
-  	}
+      private CmeEventResponse m_erResponse;
+      private int m_iSequence;
+      
+      public stateEventHandler(CmeEventResponse handler, int index) {
+          m_erResponse = handler;
+          m_iSequence = index;
+      }
+      
+      public CmeEventResponse getEvent() {
+          return m_erResponse;
+      }
 
-  	public int getSequenceLength() {
-  		return m_iSequence;
-  	}
+      public int getSequenceLength() {
+          return m_iSequence;
+      }
 
-  	public boolean Respond(int seq) {
-  		if (m_iSequence >= 0 & seq == m_iSequence) {
+      public boolean Respond(int seq) {
+          if (m_iSequence >= 0 & seq == m_iSequence) {
         m_App.dmsg(CmeApp.DEBUG_RESPONSES | CmeApp.DEBUG_FILE_SEQUENCES,
           "stateEventHander::Respond(int:" + String.valueOf(seq) + "): Response Triggering.");
-  			m_erResponse.Respond();
+              m_erResponse.Respond();
         return true;
       }
 
       return false;
-  	}
-  	
+      }
+      
   }
-	
+    
   private Vector<Vector<stateEventHandler>> m_erEvent = new Vector<Vector<stateEventHandler>>();
   /** HashSet used to store the properties for each state */
   private HashMap<String, Object> m_sProperties = new HashMap<String, Object>();
@@ -97,13 +97,13 @@ public class CmeState {
 
   /** Iterators */
   private CmeIterator m_Iterator;
-	/** Timer */
-	private HashMap<Integer, Vector<CmeTimer> > m_hvTimer = new HashMap<Integer, Vector<CmeTimer>>();
-	
-	private boolean m_bStudy;
-	
-	private CmeTimer m_AudioPlayTimer = null;
-	private CmeTimer m_AudioStopTimer = null;
+    /** Timer */
+    private HashMap<Integer, Vector<CmeTimer> > m_hvTimer = new HashMap<Integer, Vector<CmeTimer>>();
+    
+    private boolean m_bStudy;
+    
+    private CmeTimer m_AudioPlayTimer = null;
+    private CmeTimer m_AudioStopTimer = null;
 
   /** 
    * Default constructor 
@@ -111,13 +111,13 @@ public class CmeState {
   public CmeState(CmeApp thisApp) {
     m_App = thisApp;
 
-		for (int x=0; x<EVENT_MAX; x++)
-			m_erEvent.add(new Vector<stateEventHandler>());
+        for (int x=0; x<EVENT_MAX; x++)
+            m_erEvent.add(new Vector<stateEventHandler>());
   }
 
-	public Vector<String> getSequenceFiles() {
-		return m_sSequence;
-	}
+    public Vector<String> getSequenceFiles() {
+        return m_sSequence;
+    }
 
   private Vector<CmeTimer> getSequenceTimers() {
     return getSequenceTimers(m_iSequenceIndex);
@@ -134,65 +134,65 @@ public class CmeState {
 
     return m_hvTimer.get(seq);
   }
-	
-	/** 
-	 * Init global stuff...
-	 */
-	public void init() {
+    
+    /** 
+     * Init global stuff...
+     */
+    public void init() {
     m_App.dmsg(CmeApp.DEBUG_STATES, "Global State Init.");
-	}
-	
-	/**
-	 * Init at a per sequence level.
-	 */
-	public void initSequence() {
+    }
+    
+    /**
+     * Init at a per sequence level.
+     */
+    public void initSequence() {
     m_App.dmsg(CmeApp.DEBUG_STATES | CmeApp.DEBUG_FILE_SEQUENCES, "Sequence State Init.");
 
-		Vector<CmeTimer> timers = getSequenceTimers();
+        Vector<CmeTimer> timers = getSequenceTimers();
     m_App.dmsg(CmeApp.DEBUG_TIMERS, "Init Sequence -- Timer Count: " + timers.size());
-		for(int x=0; x<timers.size(); x++)
-			timers.get(x).start();
-	}
-	
-	/**
-	 * Clean up all stored variables so GC can pick them up
-	 */
-	public void clean() {
-		Vector<CmeTimer> timers = getSequenceTimers();
+        for(int x=0; x<timers.size(); x++)
+            timers.get(x).start();
+    }
+    
+    /**
+     * Clean up all stored variables so GC can pick them up
+     */
+    public void clean() {
+        Vector<CmeTimer> timers = getSequenceTimers();
 
-		for(int x=0; x<timers.size(); x++) {
+        for(int x=0; x<timers.size(); x++) {
       CmeTimer timer = timers.get(x);
 
       if (timer != null)
         timer.stop();
 
-			timers.set(x, null);
+            timers.set(x, null);
     }
 
-		timers.clear();
-		
-		m_Iterator = null;
+        timers.clear();
+        
+        m_Iterator = null;
 
-		/*for (int x=0; x<m_erEvent.size(); x++)
-			if (m_erEvent.get(x) != null) {
-				for (int y=0; y<m_erEvent.get(x).size(); y++)
-					m_erEvent.get(x).set(y,null);
-				m_erEvent.set(x, null);
-			}
-		m_erEvent = null;*/
+        /*for (int x=0; x<m_erEvent.size(); x++)
+            if (m_erEvent.get(x) != null) {
+                for (int y=0; y<m_erEvent.get(x).size(); y++)
+                    m_erEvent.get(x).set(y,null);
+                m_erEvent.set(x, null);
+            }
+        m_erEvent = null;*/
 
-		for (int x=0; x < m_sSequenceProperties.size(); x++) {
-			HashMap<String, Object> seq = m_sSequenceProperties.get(x);
-			if (seq != null)
-				seq.clear();				
-		}
+        for (int x=0; x < m_sSequenceProperties.size(); x++) {
+            HashMap<String, Object> seq = m_sSequenceProperties.get(x);
+            if (seq != null)
+                seq.clear();                
+        }
 
-		m_sSequenceProperties.clear();
-		m_sSequenceProperties = null;
+        m_sSequenceProperties.clear();
+        m_sSequenceProperties = null;
 
-		m_sProperties.clear();
-		m_sProperties = null;
-	}
+        m_sProperties.clear();
+        m_sProperties = null;
+    }
 
     /**
      * Sets the interface for the given iterator.
@@ -205,86 +205,86 @@ public class CmeState {
         m_Iterator = iterator;
         return 0;
     }
-	
+    
     /**
      * Set event response 
      */
     public void addEventResponse(int eventId, CmeEventResponse event, int sequence) {
-		if (m_erEvent.get(eventId) == null)
-			m_erEvent.set(eventId, new Vector<stateEventHandler>());
+        if (m_erEvent.get(eventId) == null)
+            m_erEvent.set(eventId, new Vector<stateEventHandler>());
         m_erEvent.get(eventId).add(new stateEventHandler(event, sequence));
     }
-	
+    
     /**
      * get event response 
      */
     public CmeEventResponse getEventResponse(int eventId, int index) {
-		if (m_erEvent == null || m_erEvent.get(eventId) == null || index >= m_erEvent.get(eventId).size())
-			return null;
+        if (m_erEvent == null || m_erEvent.get(eventId) == null || index >= m_erEvent.get(eventId).size())
+            return null;
         return m_erEvent.get(eventId).get(index).getEvent();
     }
-	
-	public int getEventResponseCount(int eventId) {
-		if (m_erEvent == null)
-			return 0;
-		int count = 0;
-		for (int x=0; x < m_erEvent.get(eventId).size(); x++) {
-			if (m_erEvent.get(eventId).get(x).getSequenceLength() == m_iSequenceIndex)
-				count++;
-		}
-		return count;
-	}
-	
-	/**
-	 * Sets the timer object associated with this state.
-	 * @param timer - CmeTimer object
-	 * @return true if valid timer; false else
-	 * @throws Exception 
-	 */
-	public boolean addEventTimer(CmeTimer timer, int seq) throws Exception {
-		if (timer == null || !timer.isValid())
-			return false;
+    
+    public int getEventResponseCount(int eventId) {
+        if (m_erEvent == null)
+            return 0;
+        int count = 0;
+        for (int x=0; x < m_erEvent.get(eventId).size(); x++) {
+            if (m_erEvent.get(eventId).get(x).getSequenceLength() == m_iSequenceIndex)
+                count++;
+        }
+        return count;
+    }
+    
+    /**
+     * Sets the timer object associated with this state.
+     * @param timer - CmeTimer object
+     * @return true if valid timer; false else
+     * @throws Exception 
+     */
+    public boolean addEventTimer(CmeTimer timer, int seq) throws Exception {
+        if (timer == null || !timer.isValid())
+            return false;
 
-		//System.out.print("Delay: ");
-		//System.out.println(timer.getDelay());
+        //System.out.print("Delay: ");
+        //System.out.println(timer.getDelay());
 
-		Vector<CmeTimer> timers = getSequenceTimers(seq);
-		timers.add(timer);
+        Vector<CmeTimer> timers = getSequenceTimers(seq);
+        timers.add(timer);
 
-		return true;
-	}
-	
+        return true;
+    }
+    
 
-	/**
-	 * Used to determine if the sequential are complete.
-	 * 
-	 * @return true if the number of iterations has been met; false else.
-	 */
-	public boolean isDone() throws Exception {
-		if (getState() != CmeState.STATE_MULTIPLE) {
-			throw new Exception("Tested if a rating was done when NOT in a rating step!");
-		}
-		
-		CmeIterator iterator = getIterator();
-		if (iterator != null && iterator.isComplete())
-			return true;
+    /**
+     * Used to determine if the sequential are complete.
+     * 
+     * @return true if the number of iterations has been met; false else.
+     */
+    public boolean isDone() throws Exception {
+        if (getState() != CmeState.STATE_MULTIPLE) {
+            throw new Exception("Tested if a rating was done when NOT in a rating step!");
+        }
+        
+        CmeIterator iterator = getIterator();
+        if (iterator != null && iterator.isComplete())
+            return true;
 
-		int istep = getStep();
-		int ismax = getStepMax();
+        int istep = getStep();
+        int ismax = getStepMax();
 
-		return (istep >= ismax);
-	}
-	
-	/**
-	 * Resets any per seq components which need to reinit.
-	 */
-	public void resetSeqState() {
-		Vector<CmeTimer> timers = getSequenceTimers();
-		for(int x=0; x<timers.size(); x++)
-			timers.get(x).restart();
-		
-		resetSequencePosition();
-	}
+        return (istep >= ismax);
+    }
+    
+    /**
+     * Resets any per seq components which need to reinit.
+     */
+    public void resetSeqState() {
+        Vector<CmeTimer> timers = getSequenceTimers();
+        for(int x=0; x<timers.size(); x++)
+            timers.get(x).restart();
+        
+        resetSequencePosition();
+    }
 
     /**
      * Returns the interface for the given iterator.
@@ -307,16 +307,16 @@ public class CmeState {
     public int getState() {
         return m_iState;
     }
-	
-	/** Set whether this instruction can study */
-	public void setStudyInstruction(boolean b) {
-		m_bStudy = b;
-	}
-	
-	/** Can this instruction state study? */
-	public boolean canStudy() {
-		return m_bStudy;
-	}
+    
+    /** Set whether this instruction can study */
+    public void setStudyInstruction(boolean b) {
+        m_bStudy = b;
+    }
+    
+    /** Can this instruction state study? */
+    public boolean canStudy() {
+        return m_bStudy;
+    }
 
     /**
      * Set the change by action 
@@ -337,21 +337,21 @@ public class CmeState {
         m_App.dmsg(CmeApp.DEBUG_RESPONSES, "No event to trigger.");
         return;
       }
-		//System.out.print("Event: ");
-		//System.out.println(event);
-		//System.out.println(m_erEvent.get(event).size());
-		
-  		for (int x=0; x<m_erEvent.get(event).size(); x++) {
-  			stateEventHandler response = m_erEvent.get(event).get(x);
-  			if (response != null) {
+        //System.out.print("Event: ");
+        //System.out.println(event);
+        //System.out.println(m_erEvent.get(event).size());
+        
+          for (int x=0; x<m_erEvent.get(event).size(); x++) {
+              stateEventHandler response = m_erEvent.get(event).get(x);
+              if (response != null) {
           m_App.dmsg(CmeApp.DEBUG_RESPONSES, "Attempting Trigger Seq (" + String.valueOf(m_iSequenceIndex) + "): " + sEvent);
-  				if (response.Respond(m_iSequenceIndex)) {
+                  if (response.Respond(m_iSequenceIndex)) {
             m_App.dmsg(CmeApp.DEBUG_RESPONSES, "Triggered Seq (" + String.valueOf(m_iSequenceIndex) + "): " + sEvent);
             return;
           }
           m_App.dmsg(CmeApp.DEBUG_RESPONSES, "No Response Seq (" + String.valueOf(m_iSequenceIndex) + "): " + sEvent);
         }
-  		}
+          }
     }
 
     /** 
@@ -365,13 +365,13 @@ public class CmeState {
      * Set a PropertyValue
      */
     public boolean setProperty(String name, Object prop, int seq) {
-    	if (seq == -1 || m_sSequenceProperties.size() <= seq) {
-    		setProperty(name, prop);
-    		return true;
-    	}
+        if (seq == -1 || m_sSequenceProperties.size() <= seq) {
+            setProperty(name, prop);
+            return true;
+        }
 
-    	m_sSequenceProperties.get(seq).put(name, prop);
-    	return true;
+        m_sSequenceProperties.get(seq).put(name, prop);
+        return true;
     }
 
 
@@ -406,7 +406,7 @@ public class CmeState {
       
       return def;
     }
-	
+    
     /** 
      * Set event response 
      */
@@ -472,14 +472,14 @@ public class CmeState {
     public int getStepMax() {
         return m_iStepMax;
     }
-	
-	public int getPerStepCount() {
-		return m_iCount;
-	}
-	
-	public void setPerStepCount(int count) {
-		m_iCount = count;
-	}
+    
+    public int getPerStepCount() {
+        return m_iCount;
+    }
+    
+    public void setPerStepCount(int count) {
+        m_iCount = count;
+    }
 
     /**
      * Validate a regular expression.
@@ -492,23 +492,23 @@ public class CmeState {
         // m_App.dmsg(11, "Regex: " + regex + "\nInput: |" + input + "|");
         return input.matches(regex);
     }
-	
+    
     private boolean incrementValue(String name, Integer inc) {
-    	int total = m_App.getIntProperty(name);
-		if (total == -1)
-			total = 0;
-		
-		m_App.setProperty(name, Integer.toString(total+inc));
-		return true;
+        int total = m_App.getIntProperty(name);
+        if (total == -1)
+            total = 0;
+        
+        m_App.setProperty(name, Integer.toString(total+inc));
+        return true;
     }
     
     @SuppressWarnings("unused")
-	private boolean incrementValue(String name, String value) {
-		int points = getIntProperty("Pair1Value");
-		if (points == -1)
-			points = 1;
-		
-		return incrementValue(name, points);
+    private boolean incrementValue(String name, String value) {
+        int points = getIntProperty("Pair1Value");
+        if (points == -1)
+            points = 1;
+        
+        return incrementValue(name, points);
     }
     
     /**
@@ -518,69 +518,69 @@ public class CmeState {
      * @param input - the input string to validate.
      * @return true on match; false else
      */
-	private boolean validateMatchAny(String dataset, String matchstring, String datafield)
-		throws Exception
-	{
-		String input = matchstring.toLowerCase();
-		
-		/* Nasty Hack to get around Theif */
-		input = input.replace("ie", "ee").replace("ei", "ee");
+    private boolean validateMatchAny(String dataset, String matchstring, String datafield)
+        throws Exception
+    {
+        String input = matchstring.toLowerCase();
+        
+        /* Nasty Hack to get around Theif */
+        input = input.replace("ie", "ee").replace("ei", "ee");
 
-		int matchCount = getIntProperty("MatchCount");
-		if (matchCount == -1)
-			matchCount = 3;
-		
-		String trial = (String) getProperty("CurrentTrial");
-		String name = (String) getProperty("RecallName");
+        int matchCount = getIntProperty("MatchCount");
+        if (matchCount == -1)
+            matchCount = 3;
+        
+        String trial = (String) getProperty("CurrentTrial");
+        String name = (String) getProperty("RecallName");
     String seq = (String) getProperty("Pair1Sequence");
 
-		if (name == null)
-			name = "Recall_";
-		else
-			name = m_App.translateString(name);
+        if (name == null)
+            name = "Recall_";
+        else
+            name = m_App.translateString(name);
 
-		if (trial == null)
-			trial = "";
-		else
-			trial = "_T" + trial;
+        if (trial == null)
+            trial = "";
+        else
+            trial = "_T" + trial;
 
-		CmePair pairc = m_App.getPairFactory().getPairByValue(dataset, datafield, matchstring, matchCount);
-		
-		if (pairc != null) {
-			String pair = Integer.toString(m_App.getPairFactory().getTrueIndex(pairc));
-			String group = pairc.getPairGroup();
+        CmePair pairc = m_App.getPairFactory().getPairByValue(dataset, datafield, matchstring, matchCount);
+        
+        if (pairc != null) {
+            String pair = Integer.toString(m_App.getPairFactory().getTrueIndex(pairc));
+            String group = pairc.getPairGroup();
 
-			System.out.println("Correct!");
+            System.out.println("Correct!");
       setProperty("Match", "Correct");
 
-			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
-			m_App.addFeedback(name + "Response_" + pair, matchstring);
+            m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
+            m_App.addFeedback(name + "Response_" + pair, matchstring);
       m_App.addFeedback(name + "Order_" + pair, seq);
 
-			incrementValue(group + "Count" + trial, 1);
-			incrementValue("TotalCount" + trial, 1);
-			incrementValue("ExpTotalCount", 1);
+            incrementValue(group + "Count" + trial, 1);
+            incrementValue("TotalCount" + trial, 1);
+            incrementValue("ExpTotalCount", 1);
 
-			int points = getIntProperty("Pair1Value");
-			if (points == -1)
-				points = 1;
+            int points = getIntProperty("Pair1Value");
+            if (points == -1)
+                points = 1;
 
-			incrementValue(group + "Points" + trial, points);
-			incrementValue("TotalPoints" + trial, points);
-			incrementValue("ExpTotalPoints", points);
-		} else {	
-			System.out.println("Incorrect!");
-			setProperty("Match", "Incorrect");
-		}
-		
-		// Ensure that the spot we're currently modifying is set to false,
-		// if its not already true.
-		String pair = (String) getProperty("Pair1DataOrder");
-		if (pair != null) {
-			String correct_name = name + "Correct" + trial + "_" + pair;
-			String feedback = m_App.getFeedback(correct_name);
-			if (feedback == null) {
-				m_App.addFeedback(correct_name, "false");
+            incrementValue(group + "Points" + trial, points);
+            incrementValue("TotalPoints" + trial, points);
+            incrementValue("ExpTotalPoints", points);
+        } else {    
+            System.out.println("Incorrect!");
+            setProperty("Match", "Incorrect");
+        }
+        
+        // Ensure that the spot we're currently modifying is set to false,
+        // if its not already true.
+        String pair = (String) getProperty("Pair1DataOrder");
+        if (pair != null) {
+            String correct_name = name + "Correct" + trial + "_" + pair;
+            String feedback = m_App.getFeedback(correct_name);
+            if (feedback == null) {
+                m_App.addFeedback(correct_name, "false");
       }
 
       String response_name = name + "Response_" + pair;
@@ -594,10 +594,10 @@ public class CmeState {
       if (feedback == null) {
         m_App.addFeedback(order_name, "");
       }
-		}
+        }
 
-		return true;
-	}
+        return true;
+    }
 
     
     /**
@@ -607,76 +607,76 @@ public class CmeState {
      * @param input - the input string to validate.
      * @return true on match; false else
      */
-	private boolean validateMatch(String matchstring, String input) throws Exception {
-		String in = input.toLowerCase();
-		String matchon = matchstring.toLowerCase();
-		String match = null;
-		
-		if (matchon.trim().startsWith("<")) {
-			matchon = matchon.replaceAll("<[^>]*>", "");
-		}
-		
-		/* Nasty Hack to get around Theif */
-		matchon = matchon.replace("ie", "ee").replace("ei", "ee");
-		in = in.replace("ie", "ee").replace("ei", "ee");
-		
-		int matchCount = getIntProperty("MatchCount");
-		if (matchCount == -1)
-			matchCount = 3;
-		
-		if (matchon.length() > matchCount)
-			match = matchon.substring(0, matchCount);
-		else
-			match = matchon;
-		
-		String trial = (String) getProperty("CurrentTrial");
-		String pair = (String) getProperty("Pair1DataOrder");
-		String group = (String) getProperty("Pair1Group");
-		String name = (String) getProperty("RecallName");
-		
-		if (name == null)
-			name = "Recall_";
-		else
-			name = m_App.translateString(name);
-		
-		if (trial == null)
-			trial = "";
-		else
-			trial = "_T" + trial;
-		
-		if (group == null)
-			group = "";
-		
-		if (pair == null)
-			throw new Exception("Failed to process the current pair!");
-			
-		
-		if (in.startsWith(match)) {
-			System.out.println("Correct!");
-			setProperty("Match", "Correct");
-			
-			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
-			
-			incrementValue(group + "Count" + trial, 1);
-			incrementValue("TotalCount" + trial, 1);
-			incrementValue("ExpTotalCount", 1);
+    private boolean validateMatch(String matchstring, String input) throws Exception {
+        String in = input.toLowerCase();
+        String matchon = matchstring.toLowerCase();
+        String match = null;
+        
+        if (matchon.trim().startsWith("<")) {
+            matchon = matchon.replaceAll("<[^>]*>", "");
+        }
+        
+        /* Nasty Hack to get around Theif */
+        matchon = matchon.replace("ie", "ee").replace("ei", "ee");
+        in = in.replace("ie", "ee").replace("ei", "ee");
+        
+        int matchCount = getIntProperty("MatchCount");
+        if (matchCount == -1)
+            matchCount = 3;
+        
+        if (matchon.length() > matchCount)
+            match = matchon.substring(0, matchCount);
+        else
+            match = matchon;
+        
+        String trial = (String) getProperty("CurrentTrial");
+        String pair = (String) getProperty("Pair1DataOrder");
+        String group = (String) getProperty("Pair1Group");
+        String name = (String) getProperty("RecallName");
+        
+        if (name == null)
+            name = "Recall_";
+        else
+            name = m_App.translateString(name);
+        
+        if (trial == null)
+            trial = "";
+        else
+            trial = "_T" + trial;
+        
+        if (group == null)
+            group = "";
+        
+        if (pair == null)
+            throw new Exception("Failed to process the current pair!");
+            
+        
+        if (in.startsWith(match)) {
+            System.out.println("Correct!");
+            setProperty("Match", "Correct");
+            
+            m_App.addFeedback(name + "Correct" + trial + "_" + pair, "true");
+            
+            incrementValue(group + "Count" + trial, 1);
+            incrementValue("TotalCount" + trial, 1);
+            incrementValue("ExpTotalCount", 1);
 
-			int points = getIntProperty("Pair1Value");
-			if (points == -1)
-				points = 1;
+            int points = getIntProperty("Pair1Value");
+            if (points == -1)
+                points = 1;
 
-			incrementValue(group + "Points" + trial, points);
-			incrementValue("TotalPoints" + trial, points);
-			incrementValue("ExpTotalPoints", points);
-		} else {	
-			System.out.println("Incorrect!");
-			setProperty("Match", "Incorrect");
-			
-			m_App.addFeedback(name + "Correct" + trial + "_" + pair, "false");
-		}
-		
-		return true;
-	}
+            incrementValue(group + "Points" + trial, points);
+            incrementValue("TotalPoints" + trial, points);
+            incrementValue("ExpTotalPoints", points);
+        } else {    
+            System.out.println("Incorrect!");
+            setProperty("Match", "Incorrect");
+            
+            m_App.addFeedback(name + "Correct" + trial + "_" + pair, "false");
+        }
+        
+        return true;
+    }
 
     /**
      * Validate the range of an input.
@@ -860,16 +860,16 @@ public class CmeState {
             } else if (constraintType.equals("match")) {
                 // m_App.dmsg(10, "Match!");
                 validateMatch(constraint, text);
-				return true;
+                return true;
             } else if (constraintType.equals("match_any")) {
                 // m_App.dmsg(10, "Match Any!");
                 validateMatchAny(constraint, text, param1);
-				return true;
-			} else {
+                return true;
+            } else {
                 // m_App.dmsg(10, "None!");
             }
         } catch (Exception ex) {
-            System.out.println("Catch: " + ex.getMessage());
+            System.out.println("Caught (" + ex.getClass().getName() + "):" + ex.getMessage());
             return false;
         }
 
@@ -906,7 +906,7 @@ public class CmeState {
      * @return Integer value length of the sequence, 0-N
      */
     public int getSequenceLength() {
-    	return m_sSequence.size();
+        return m_sSequence.size();
     }
     
     /**
@@ -914,12 +914,12 @@ public class CmeState {
      * @return the current sequence index.
      */
     public int getSequencePosition() {
-    	return m_iSequenceIndex;
+        return m_iSequenceIndex;
     }
     
     public boolean isSequenceValid() {
-    	int seqLength = getSequenceLength();
-    	boolean valid = (m_iSequenceIndex < seqLength && m_iSequenceIndex >= 0);
+        int seqLength = getSequenceLength();
+        boolean valid = (m_iSequenceIndex < seqLength && m_iSequenceIndex >= 0);
       m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Sequence Valid? " + String.valueOf(valid));
       return valid;
     }
@@ -931,29 +931,29 @@ public class CmeState {
     public boolean nextSequencePosition() {
       m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Next Sequence.");
       m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Cur Seq: " + String.valueOf(m_iSequenceIndex));
-    	m_iSequenceIndex++;
+        m_iSequenceIndex++;
       m_App.dmsg(CmeApp.DEBUG_FILE_SEQUENCES, "Next Seq: " + String.valueOf(m_iSequenceIndex));
 
-    	boolean valid = isSequenceValid();
+        boolean valid = isSequenceValid();
 
-    	if (!valid)
-    		return false;
+        if (!valid)
+            return false;
 
-    	initSequence();
-    	return true;
+        initSequence();
+        return true;
     }
     
     public String getSequenceFile() {
-    	if (!isSequenceValid())
-    		return null;
-    	return m_sSequence.get(m_iSequenceIndex); 
+        if (!isSequenceValid())
+            return null;
+        return m_sSequence.get(m_iSequenceIndex); 
     }
 
     /**
      * Reset sequnce counter.
      */
     public void resetSequencePosition() {
-    	m_iSequenceIndex = 0;
+        m_iSequenceIndex = 0;
     }
     
     /**
@@ -961,15 +961,15 @@ public class CmeState {
      * @param file - Name of the file to add to the sequence.
      */
     public void addInstructionFile(String file) {
-    	m_sSequence.add(file);
-    	m_sSequenceProperties.add(new HashMap<String, Object>());
+        m_sSequence.add(file);
+        m_sSequenceProperties.add(new HashMap<String, Object>());
     }
     
     public void printInstructionFiles() {
-    	System.out.println("Files for state:");
-    	for (int x=0; x<m_sSequence.size(); x++) {
-    		System.out.println(m_sSequence.get(x));
-    	}
+        System.out.println("Files for state:");
+        for (int x=0; x<m_sSequence.size(); x++) {
+            System.out.println(m_sSequence.get(x));
+        }
     }
 
     /* Configures the AudioHandler for audio playback. */
